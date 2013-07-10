@@ -1,0 +1,24 @@
+ {
+addRepo "http://maven.kevoree.org/release"
+addRepo "http://repo1.maven.org/maven2"
+addRepo "http://maven.kevoree.org/archiva/repository/daum/snapshots"
+addRepo "http://repo.maven.apache.org/maven2"
+addRepo "http://maven.kevoree.org/daum/release"
+addRepo "http://repository.jetbrains.com/all"
+addRepo "https://oss.sonatype.org/content/groups/public/"
+addRepo "http://maven.kevoree.org/snapshots"
+addRepo "http://maven.kevoree.org/daum/snapshots"
+addRepo "http://maven.kevoree.org/archiva/repository/release/"
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/2.0.0-ALPHA'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.jexxus/2.0.0-ALPHA'
+merge 'mvn:org.daum.planrouge/org.daum.planrouge.server/2.0.0-SNAPSHOT'
+addNode node0:JavaSENode
+updateDictionary node0{}
+ {
+  addComponent ServerPla755@node0 : ServerPlanRouge {}
+updateDictionary ServerPla755@node0
+}
+
+addGroup group600982085:BasicGroup
+addToGroup group600982085 node0
+}

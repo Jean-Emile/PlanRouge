@@ -30,6 +30,9 @@ public class DemoModel {
         victime.setNom("briand");
         victime.setPrenom("clement");
 
+
+
+
         intervention.addVictimes(victime);
 
 
