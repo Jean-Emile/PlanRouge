@@ -3,6 +3,9 @@ package org.daum.planrouge.server;
 import org.kevoree.annotation.*;
 import org.kevoree.framework.AbstractComponentType;
 import org.kevoree.log.Log;
+import org.kevoree.planrouge.ContainerRoot;
+import org.kevoree.planrouge.PlanrougeFactory;
+import org.kevoree.planrouge.factory.MainFactory;
 import org.webbitserver.WebServer;
 import org.webbitserver.WebServers;
 import org.webbitserver.handler.StaticFileHandler;
@@ -20,16 +23,21 @@ import org.webbitserver.handler.StaticFileHandler;
 })
 @ComponentType
 public class ServerPlanRouge extends AbstractComponentType {
+
     WebServer webServer;
     int port;
-    MapDB mapDB;
+    static PlanrougeFactory f;
+    static ContainerRoot containerRoot;
+
     @Start
     public void start() {
         createWebServer();
         webServer.start();
-        mapDB = new MapDB("BD_Victime","password","Collection_Victime");
-        Log.debug("powet");
-        System.out.println("Server running at " + webServer.getUri());
+
+        f = new MainFactory().getPlanrougeFactory();
+        containerRoot =f.createContainerRoot();
+
+        Log.debug("Server running at " + webServer.getUri());
         // start server
     }
 
@@ -57,7 +65,10 @@ public class ServerPlanRouge extends AbstractComponentType {
                 .add(new StaticFileHandler("/web"));
     }
 
-    public MapDB getMapDB(){
-        return mapDB;
+    public static ContainerRoot getContainerRoot(){
+        return containerRoot;
+    }
+    public static PlanrougeFactory getPlanrougeFactory(){
+        return f;
     }
 }

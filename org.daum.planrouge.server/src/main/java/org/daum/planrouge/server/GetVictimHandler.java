@@ -1,6 +1,8 @@
 package org.daum.planrouge.server;
 
 import org.json.JSONException;
+import org.kevoree.planrouge.ContainerRoot;
+import org.kevoree.planrouge.PlanrougeFactory;
 import org.webbitserver.*;
 
 /**
@@ -12,6 +14,14 @@ import org.webbitserver.*;
  */
 public class GetVictimHandler extends BaseWebSocketHandler {
     private int connectionCount;
+
+    private PlanrougeFactory planrougeFactory;
+    private ContainerRoot containerRoot;
+
+    public GetVictimHandler(PlanrougeFactory planrougeFactory, ContainerRoot containerRoot) {
+        this.planrougeFactory = planrougeFactory;
+        this.containerRoot = containerRoot;
+    }
 
     public void onOpen(WebSocketConnection connection) {
         System.out.println("Nouvelle connexion");
@@ -28,7 +38,7 @@ public class GetVictimHandler extends BaseWebSocketHandler {
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         System.out.println("GetVictimHandler :::  ON_MESSAGE");
 
-        connection.send("Nombre de victimes :: "+"\n"); // echo back message in upper case
+        connection.send("Nombre de victimes :: " + "\n"); // echo back message in upper case
 
     }
 }

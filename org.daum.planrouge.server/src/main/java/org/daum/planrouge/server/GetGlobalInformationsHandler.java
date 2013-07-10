@@ -1,7 +1,13 @@
 package org.daum.planrouge.server;
 
 import org.json.JSONException;
+import org.kevoree.log.Log;
+import org.kevoree.planrouge.ContainerRoot;
+import org.kevoree.planrouge.Intervention;
+import org.kevoree.planrouge.PlanrougeFactory;
 import org.webbitserver.*;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,28 +19,34 @@ import org.webbitserver.*;
 public class GetGlobalInformationsHandler extends BaseWebSocketHandler{
     private int connectionCount;
 
+    private PlanrougeFactory planrougeFactory;
+    private ContainerRoot containerRoot;
+
+    public GetGlobalInformationsHandler(PlanrougeFactory pPlanrougeFactory, ContainerRoot pContainerRoot) {
+        this.planrougeFactory = pPlanrougeFactory;
+        this.containerRoot = pContainerRoot;
+    }
     public void onOpen(WebSocketConnection connection) {
-        System.out.println("Nouvelle connexion");
+        Log.debug("Nouvelle connexion");
         connection.send("GetGlobalInformationsHandler ::: " + connectionCount + " other connections active");
         connectionCount++;
     }
 
     public void onClose(WebSocketConnection connection) {
-        System.out.println("GetGlobalInformationsHandler ::: Connexion fermée ");
+        Log.debug("GetGlobalInformationsHandler ::: Connexion fermée ");
         connectionCount--;
 
     }
 
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
-        System.out.println("GetGlobalInformationsHandler ::: ON_MESSAGE");
+        Log.debug("GetGlobalInformationsHandler ::: ON_MESSAGE");
 
-        MapDB mapDB = new MapDB("BD_Victime","password","Collection_Victime");
-        int nbVictim = mapDB.getMap().size();
-        String retour = "NOMBRE DE VICTIME ::: "+nbVictim+"\n";
-        for (String mapKey : mapDB.getMap().keySet()) {
-           retour += " clé :: "+mapKey+"  |  valeur :: "+mapDB.getMap().get(mapKey)+"\n";
-        }
-        mapDB.close();
+        //List victimes;
+
+        int size = containerRoot.findInterventionsByID("1").getVictimes().size();
+
+        String retour = "NOMBRE DE VICTIME ::: "+size+"\n";
+
         connection.send(retour); // echo back message in upper case
 
     }
