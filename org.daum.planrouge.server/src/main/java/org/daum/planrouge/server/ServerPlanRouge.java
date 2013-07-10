@@ -4,7 +4,9 @@ import org.kevoree.annotation.*;
 import org.kevoree.framework.AbstractComponentType;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
+import org.kevoree.planrouge.Intervention;
 import org.kevoree.planrouge.PlanrougeFactory;
+import org.kevoree.planrouge.Victime;
 import org.kevoree.planrouge.factory.MainFactory;
 import org.webbitserver.WebServer;
 import org.webbitserver.WebServers;
@@ -24,18 +26,24 @@ import org.webbitserver.handler.StaticFileHandler;
 @ComponentType
 public class ServerPlanRouge extends AbstractComponentType {
 
-    WebServer webServer;
-    int port;
-    static PlanrougeFactory f;
-    static ContainerRoot containerRoot;
-
+    private WebServer webServer;
+    private int port;
+    private PlanrougeFactory planrougeFactory;
+    private ContainerRoot containerRoot;
+      private int i;
     @Start
     public void start() {
+
+        planrougeFactory = new MainFactory().getPlanrougeFactory();
+        containerRoot = planrougeFactory.createContainerRoot();
+
+        Intervention intervention = planrougeFactory.createIntervention();
+        intervention.setId("1");
+        intervention.setDescription("un train est rentré dans un avion en plein vol");
+        containerRoot.addInterventions(intervention);
+
         createWebServer();
         webServer.start();
-
-        f = new MainFactory().getPlanrougeFactory();
-        containerRoot =f.createContainerRoot();
 
         Log.debug("Server running at " + webServer.getUri());
         // start server
@@ -44,31 +52,25 @@ public class ServerPlanRouge extends AbstractComponentType {
     @Stop
     public void stop() {
         webServer.stop();
-
     }
 
 
     @Update
     public void update() {
         webServer.stop();
-        createWebServer()   ;
+        createWebServer();
         webServer.start();
         // TODO update webbit server port
+        Log.debug("UPDATE :: Server running at " + webServer.getUri());
     }
 
 
-    private void createWebServer(){
+    private void createWebServer() {
         webServer = WebServers.createWebServer(Integer.parseInt(getDictionary().get("port").toString()))
-                .add("/addVictim", new AddVictimHandler())
-                .add("/getVictim", new GetVictimHandler())
-                .add("/getGlobalInformations", new GetGlobalInformationsHandler())
+                .add("/addVictim", new AddVictimHandler(planrougeFactory, containerRoot, i))
+                .add("/getVictim", new GetVictimHandler(planrougeFactory, containerRoot))
+                .add("/getGlobalInformations", new GetGlobalInformationsHandler(planrougeFactory, containerRoot))
                 .add(new StaticFileHandler("/web"));
     }
 
-    public static ContainerRoot getContainerRoot(){
-        return containerRoot;
-    }
-    public static PlanrougeFactory getPlanrougeFactory(){
-        return f;
-    }
 }
