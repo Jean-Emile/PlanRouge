@@ -1,45 +1,41 @@
 package org.daum.planrouge.server;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.webbitserver.*;
-
-import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.
  * User: cbriand
  * Date: 09/07/13
- * Time: 13:39
+ * Time: 15:20
  * To change this template use File | Settings | File Templates.
  */
-public class AddVictimHandler extends BaseWebSocketHandler {
-
+public class GetGlobalInformationsHandler extends BaseWebSocketHandler{
     private int connectionCount;
-    private int i=0;
+
     public void onOpen(WebSocketConnection connection) {
         System.out.println("Nouvelle connexion");
-        connection.send("AddVictimHandler ::: " + connectionCount + " other connections active");
+        connection.send("GetGlobalInformationsHandler ::: " + connectionCount + " other connections active");
         connectionCount++;
     }
 
     public void onClose(WebSocketConnection connection) {
-        System.out.println("AddVictimHandler ::: Connexion fermée ");
+        System.out.println("GetGlobalInformationsHandler ::: Connexion fermée ");
         connectionCount--;
 
     }
 
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
-        System.out.println("AddVictimHandler ::: ON_MESSAGE");
-     //   ServerPlanRouge serverPlanRouge = new ServerPlanRouge();
+        System.out.println("GetGlobalInformationsHandler ::: ON_MESSAGE");
 
         MapDB mapDB = new MapDB("BD_Victime","password","Collection_Victime");
-        mapDB.addInMap(String.valueOf(i++),message);
-        mapDB.commit();
-
-        int size = mapDB.getMap().size();
+        int nbVictim = mapDB.getMap().size();
+        String retour = "NOMBRE DE VICTIME ::: "+nbVictim+"\n";
+        for (String mapKey : mapDB.getMap().keySet()) {
+           retour += " clé :: "+mapKey+"  |  valeur :: "+mapDB.getMap().get(mapKey)+"\n";
+        }
         mapDB.close();
-        connection.send("Nombre de VICTIMES:: "+ size +"\n");
+        connection.send(retour); // echo back message in upper case
+
     }
 }
