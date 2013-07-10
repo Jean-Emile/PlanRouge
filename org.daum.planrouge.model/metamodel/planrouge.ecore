@@ -5,7 +5,7 @@
 
   <eClassifiers xsi:type="ecore:EClass" name="Intervention">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"  iD="true"/>
-
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//InterventionType"/>
 
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"  containment="true"/>
