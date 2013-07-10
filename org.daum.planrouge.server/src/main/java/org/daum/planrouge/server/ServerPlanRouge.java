@@ -2,6 +2,9 @@ package org.daum.planrouge.server;
 
 import org.kevoree.annotation.*;
 import org.kevoree.framework.AbstractComponentType;
+import org.webbitserver.WebServer;
+import org.webbitserver.WebServers;
+import org.webbitserver.handler.StaticFileHandler;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,25 +14,39 @@ import org.kevoree.framework.AbstractComponentType;
  * To change this template use File | Settings | File Templates.
  */
 @Library(name = "PlanRouge")
+@DictionaryType({
+        @DictionaryAttribute(name = "port", defaultValue = "8080", optional = false)
+})
 @ComponentType
 public class ServerPlanRouge extends AbstractComponentType {
+    WebServer webServer;
+    int port;
 
     @Start
     public void start() {
 
-               // start server
+        webServer = WebServers.createWebServer(Integer.parseInt(getDictionary().get("port").toString()))
+                .add("/addVictim", new AddVictimHandler())
+                .add(new StaticFileHandler("/web"));
+        webServer.start();
+        System.out.println("Server running at " + webServer.getUri());
+        // start server
     }
 
     @Stop
     public void stop() {
-
+        webServer.stop();
 
     }
 
 
     @Update
     public void update() {
-
-           // TODO update webbit server port
+        webServer.stop();
+        webServer = WebServers.createWebServer(Integer.parseInt(getDictionary().get("port").toString()))
+                .add("/addVictim", new AddVictimHandler())
+                .add(new StaticFileHandler("/web"));
+        webServer.start();
+        // TODO update webbit server port
     }
 }
