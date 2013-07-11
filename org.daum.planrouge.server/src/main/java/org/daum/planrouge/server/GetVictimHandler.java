@@ -1,8 +1,8 @@
 package org.daum.planrouge.server;
 
 import org.json.JSONException;
-import org.kevoree.planrouge.ContainerRoot;
-import org.kevoree.planrouge.PlanrougeFactory;
+import org.kevoree.log.Log;
+import org.kevoree.planrouge.*;
 import org.webbitserver.*;
 
 /**
@@ -38,7 +38,22 @@ public class GetVictimHandler extends BaseWebSocketHandler {
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         System.out.println("GetVictimHandler :::  ON_MESSAGE");
 
-        connection.send("Nombre de victimes :: " + "\n"); // echo back message in upper case
+       Victime victime = containerRoot.findInterventionsByID("1").findVictimesByID(message);
+        Position postion = victime.getPosRef();
+        GpsPoint position2 = (GpsPoint) victime.getPosRef();
+
+        if(victime.getPosRef() instanceof GpsPoint){
+            Log.debug("GPSPoint instance");
+        }else if ( victime.getPosRef() instanceof PositionCivil){
+            Log.debug("PositionCivil instance");
+        }
+
+
+
+        connection.send("Victime :: "+victime.getNom()+"  priorité :::"+"  GPS :: "); // echo back message in upper case
 
     }
+
+
+
 }
