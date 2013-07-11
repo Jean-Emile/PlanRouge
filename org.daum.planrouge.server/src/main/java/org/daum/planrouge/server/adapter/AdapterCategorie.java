@@ -2,6 +2,7 @@ package org.daum.planrouge.server.adapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.kevoree.log.Log;
 import org.kevoree.planrouge.Categorie;
 import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.PlanrougeFactory;
@@ -28,15 +29,23 @@ public class AdapterCategorie {
 
 
     // Parse JSONObject to Categorie
-    public Categorie parseJsonToCategorie(JSONObject jsonCategorie) throws JSONException {
+    public Categorie parseJsonToCategorie(JSONObject jsonCategorie){
         Categorie categorie = this.planrougeFactory.createCategorie();
 
         Iterator iteratorNewObject = jsonCategorie.keys();
         while (iteratorNewObject.hasNext()) {
             String keyPositionCivile = iteratorNewObject.next().toString();
-            String value = jsonCategorie.getString(keyPositionCivile);
+            String value = null;
+            try {
+                value = jsonCategorie.getString(keyPositionCivile);
+            } catch (JSONException e) {
+                Log.debug(e.getMessage());
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                return null;
+            }
             if (keyPositionCivile.equals("code")) {
                 categorie.setId(value);
+                Log.debug(value);
             }
         }
         return categorie;

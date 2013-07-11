@@ -50,20 +50,15 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         //List victimes;
 
         JSONArray informations = new JSONArray();
-        informations.put(0,adapterVictime.getNombreVictimes());
-        informations.put(1,adapterVictime.getNombreVictimeParCategorie()[0]);
-        informations.put(2,adapterVictime.getNombreVictimeParCategorie()[1]);
-        informations.put(3,adapterVictime.getNombreVictimeParCategorie()[2]);
-        informations.put(4,adapterVictime.getNombreVictimeParCategorie()[3]);
-        informations.put(5,adapterVictime.getNombreVictimeParCategorie()[4]);
-
-        String retour = "NOMBRE DE VICTIME ::: " + adapterVictime.getNombreVictimes()
-                + "  Categorie 1 :: " + adapterVictime.getNombreVictimeParCategorie()[0]
-                + "  Categorie 2 :: " + adapterVictime.getNombreVictimeParCategorie()[1]
-                + "  Categorie 3 :: " + adapterVictime.getNombreVictimeParCategorie()[2]
-                + "  Categorie 4 :: " + adapterVictime.getNombreVictimeParCategorie()[3]
-                + "  Categorie 5 :: " + adapterVictime.getNombreVictimeParCategorie()[4];
-
+        informations.put(0,"graph");
+        informations.put(1,adapterVictime.getNombreVictimes());
+        informations.put(2,adapterVictime.getNombreVictimeParCategorie()[0]);
+        informations.put(3,adapterVictime.getNombreVictimeParCategorie()[1]);
+        informations.put(4,adapterVictime.getNombreVictimeParCategorie()[2]);
+        informations.put(5,adapterVictime.getNombreVictimeParCategorie()[3]);
+        informations.put(6,adapterVictime.getNombreVictimeParCategorie()[4]);
+        informations.put(7,containerRoot.findInterventionsByID("1").getDescription());
+        Log.debug(informations.toString());
         connection.send(informations.toString()); // echo back message in upper case
 
     }

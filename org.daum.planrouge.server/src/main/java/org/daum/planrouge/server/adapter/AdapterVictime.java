@@ -35,9 +35,16 @@ public class AdapterVictime {
 
 
 
-    public Victime parseJsonToVictime(String jsonMessage) throws JSONException {
+    public Victime parseJsonToVictime(String jsonMessage){
 
-        JSONObject jNewObject = new JSONObject(jsonMessage);
+        JSONObject jNewObject = null;
+        try {
+            jNewObject = new JSONObject(jsonMessage);
+        } catch (JSONException e) {
+            Log.debug(e.getMessage());
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return null;
+        }
         Victime victime = this.planrougeFactory.createVictime();
 
         //iterarateur pour parcourir les différentes valeurs du message reçu
@@ -49,13 +56,28 @@ public class AdapterVictime {
             //Si la clé correspond à Identity
             if (key.equals("identity")) {
                 // On récupére l'objet JSON identity
-                JSONObject IdentityObject = jNewObject.getJSONObject(key);
+                JSONObject IdentityObject = null;
+                try {
+                    IdentityObject = jNewObject.getJSONObject(key);
+                } catch (JSONException e) {
+                    Log.debug(e.getMessage());
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    return null;
+                }
                 //on crée un iterator pour l'objet identity
                 Iterator iteratorNewObject = IdentityObject.keys();
                 while (iteratorNewObject.hasNext()) {
                     String keyIdentity = iteratorNewObject.next().toString();
-                    String value = IdentityObject.getString(keyIdentity);
+                    String value = null;
+                    try {
+                        value = IdentityObject.getString(keyIdentity);
+                    } catch (JSONException e) {
+                        Log.debug(e.getMessage());
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        return null;
+                    }
                     if (keyIdentity.equals("id")) {
+
                         victime.setId(value);
                     } else if (keyIdentity.equals("nom")) {
                         victime.setNom(value);
@@ -65,14 +87,28 @@ public class AdapterVictime {
                 }
             } else if (key.equals("positionRef")) {
                 Log.debug("positionRef");
-                JSONObject jsonPositionRef = jNewObject.getJSONObject(key);
+                JSONObject jsonPositionRef = null;
+                try {
+                    jsonPositionRef = jNewObject.getJSONObject(key);
+                } catch (JSONException e) {
+                    Log.debug(e.getMessage());
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    return null;
+                }
                 Iterator iteratorPositionRef = jsonPositionRef.keys();
                 while (iteratorPositionRef.hasNext()) {
                     String keyPositionRef = iteratorPositionRef.next().toString();
                     Log.debug(keyPositionRef);
                     if (keyPositionRef.equals("GPSPoint")) {
                         // On récupére l'objet JSON GPSPoint
-                        JSONObject jsonGPSPoint = jsonPositionRef.getJSONObject(keyPositionRef);
+                        JSONObject jsonGPSPoint = null;
+                        try {
+                            jsonGPSPoint = jsonPositionRef.getJSONObject(keyPositionRef);
+                        } catch (JSONException e) {
+                            Log.debug(e.getMessage());
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            return null;
+                        }
 
                         AdapterGpsPoint adapterGpsPoint = new AdapterGpsPoint(planrougeFactory,containerRoot);
                         Position gpsPoint = adapterGpsPoint.parseJsonToGPS(jsonGPSPoint);
@@ -82,7 +118,14 @@ public class AdapterVictime {
                         }
                     } else if (keyPositionRef.equals("PositionCivile")) {
                         // On récupére l'objet JSON PositionCivile
-                        JSONObject jsonGPSPoint = jsonPositionRef.getJSONObject(keyPositionRef);
+                        JSONObject jsonGPSPoint = null;
+                        try {
+                            jsonGPSPoint = jsonPositionRef.getJSONObject(keyPositionRef);
+                        } catch (JSONException e) {
+                            Log.debug(e.getMessage());
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            return null;
+                        }
                         AdapterPositionCivile adapterPositionCivile = new AdapterPositionCivile(planrougeFactory,containerRoot) ;
                         Position positionCivile = adapterPositionCivile.parseJsonToPositionCivile(jsonGPSPoint);
                         if (positionCivile != null) {
@@ -91,13 +134,27 @@ public class AdapterVictime {
                     }
                 }
             } else if (key.equals("positionDestination")) {
-                JSONObject jsonPositionDestination = jNewObject.getJSONObject(key);
+                JSONObject jsonPositionDestination = null;
+                try {
+                    jsonPositionDestination = jNewObject.getJSONObject(key);
+                } catch (JSONException e) {
+                    Log.debug(e.getMessage());
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    return null;
+                }
                 Iterator iteratorpositionDestination = jsonPositionDestination.keys();
                 while (iteratorpositionDestination.hasNext()) {
                     String keyPositionRef = iteratorpositionDestination.next().toString();
                     if (keyPositionRef.equals("GPSPoint")) {
                         // On récupére l'objet JSON GPSPoint
-                        JSONObject jsonGPSPoint = jsonPositionDestination.getJSONObject(keyPositionRef);
+                        JSONObject jsonGPSPoint = null;
+                        try {
+                            jsonGPSPoint = jsonPositionDestination.getJSONObject(keyPositionRef);
+                        } catch (JSONException e) {
+                            Log.debug(e.getMessage());
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            return null;
+                        }
                         AdapterGpsPoint adapterGpsPoint = new AdapterGpsPoint(planrougeFactory,containerRoot);
                         Position gpsPoint = adapterGpsPoint.parseJsonToGPS(jsonGPSPoint);
                         if (gpsPoint != null) {
@@ -105,7 +162,14 @@ public class AdapterVictime {
                         }
                     } else if (keyPositionRef.equals("PositionCivile")) {
                         // On récupére l'objet JSON PositionCivile
-                        JSONObject jsonGPSPoint = jsonPositionDestination.getJSONObject(keyPositionRef);
+                        JSONObject jsonGPSPoint = null;
+                        try {
+                            jsonGPSPoint = jsonPositionDestination.getJSONObject(keyPositionRef);
+                        } catch (JSONException e) {
+                            Log.debug(e.getMessage());
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            return null;
+                        }
 
                         AdapterPositionCivile adapterPositionCivile = new AdapterPositionCivile(planrougeFactory,containerRoot) ;
                         Position positionCivile = adapterPositionCivile.parseJsonToPositionCivile(jsonGPSPoint);
@@ -116,7 +180,14 @@ public class AdapterVictime {
                 }
             } else if (key.equals("categorie")) {
                 // On récupére l'objet JSON Categorie
-                JSONObject jsonGPSPoint = jNewObject.getJSONObject(key);
+                JSONObject jsonGPSPoint = null;
+                try {
+                    jsonGPSPoint = jNewObject.getJSONObject(key);
+                } catch (JSONException e) {
+                    Log.debug(e.getMessage());
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    return null;
+                }
                 AdapterCategorie adapterCategorie = new AdapterCategorie(planrougeFactory,containerRoot);
                 Categorie categorie =adapterCategorie.parseJsonToCategorie(jsonGPSPoint);
                 if (categorie != null) {

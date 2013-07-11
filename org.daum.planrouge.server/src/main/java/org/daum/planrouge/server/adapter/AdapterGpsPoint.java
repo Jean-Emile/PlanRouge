@@ -2,6 +2,7 @@ package org.daum.planrouge.server.adapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.GpsPoint;
 import org.kevoree.planrouge.PlanrougeFactory;
@@ -27,14 +28,21 @@ public class AdapterGpsPoint {
     }
 
     // Parse JSONObject to GPSPoint
-    public GpsPoint parseJsonToGPS(JSONObject jsonGPSPoint) throws JSONException {
+    public GpsPoint parseJsonToGPS(JSONObject jsonGPSPoint){
 
         GpsPoint gpsPoint = this.planrougeFactory.createGpsPoint();
         //on crée un iterator pour l'objet identity
         Iterator iteratorNewObject = jsonGPSPoint.keys();
         while (iteratorNewObject.hasNext()) {
             String keyGPS = iteratorNewObject.next().toString();
-            String value = jsonGPSPoint.getString(keyGPS);
+            String value = null;
+            try {
+                value = jsonGPSPoint.getString(keyGPS);
+            } catch (JSONException e) {
+                Log.debug(e.getMessage());
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                return null;
+            }
             if (keyGPS.equals("latitude")) {
                 gpsPoint.setLatitude(Integer.parseInt(value));
             } else if (keyGPS.equals("longitude")) {
