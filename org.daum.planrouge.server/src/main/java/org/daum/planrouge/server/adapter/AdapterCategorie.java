@@ -52,5 +52,17 @@ public class AdapterCategorie {
     }
 
 
+    public JSONObject parseCategorieToJson (Categorie categorie) throws JSONException {
+
+        JSONObject priorite = new JSONObject();
+
+        priorite.put("code",categorie.getId());
+
+        return priorite;
+
+
+    }
+
+
 
 }

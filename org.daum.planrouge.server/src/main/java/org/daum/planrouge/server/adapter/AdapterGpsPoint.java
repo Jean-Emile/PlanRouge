@@ -58,4 +58,14 @@ public class AdapterGpsPoint {
         return gpsPoint;
     }
 
+    public JSONObject parseGPSToJson (GpsPoint gpsPoint) throws JSONException {
+        JSONObject jsonGps = new JSONObject();
+        jsonGps.put("latitude", gpsPoint.getLatitude());
+        jsonGps.put("longitude", gpsPoint.getLongitude());
+        jsonGps.put("precision", gpsPoint.getMode());
+        jsonGps.put("heure", gpsPoint.getHorodatage());
+
+        return jsonGps;
+    }
+
 }

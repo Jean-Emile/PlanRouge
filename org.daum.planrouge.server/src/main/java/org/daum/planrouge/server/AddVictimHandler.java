@@ -1,14 +1,11 @@
 package org.daum.planrouge.server;
 
 import org.daum.planrouge.server.adapter.AdapterVictime;
-import org.json.JSONArray;
+import org.daum.planrouge.server.connections.Connections;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.kevoree.planrouge.*;
 import org.kevoree.log.Log;
 import org.webbitserver.*;
-
-import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,25 +17,27 @@ import java.util.Iterator;
 public class AddVictimHandler extends BaseWebSocketHandler {
 
     private int connectionCount;
-    private int i = 0;
+    private Connections connections ;
     private PlanrougeFactory planrougeFactory;
     private ContainerRoot containerRoot;
 
 
-    public AddVictimHandler(PlanrougeFactory planrougeFactory, ContainerRoot containerRoot, int i) {
+    public AddVictimHandler(PlanrougeFactory planrougeFactory, ContainerRoot containerRoot, Connections connections) {
         this.planrougeFactory = planrougeFactory;
         this.containerRoot = containerRoot;
-        this.i = i;
+        this.connections = connections;
     }
 
     public void onOpen(WebSocketConnection connection) {
         Log.debug("Nouvelle connexion");
+        connections.getConnectionAddVictim().addConnections(connection);
         connection.send("AddVictimHandler ::: " + connectionCount + " other connections active");
         connectionCount++;
     }
 
     public void onClose(WebSocketConnection connection) {
         Log.debug("AddVictimHandler ::: Connexion fermée ");
+        connections.getConnectionAddVictim().removeConnections(connection);
         connectionCount--;
 
     }
@@ -51,10 +50,13 @@ public class AddVictimHandler extends BaseWebSocketHandler {
 
         if (victime != null) {
             containerRoot.findInterventionsByID("1").addVictimes(victime);
+            adapterVictime.parseVictimeToJson(victime);
             connection.send("Victime ajouté à la base de données");
         } else {
             connection.send("Erreur");
         }
+
+        connections.getConnectionGlobalInformations().refresh();
     }
 
 

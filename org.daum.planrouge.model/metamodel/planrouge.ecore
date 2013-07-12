@@ -36,6 +36,7 @@
 
   <eClassifiers xsi:type="ecore:EClass" name="PositionCivil" eSuperTypes="#//Position">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nomRue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nomVille" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cp" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numeroRue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="pays" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -54,6 +55,7 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="prenom" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="age" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="sexe" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateNaissance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
 
     <eStructuralFeatures xsi:type="ecore:EReference" name="priorite" eType="#//Categorie"/>
 

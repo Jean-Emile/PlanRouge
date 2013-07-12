@@ -1,12 +1,12 @@
 package org.daum.planrouge.server;
 
+import org.daum.planrouge.server.connections.Connections;
 import org.kevoree.annotation.*;
 import org.kevoree.framework.AbstractComponentType;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.Intervention;
 import org.kevoree.planrouge.PlanrougeFactory;
-import org.kevoree.planrouge.Victime;
 import org.kevoree.planrouge.factory.MainFactory;
 import org.webbitserver.WebServer;
 import org.webbitserver.WebServers;
@@ -31,17 +31,19 @@ public class ServerPlanRouge extends AbstractComponentType {
     private PlanrougeFactory planrougeFactory;
     private ContainerRoot containerRoot;
       private int i;
+    private Connections connections;
     @Start
     public void start() {
 
         planrougeFactory = new MainFactory().getPlanrougeFactory();
         containerRoot = planrougeFactory.createContainerRoot();
 
+
         Intervention intervention = planrougeFactory.createIntervention();
         intervention.setId("1");
         intervention.setDescription("un train est rentré dans un avion en plein vol");
         containerRoot.addInterventions(intervention);
-
+        connections = new Connections(planrougeFactory,containerRoot);
         createWebServer();
         webServer.start();
 
@@ -67,9 +69,9 @@ public class ServerPlanRouge extends AbstractComponentType {
 
     private void createWebServer() {
         webServer = WebServers.createWebServer(Integer.parseInt(getDictionary().get("port").toString()))
-                .add("/addVictim", new AddVictimHandler(planrougeFactory, containerRoot, i))
-                .add("/getVictim", new GetVictimHandler(planrougeFactory, containerRoot))
-                .add("/getGlobalInformations", new GetGlobalInformationsHandler(planrougeFactory, containerRoot))
+                .add("/addVictim", new AddVictimHandler(planrougeFactory, containerRoot, connections))
+                .add("/getVictim", new GetVictimHandler(planrougeFactory, containerRoot, connections))
+                .add("/getGlobalInformations", new GetGlobalInformationsHandler(planrougeFactory, containerRoot, connections))
                 .add(new StaticFileHandler("/web"));
     }
 

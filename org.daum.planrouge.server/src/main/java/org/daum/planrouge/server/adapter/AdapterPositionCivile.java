@@ -56,4 +56,17 @@ public class AdapterPositionCivile {
         return positionCivile;
     }
 
+    public JSONObject parsePositionCivileToJson (PositionCivil positionCivile) throws JSONException {
+
+        JSONObject jsonGps = new JSONObject();
+        jsonGps.put("numeroRue", positionCivile.getNumeroRue());
+        jsonGps.put("cp", positionCivile.getCp());
+        jsonGps.put("pays", positionCivile.getPays());
+        jsonGps.put("nomRue", positionCivile.getNomRue());
+        jsonGps.put("nomVille", positionCivile.getNomVille());
+        jsonGps.put("heure", positionCivile.getNomRue());
+
+        return jsonGps;
+    }
+
 }

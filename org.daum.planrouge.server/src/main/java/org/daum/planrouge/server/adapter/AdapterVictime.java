@@ -1,5 +1,6 @@
 package org.daum.planrouge.server.adapter;
 
+import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -21,28 +22,98 @@ public class AdapterVictime {
     private ContainerRoot containerRoot;
 
 
-    public AdapterVictime(PlanrougeFactory planrougeFactory, ContainerRoot containerRoot){
+    public AdapterVictime(PlanrougeFactory planrougeFactory, ContainerRoot containerRoot) {
         this.planrougeFactory = planrougeFactory;
         this.containerRoot = containerRoot;
     }
 
 
+    public JSONObject parseVictimeToJson(Victime victime) throws JSONException {
+
+        JSONObject jsonObject = new JSONObject();
+
+        //Identité
+        JSONObject jsonIdentity = new JSONObject();
+
+        jsonIdentity.put("nom", victime.getNom());
+        jsonIdentity.put("prenom", victime.getPrenom());
+        jsonIdentity.put("id", victime.getId());
+        jsonIdentity.put("age", victime.getAge());
+        jsonIdentity.put("dateNaissance", victime.getDateNaissance());
+
+        jsonObject.put("identite", jsonIdentity);
 
 
-    public JSONObject parseVictimeToJson(Victime victime){
+        if (victime.getPosRef() != null) {
+            //Poistion de Référence
+            JSONObject position = new JSONObject();
+
+            if (victime.getPosRef() instanceof GpsPoint) {
+                //Position GPS
+                GpsPoint gpsPoint = (GpsPoint) victime.getPosRef();
+                AdapterGpsPoint adapterGpsPoint = new AdapterGpsPoint(planrougeFactory, containerRoot);
+                JSONObject jGpsPoint = adapterGpsPoint.parseGPSToJson(gpsPoint);
+
+                position.put("gpsPoint", jGpsPoint);
+
+            } else if (victime.getPosRef() instanceof PositionCivil) {
+                //Position Civile
+                PositionCivil positionCivile = (PositionCivil) victime.getPosRef();
+                AdapterPositionCivile adapterPositionCivile = new AdapterPositionCivile(planrougeFactory, containerRoot);
+                JSONObject jPositionCivile = adapterPositionCivile.parsePositionCivileToJson(positionCivile);
+
+                position.put("positionCivile", jPositionCivile);
+            }
+
+
+            jsonObject.put("posRef", position);
+        }
+
+        if (victime.getPosDestination() != null) {
+            //Destination
+            JSONObject position = new JSONObject();
+
+            if (victime.getPosRef() instanceof GpsPoint) {
+                //Position GPS
+                GpsPoint gpsPoint = (GpsPoint) victime.getPosDestination();
+                AdapterGpsPoint adapterGpsPoint = new AdapterGpsPoint(planrougeFactory, containerRoot);
+                JSONObject jGpsPoint = adapterGpsPoint.parseGPSToJson(gpsPoint);
+
+                position.put("gpsPoint", jGpsPoint);
+
+            } else if (victime.getPosRef() instanceof PositionCivil) {
+                //Position Civile
+                PositionCivil positionCivile = (PositionCivil) victime.getPosDestination();
+                AdapterPositionCivile adapterPositionCivile = new AdapterPositionCivile(planrougeFactory, containerRoot);
+                JSONObject jPositionCivile = adapterPositionCivile.parsePositionCivileToJson(positionCivile);
+
+                position.put("positionCivile", jPositionCivile);
+            }
+
+            jsonObject.put("positionDestination", position);
+        }
+        if (victime.getPriorite() != null) {
+            //Priority
+            AdapterCategorie adapterCategorie = new AdapterCategorie(planrougeFactory, containerRoot);
+            JSONObject jPriorite = adapterCategorie.parseCategorieToJson(victime.getPriorite());
+
+            jsonObject.put("categorie", jPriorite);
+        }
+
+        Log.debug("VICTIME to JSON " + jsonObject);
+
         return new JSONObject();
     }
 
 
-
-    public Victime parseJsonToVictime(String jsonMessage){
+    public Victime parseJsonToVictime(String jsonMessage) {
 
         JSONObject jNewObject = null;
         try {
             jNewObject = new JSONObject(jsonMessage);
         } catch (JSONException e) {
             Log.debug(e.getMessage());
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
             return null;
         }
         Victime victime = this.planrougeFactory.createVictime();
@@ -52,16 +123,16 @@ public class AdapterVictime {
         while (iterator.hasNext()) {
             // On récupère une clé du message
             String key = iterator.next().toString();
-            Log.debug(key);
+
             //Si la clé correspond à Identity
             if (key.equals("identity")) {
-                // On récupére l'objet JSON identity
+                // Get Identity Object
                 JSONObject IdentityObject = null;
                 try {
                     IdentityObject = jNewObject.getJSONObject(key);
                 } catch (JSONException e) {
                     Log.debug(e.getMessage());
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
                     return null;
                 }
                 //on crée un iterator pour l'objet identity
@@ -73,60 +144,59 @@ public class AdapterVictime {
                         value = IdentityObject.getString(keyIdentity);
                     } catch (JSONException e) {
                         Log.debug(e.getMessage());
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                         return null;
                     }
                     if (keyIdentity.equals("id")) {
-
                         victime.setId(value);
                     } else if (keyIdentity.equals("nom")) {
                         victime.setNom(value);
                     } else if (keyIdentity.equals("prenom")) {
                         victime.setPrenom(value);
+                    } else if (keyIdentity.equals("sexe")) {
+                        victime.setAge(Integer.parseInt(value));
+                    } else if (keyIdentity.equals("dateNaissance")) {
+                        victime.setDateNaissance(value);
                     }
                 }
             } else if (key.equals("positionRef")) {
-                Log.debug("positionRef");
+
                 JSONObject jsonPositionRef = null;
                 try {
                     jsonPositionRef = jNewObject.getJSONObject(key);
                 } catch (JSONException e) {
                     Log.debug(e.getMessage());
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     return null;
                 }
                 Iterator iteratorPositionRef = jsonPositionRef.keys();
                 while (iteratorPositionRef.hasNext()) {
                     String keyPositionRef = iteratorPositionRef.next().toString();
-                    Log.debug(keyPositionRef);
-                    if (keyPositionRef.equals("GPSPoint")) {
+
+                    if (keyPositionRef.equals("gpsPoint")) {
                         // On récupére l'objet JSON GPSPoint
                         JSONObject jsonGPSPoint = null;
                         try {
                             jsonGPSPoint = jsonPositionRef.getJSONObject(keyPositionRef);
                         } catch (JSONException e) {
                             Log.debug(e.getMessage());
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                             return null;
                         }
 
-                        AdapterGpsPoint adapterGpsPoint = new AdapterGpsPoint(planrougeFactory,containerRoot);
+                        AdapterGpsPoint adapterGpsPoint = new AdapterGpsPoint(planrougeFactory, containerRoot);
                         Position gpsPoint = adapterGpsPoint.parseJsonToGPS(jsonGPSPoint);
 
                         if (gpsPoint != null) {
                             victime.setPosRef(gpsPoint);
                         }
-                    } else if (keyPositionRef.equals("PositionCivile")) {
+                    } else if (keyPositionRef.equals("positionCivile")) {
                         // On récupére l'objet JSON PositionCivile
                         JSONObject jsonGPSPoint = null;
                         try {
                             jsonGPSPoint = jsonPositionRef.getJSONObject(keyPositionRef);
                         } catch (JSONException e) {
                             Log.debug(e.getMessage());
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                             return null;
                         }
-                        AdapterPositionCivile adapterPositionCivile = new AdapterPositionCivile(planrougeFactory,containerRoot) ;
+                        AdapterPositionCivile adapterPositionCivile = new AdapterPositionCivile(planrougeFactory, containerRoot);
                         Position positionCivile = adapterPositionCivile.parseJsonToPositionCivile(jsonGPSPoint);
                         if (positionCivile != null) {
                             victime.setPosRef(positionCivile);
@@ -139,39 +209,36 @@ public class AdapterVictime {
                     jsonPositionDestination = jNewObject.getJSONObject(key);
                 } catch (JSONException e) {
                     Log.debug(e.getMessage());
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     return null;
                 }
                 Iterator iteratorpositionDestination = jsonPositionDestination.keys();
                 while (iteratorpositionDestination.hasNext()) {
                     String keyPositionRef = iteratorpositionDestination.next().toString();
-                    if (keyPositionRef.equals("GPSPoint")) {
+                    if (keyPositionRef.equals("gpsPoint")) {
                         // On récupére l'objet JSON GPSPoint
                         JSONObject jsonGPSPoint = null;
                         try {
                             jsonGPSPoint = jsonPositionDestination.getJSONObject(keyPositionRef);
                         } catch (JSONException e) {
                             Log.debug(e.getMessage());
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                             return null;
                         }
-                        AdapterGpsPoint adapterGpsPoint = new AdapterGpsPoint(planrougeFactory,containerRoot);
+                        AdapterGpsPoint adapterGpsPoint = new AdapterGpsPoint(planrougeFactory, containerRoot);
                         Position gpsPoint = adapterGpsPoint.parseJsonToGPS(jsonGPSPoint);
                         if (gpsPoint != null) {
                             victime.addPosDestination(gpsPoint);
                         }
-                    } else if (keyPositionRef.equals("PositionCivile")) {
+                    } else if (keyPositionRef.equals("positionCivile")) {
                         // On récupére l'objet JSON PositionCivile
                         JSONObject jsonGPSPoint = null;
                         try {
                             jsonGPSPoint = jsonPositionDestination.getJSONObject(keyPositionRef);
                         } catch (JSONException e) {
                             Log.debug(e.getMessage());
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                             return null;
                         }
 
-                        AdapterPositionCivile adapterPositionCivile = new AdapterPositionCivile(planrougeFactory,containerRoot) ;
+                        AdapterPositionCivile adapterPositionCivile = new AdapterPositionCivile(planrougeFactory, containerRoot);
                         Position positionCivile = adapterPositionCivile.parseJsonToPositionCivile(jsonGPSPoint);
                         if (positionCivile != null) {
                             victime.addPosDestination(positionCivile);
@@ -185,11 +252,10 @@ public class AdapterVictime {
                     jsonGPSPoint = jNewObject.getJSONObject(key);
                 } catch (JSONException e) {
                     Log.debug(e.getMessage());
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     return null;
                 }
-                AdapterCategorie adapterCategorie = new AdapterCategorie(planrougeFactory,containerRoot);
-                Categorie categorie =adapterCategorie.parseJsonToCategorie(jsonGPSPoint);
+                AdapterCategorie adapterCategorie = new AdapterCategorie(planrougeFactory, containerRoot);
+                Categorie categorie = adapterCategorie.parseJsonToCategorie(jsonGPSPoint);
                 if (categorie != null) {
                     victime.setPriorite(categorie);
                 }
