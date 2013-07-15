@@ -43,6 +43,7 @@
                             <packagePrefix>org.kevoree</packagePrefix>
                             <!--  <modelOnly>true</modelOnly>  -->
                             <json>true</json>
+                            <events>true</events>
                         </configuration>
                     </execution>
                 </executions>
