@@ -1,6 +1,5 @@
 package org.daum.planrouge.server.adapter;
 
-import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -102,7 +101,7 @@ public class AdapterVictime {
 
         Log.debug("VICTIME to JSON " + jsonObject);
 
-        return new JSONObject();
+        return jsonObject;
     }
 
 

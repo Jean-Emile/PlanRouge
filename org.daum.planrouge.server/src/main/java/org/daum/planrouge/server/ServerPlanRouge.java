@@ -47,7 +47,7 @@ public class ServerPlanRouge extends AbstractComponentType {
         createWebServer();
         webServer.start();
 
-        Log.debug("Server running at " + webServer.getUri());
+        Log.info("Server running at " + webServer.getUri());
         // start server
     }
 
@@ -63,7 +63,7 @@ public class ServerPlanRouge extends AbstractComponentType {
         createWebServer();
         webServer.start();
         // TODO update webbit server port
-        Log.debug("UPDATE :: Server running at " + webServer.getUri());
+        Log.info("UPDATE :: Server running at " + webServer.getUri());
     }
 
 

@@ -13,10 +13,8 @@ merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.jexxus/2.0.
 merge 'mvn:org.daum.planrouge/org.daum.planrouge.server/2.0.0-SNAPSHOT'
 addNode node0:JavaSENode
 updateDictionary node0{coreLogLevel="DEBUG",logLevel="DEBUG"}
- {
   addComponent ServerPla330@node0 : ServerPlanRouge {}
 updateDictionary ServerPla330@node0 
-}
 
 addGroup sync:BasicGroup
 addToGroup sync node0

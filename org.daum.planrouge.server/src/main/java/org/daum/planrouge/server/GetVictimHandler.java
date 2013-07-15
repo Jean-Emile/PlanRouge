@@ -1,5 +1,6 @@
 package org.daum.planrouge.server;
 
+import org.daum.planrouge.server.adapter.AdapterVictime;
 import org.daum.planrouge.server.connections.Connections;
 import org.json.JSONException;
 import org.kevoree.log.Log;
@@ -45,30 +46,15 @@ public class GetVictimHandler extends BaseWebSocketHandler {
         System.out.println("GetVictimHandler :::  ON_MESSAGE");
 
         Victime victime = containerRoot.findInterventionsByID("1").findVictimesByID(message);
+        AdapterVictime adapterVictime = new AdapterVictime(planrougeFactory, containerRoot);
+
         if (victime != null) {
-            if (victime.getPosRef() != null) {
-                connection.send("Victime :: " + victime.getNom() + "  priorité :::" + "  GPS :: ");
-            } else {
-                connection.send("Victime :: " + victime.getNom() + "  priorité :::");
-            }
+            Log.debug(adapterVictime.parseVictimeToJson(victime).toString());
+            connection.send(String.valueOf(adapterVictime.parseVictimeToJson(victime)));
+
 
         } else {
             connection.send("Pas de victime à cet ID");
-        }
-        try {
-            Position position = victime.getPosRef();
-        } catch (NullPointerException e) {
-
-        }
-        try {
-            GpsPoint position2 = (GpsPoint) victime.getPosRef();
-            if (victime.getPosRef() instanceof GpsPoint) {
-                Log.debug("GPSPoint instance");
-            } else if (victime.getPosRef() instanceof PositionCivil) {
-                Log.debug("PositionCivil instance");
-            }
-        } catch (NullPointerException e) {
-
         }
 
 
