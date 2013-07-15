@@ -4,6 +4,8 @@ import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.Intervention;
 import org.kevoree.planrouge.PlanrougeFactory;
 import org.kevoree.planrouge.Victime;
+import org.kevoree.planrouge.events.ModelEvent;
+import org.kevoree.planrouge.events.ModelTreeListener;
 import org.kevoree.planrouge.factory.MainFactory;
 
 /**
@@ -20,6 +22,15 @@ public class DemoModel {
         PlanrougeFactory f = new MainFactory().getPlanrougeFactory();
 
         ContainerRoot containerRoot =f.createContainerRoot();
+
+
+        // tree
+        containerRoot.addModelTreeListener(new ModelTreeListener() {
+            @Override
+            public void elementChanged(ModelEvent evt) {
+                System.out.println(evt);
+            }
+        });
 
         Intervention intervention =  f.createIntervention();
         intervention.setId("393939");

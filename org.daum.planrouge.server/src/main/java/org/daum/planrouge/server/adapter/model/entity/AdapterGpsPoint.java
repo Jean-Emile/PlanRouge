@@ -8,6 +8,7 @@ import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.GpsPoint;
 import org.kevoree.planrouge.PlanrougeFactory;
 import org.kevoree.planrouge.container.KMFContainer;
+import org.kevoree.planrouge.impl.GpsPointImpl;
 
 import java.util.Iterator;
 
@@ -28,12 +29,13 @@ public class AdapterGpsPoint extends AbstractAdapter {
         jsonGps.put("longitude", gpsPoint.getLongitude());
         jsonGps.put("precision", gpsPoint.getMode());
         jsonGps.put("heure", gpsPoint.getHorodatage());
+        jsonGps.put("type", container.getClass().getName());
         return jsonGps;
     }
 
     // Parse JSONObject to GPSPoint
     @Override
-    public KMFContainer build(JSONObject json) {
+    public  <T> T  build(JSONObject json) {
         GpsPoint gpsPoint = getModelfactory().createGpsPoint();
         //on crée un iterator pour l'objet identity
         Iterator iteratorNewObject = json.keys();
@@ -58,7 +60,12 @@ public class AdapterGpsPoint extends AbstractAdapter {
             }
         }
 
-        return gpsPoint;
+        return (T) gpsPoint;
+    }
+
+    @Override
+    public String getType() {
+        return GpsPointImpl.class.getName();
     }
 
 }
