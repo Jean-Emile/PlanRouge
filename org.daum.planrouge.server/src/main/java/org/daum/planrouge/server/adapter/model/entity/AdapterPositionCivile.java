@@ -21,7 +21,7 @@ import java.util.Iterator;
  */
 public class AdapterPositionCivile extends AbstractAdapter {
 
-    AdapterFactory adapterFactory;
+    private AdapterFactory adapterFactory;
 
     public AdapterPositionCivile(AdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -44,29 +44,11 @@ public class AdapterPositionCivile extends AbstractAdapter {
     @Override
     public <T> T build(JSONObject json) throws JSONException {
         PositionCivil positionCivile = adapterFactory.getFactory().createPositionCivil();
-        Iterator iteratorNewObject = json.keys();
-        while (iteratorNewObject.hasNext()) {
-            String keyPositionCivile = iteratorNewObject.next().toString();
-            String value = null;
-            try {
-                value = json.getString(keyPositionCivile);
-            } catch (JSONException e) {
-                Log.debug(e.getMessage());
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                return null;
-            }
-            if (keyPositionCivile.equals("cp")) {
-                positionCivile.setCp(value);
-            } else if (keyPositionCivile.equals("nomRue")) {
-                positionCivile.setNomRue(value);
-            } else if (keyPositionCivile.equals("numeroRue")) {
-                positionCivile.setNumeroRue(value);
-            } else if (keyPositionCivile.equals("pays")) {
-                positionCivile.setPays(value);
-            } else if (keyPositionCivile.equals("heure")) {
-                positionCivile.setHorodatage(value);
-            }
-        }
+        positionCivile.setCp(json.getString("cp").toString());
+        positionCivile.setNomRue(json.getString("nomRue").toString());
+        positionCivile.setNumeroRue(json.getString("numeroRue").toString());
+        positionCivile.setPays(json.getString("pays").toString());
+        positionCivile.setHorodatage(json.getString("heure").toString());
         return (T) positionCivile;
     }
 

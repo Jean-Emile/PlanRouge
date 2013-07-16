@@ -21,7 +21,7 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public class AdapterGpsPoint extends AbstractAdapter {
-    AdapterFactory adapterFactory;
+    private AdapterFactory adapterFactory;
     public AdapterGpsPoint(AdapterFactory adapterFactory) {
         super();
         this.adapterFactory = adapterFactory;
@@ -41,33 +41,12 @@ public class AdapterGpsPoint extends AbstractAdapter {
 
     // Parse JSONObject to GPSPoint
     @Override
-    public  <T> T  build(JSONObject json) {
+    public  <T> T  build(JSONObject json) throws JSONException {
         GpsPoint gpsPoint = adapterFactory.getFactory().createGpsPoint();
-
-
-        //on crée un iterator pour l'objet identity
-        Iterator iteratorNewObject = json.keys();
-        while (iteratorNewObject.hasNext()) {
-            String keyGPS = iteratorNewObject.next().toString();
-            String value = null;
-            try {
-                value = json.getString(keyGPS);
-            } catch (JSONException e) {
-                Log.debug(e.getMessage());
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                return null;
-            }
-            if (keyGPS.equals("latitude")) {
-                gpsPoint.setLatitude(Integer.parseInt(value));
-            } else if (keyGPS.equals("longitude")) {
-                gpsPoint.setLongitude(Integer.parseInt(value));
-            } else if (keyGPS.equals("precision")) {
-                gpsPoint.setMode(Integer.parseInt(value));
-            } else if (keyGPS.equals("heure")) {
-                gpsPoint.setHorodatage(value);
-            }
-        }
-
+        gpsPoint.setHorodatage(json.getString("heure").toString());
+        gpsPoint.setLongitude(Integer.parseInt(json.getString("longitude").toString()));
+        gpsPoint.setLatitude(Integer.parseInt(json.getString("latitude").toString()));
+        gpsPoint.setMode(Integer.parseInt(json.getString("precision").toString()));
         return (T) gpsPoint;
     }
 

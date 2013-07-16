@@ -1,16 +1,14 @@
 package org.daum.planrouge.server.adapter.model;
 
 
-import org.daum.planrouge.server.adapter.model.entity.AdapterCategorie;
-import org.daum.planrouge.server.adapter.model.entity.AdapterGpsPoint;
-import org.daum.planrouge.server.adapter.model.entity.AdapterPositionCivile;
-import org.daum.planrouge.server.adapter.model.entity.AdapterVictime;
+import org.daum.planrouge.server.adapter.model.entity.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.planrouge.*;
 import org.kevoree.planrouge.container.KMFContainer;
 import org.kevoree.planrouge.factory.MainFactory;
 import org.kevoree.planrouge.impl.GpsPointImpl;
+import org.kevoree.planrouge.impl.InterventionImpl;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +25,8 @@ public class AdapterFactory implements IAdapterFactory {
     private AdapterPositionCivile adapterPositionCivile = null;
     private AdapterCategorie adapterCategorie = null;
     private AdapterVictime adapterVictime = null;
+    private AdapterIntervention adapterIntervention = null;
+
 
     public AdapterFactory() {
 
@@ -34,8 +34,7 @@ public class AdapterFactory implements IAdapterFactory {
         adapterCategorie = new AdapterCategorie(this);
         adapterPositionCivile = new AdapterPositionCivile(this);
         adapterVictime = new AdapterVictime(this);
-
-
+        adapterIntervention = new AdapterIntervention(this);
     }
 
     @Override
@@ -49,6 +48,8 @@ public class AdapterFactory implements IAdapterFactory {
             return adapterCategorie.build(container);
         } else if (container instanceof Victime) {
             return adapterVictime.build(container);
+        } else if(container instanceof InterventionImpl){
+            return   adapterIntervention.build(container);
         }
 
         return null;
@@ -66,7 +67,6 @@ public class AdapterFactory implements IAdapterFactory {
         } else if (json.getString("type").equals(adapterVictime.getType())) {
             return adapterVictime.build(json);
         }
-
         return null;
     }
 

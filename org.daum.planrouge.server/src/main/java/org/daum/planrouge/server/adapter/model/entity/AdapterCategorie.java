@@ -20,7 +20,7 @@ import java.util.Iterator;
  */
 public class AdapterCategorie extends AbstractAdapter {
 
-    AdapterFactory adapterFactory;
+    private  AdapterFactory adapterFactory;
 
     public AdapterCategorie(AdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -30,7 +30,6 @@ public class AdapterCategorie extends AbstractAdapter {
     public JSONObject build(KMFContainer container) throws JSONException {
         JSONObject jsonCategorie = new JSONObject();
         Categorie categorie = (Categorie) container;
-
         jsonCategorie.put("code", categorie.getId());
         jsonCategorie.put("type", container.getClass().getName());
         return jsonCategorie;
@@ -39,23 +38,7 @@ public class AdapterCategorie extends AbstractAdapter {
     @Override
     public <T> T build(JSONObject json) throws JSONException {
         Categorie categorie = adapterFactory.getFactory().createCategorie();
-
-        Iterator iteratorNewObject = json.keys();
-        while (iteratorNewObject.hasNext()) {
-            String keyPositionCivile = iteratorNewObject.next().toString();
-            String value = null;
-            try {
-                value = json.getString(keyPositionCivile);
-            } catch (JSONException e) {
-                Log.debug(e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-            if (keyPositionCivile.equals("code")) {
-                categorie.setId(value);
-                Log.debug(value);
-            }
-        }
+        categorie.setId(json.getString("code").toString());
         return (T) categorie;
     }
 

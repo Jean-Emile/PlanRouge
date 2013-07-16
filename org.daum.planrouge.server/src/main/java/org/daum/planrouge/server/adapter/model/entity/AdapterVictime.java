@@ -1,9 +1,5 @@
 package org.daum.planrouge.server.adapter.model.entity;
 
-import org.daum.planrouge.server.adapter.*;
-import org.daum.planrouge.server.adapter.AdapterCategorie;
-import org.daum.planrouge.server.adapter.AdapterGpsPoint;
-import org.daum.planrouge.server.adapter.AdapterPositionCivile;
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.json.JSONException;
@@ -11,7 +7,6 @@ import org.json.JSONObject;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.*;
 import org.kevoree.planrouge.container.KMFContainer;
-import org.kevoree.planrouge.impl.GpsPointImpl;
 import org.kevoree.planrouge.impl.VictimeImpl;
 
 import java.util.Iterator;
@@ -112,7 +107,7 @@ public class AdapterVictime extends AbstractAdapter {
 
         Victime victime =  adapterFactory.getFactory().createVictime();
 
-
+              // todo refactor
         //iterarateur pour parcourir les différentes valeurs du message reçu
         Iterator iterator = json.keys();
         while (iterator.hasNext()) {
