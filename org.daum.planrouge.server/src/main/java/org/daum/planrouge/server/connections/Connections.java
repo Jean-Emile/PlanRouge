@@ -1,6 +1,6 @@
 package org.daum.planrouge.server.connections;
 
-import org.daum.planrouge.server.adapter.AdapterVictime;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.kevoree.log.Log;

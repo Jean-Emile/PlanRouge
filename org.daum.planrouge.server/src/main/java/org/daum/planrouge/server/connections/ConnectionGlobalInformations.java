@@ -1,6 +1,7 @@
 package org.daum.planrouge.server.connections;
 
-import org.daum.planrouge.server.adapter.AdapterVictime;
+
+import org.daum.planrouge.server.adapter.model.entity.AdapterVictime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.kevoree.planrouge.ContainerRoot;
@@ -49,7 +50,7 @@ public class ConnectionGlobalInformations {
     }
 
     public void refresh() throws JSONException {
-        AdapterVictime adapterVictime = new AdapterVictime(planrougeFactory, containerRoot);
+      /*  AdapterVictime adapterVictime = new AdapterVictime(planrougeFactory, containerRoot);
 
         //List victimes;
 
@@ -65,6 +66,6 @@ public class ConnectionGlobalInformations {
 
         for (int i = 0; i < connections.size(); i++) {
             connections.get(i).send(informations.toString());
-        }
+        } */
     }
 }
