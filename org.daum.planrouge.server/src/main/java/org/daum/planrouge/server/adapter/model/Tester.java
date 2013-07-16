@@ -26,7 +26,7 @@ public class Tester {
 
 
             JSONObject jsonGPS = adapterFactory.build(adapterFactory.getFactory().createGpsPoint());
-
+                               System.out.println(jsonGPS);
 
             GpsPoint point =   adapterFactory.build(jsonGPS);
 

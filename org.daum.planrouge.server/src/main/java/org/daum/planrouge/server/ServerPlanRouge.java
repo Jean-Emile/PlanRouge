@@ -1,5 +1,6 @@
 package org.daum.planrouge.server;
 
+import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.connections.Connections;
 import org.kevoree.annotation.*;
 import org.kevoree.framework.AbstractComponentType;
@@ -28,22 +29,23 @@ public class ServerPlanRouge extends AbstractComponentType {
 
     private WebServer webServer;
     private int port;
-    private PlanrougeFactory planrougeFactory;
+
     private ContainerRoot containerRoot;
       private int i;
     private Connections connections;
+    private AdapterFactory adapterFactory;
     @Start
     public void start() {
+        adapterFactory = new AdapterFactory();
+//        planrougeFactory = new MainFactory().getPlanrougeFactory();
+        containerRoot = adapterFactory.getFactory().createContainerRoot();
 
-        planrougeFactory = new MainFactory().getPlanrougeFactory();
-        containerRoot = planrougeFactory.createContainerRoot();
 
-
-        Intervention intervention = planrougeFactory.createIntervention();
+        Intervention intervention = adapterFactory.getFactory().createIntervention();
         intervention.setId("1");
         intervention.setDescription("un train est rentré dans un avion en plein vol");
         containerRoot.addInterventions(intervention);
-        connections = new Connections(planrougeFactory,containerRoot);
+        connections = new Connections(adapterFactory.getFactory(),containerRoot);
         createWebServer();
         webServer.start();
 
@@ -69,9 +71,9 @@ public class ServerPlanRouge extends AbstractComponentType {
 
     private void createWebServer() {
         webServer = WebServers.createWebServer(Integer.parseInt(getDictionary().get("port").toString()))
-                .add("/addVictim", new AddVictimHandler(planrougeFactory, containerRoot, connections))
-                .add("/getVictim", new GetVictimHandler(planrougeFactory, containerRoot, connections))
-                .add("/getGlobalInformations", new GetGlobalInformationsHandler(planrougeFactory, containerRoot, connections))
+                .add("/addVictim", new AddVictimHandler(adapterFactory,containerRoot, connections))
+                .add("/getVictim", new GetVictimHandler(adapterFactory,containerRoot, connections))
+                .add("/getGlobalInformations", new GetGlobalInformationsHandler(adapterFactory,containerRoot, connections))
                 .add(new StaticFileHandler("/web"));
     }
 

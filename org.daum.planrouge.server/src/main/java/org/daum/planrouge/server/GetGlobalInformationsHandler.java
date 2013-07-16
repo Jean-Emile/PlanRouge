@@ -1,6 +1,7 @@
 package org.daum.planrouge.server;
 
 import org.daum.planrouge.server.adapter.AdapterVictime;
+import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.connections.Connections;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,12 +20,12 @@ import org.webbitserver.*;
 public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
     private int connectionCount;
 
-    private PlanrougeFactory planrougeFactory;
+    private AdapterFactory adapterFactory;
     private ContainerRoot containerRoot;
     private Connections connections;
 
-    public GetGlobalInformationsHandler(PlanrougeFactory pPlanrougeFactory, ContainerRoot pContainerRoot, Connections connections) {
-        this.planrougeFactory = pPlanrougeFactory;
+    public GetGlobalInformationsHandler(AdapterFactory adapterFactory, ContainerRoot pContainerRoot, Connections connections) {
+        this.adapterFactory = adapterFactory;
         this.containerRoot = pContainerRoot;
         this.connections = connections;
     }
@@ -46,7 +47,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         Log.debug("GetGlobalInformationsHandler ::: ON_MESSAGE");
 
-        AdapterVictime adapterVictime = new AdapterVictime(planrougeFactory, containerRoot);
+        AdapterVictime adapterVictime = new AdapterVictime(adapterFactory.getFactory(), containerRoot);
 
         //List victimes;
 

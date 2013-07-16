@@ -1,12 +1,18 @@
 package org.daum.planrouge.server;
 
 import org.daum.planrouge.server.adapter.AdapterVictime;
+import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.connections.Connections;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.*;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,12 +24,12 @@ import org.webbitserver.WebSocketConnection;
 public class GetVictimHandler extends BaseWebSocketHandler {
     private int connectionCount;
 
-    private PlanrougeFactory planrougeFactory;
+    private AdapterFactory adapterFactory;
     private ContainerRoot containerRoot;
     private Connections connections;
 
-    public GetVictimHandler(PlanrougeFactory planrougeFactory, ContainerRoot containerRoot, Connections connections) {
-        this.planrougeFactory = planrougeFactory;
+    public GetVictimHandler(AdapterFactory adapterFactory, ContainerRoot containerRoot, Connections connections) {
+        this.adapterFactory = adapterFactory;
         this.containerRoot = containerRoot;
         this.connections = connections;
     }
@@ -46,11 +52,21 @@ public class GetVictimHandler extends BaseWebSocketHandler {
         System.out.println("GetVictimHandler :::  ON_MESSAGE");
 
         Victime victime = containerRoot.findInterventionsByID("1").findVictimesByID(message);
-        AdapterVictime adapterVictime = new AdapterVictime(planrougeFactory, containerRoot);
+
+        JSONObject jsonVictime = adapterFactory.build(victime);
+        List<Victime> victimeList = new LinkedList();
+        victimeList = containerRoot.findInterventionsByID("1").getVictimes();
+
+        Iterator iterator
+                = victimeList.iterator();
+       while ( iterator.hasNext()){
+           Victime key = (Victime) iterator.next();
+           Log.debug(key.getId());
+       }
 
         if (victime != null) {
-            Log.debug(adapterVictime.parseVictimeToJson(victime).toString());
-            connection.send(String.valueOf(adapterVictime.parseVictimeToJson(victime)));
+            Log.debug(jsonVictime.toString());
+            connection.send(String.valueOf(jsonVictime));
 
 
         } else {

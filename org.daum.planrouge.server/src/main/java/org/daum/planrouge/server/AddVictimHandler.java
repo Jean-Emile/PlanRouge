@@ -1,8 +1,10 @@
 package org.daum.planrouge.server;
 
 import org.daum.planrouge.server.adapter.AdapterVictime;
+import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.connections.Connections;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.kevoree.planrouge.*;
 import org.kevoree.log.Log;
 import org.webbitserver.*;
@@ -18,25 +20,25 @@ public class AddVictimHandler extends BaseWebSocketHandler {
 
     private int connectionCount;
     private Connections connections ;
-    private PlanrougeFactory planrougeFactory;
+    private AdapterFactory adapterFactory;
     private ContainerRoot containerRoot;
 
 
-    public AddVictimHandler(PlanrougeFactory planrougeFactory, ContainerRoot containerRoot, Connections connections) {
-        this.planrougeFactory = planrougeFactory;
+    public AddVictimHandler(AdapterFactory adapterFactory, ContainerRoot containerRoot, Connections connections) {
+        this.adapterFactory = adapterFactory;
         this.containerRoot = containerRoot;
         this.connections = connections;
     }
 
     public void onOpen(WebSocketConnection connection) {
-        Log.debug("Nouvelle connexion");
+        Log.debug("New connection");
         connections.getConnectionAddVictim().addConnections(connection);
         connection.send("AddVictimHandler ::: " + connectionCount + " other connections active");
         connectionCount++;
     }
 
     public void onClose(WebSocketConnection connection) {
-        Log.debug("AddVictimHandler ::: Connexion fermée ");
+        Log.debug("AddVictimHandler ::: Connection close ");
         connections.getConnectionAddVictim().removeConnections(connection);
         connectionCount--;
 
@@ -45,13 +47,18 @@ public class AddVictimHandler extends BaseWebSocketHandler {
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         Log.debug("AddVictimHandler ::: ON_MESSAGE");
 
-        AdapterVictime adapterVictime = new AdapterVictime(planrougeFactory,containerRoot);
-        Victime victime = adapterVictime.parseJsonToVictime(message);
+        JSONObject jsonVictime = new JSONObject(message);
+        Victime victime = adapterFactory.build(jsonVictime);
 
         if (victime != null) {
-            containerRoot.findInterventionsByID("1").addVictimes(victime);
-            adapterVictime.parseVictimeToJson(victime);
-            connection.send("Victime ajouté à la base de données");
+         Victime vicmodel =   containerRoot.findInterventionsByID("1").findVictimesByID(victime.getId());
+            if(vicmodel !=null){
+                //todo jed
+            } else {
+                containerRoot.findInterventionsByID("1").addVictimes(victime);
+            }
+
+            connection.send("Victim added to database");
         } else {
             connection.send("Erreur");
         }

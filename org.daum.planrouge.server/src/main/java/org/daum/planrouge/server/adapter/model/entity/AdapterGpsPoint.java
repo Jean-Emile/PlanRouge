@@ -1,6 +1,7 @@
 package org.daum.planrouge.server.adapter.model.entity;
 
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
+import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -20,6 +21,11 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public class AdapterGpsPoint extends AbstractAdapter {
+    AdapterFactory adapterFactory;
+    public AdapterGpsPoint(AdapterFactory adapterFactory) {
+        super();
+        this.adapterFactory = adapterFactory;
+    }
 
     @Override
     public JSONObject build(KMFContainer container) throws JSONException {
@@ -36,7 +42,9 @@ public class AdapterGpsPoint extends AbstractAdapter {
     // Parse JSONObject to GPSPoint
     @Override
     public  <T> T  build(JSONObject json) {
-        GpsPoint gpsPoint = getModelfactory().createGpsPoint();
+        GpsPoint gpsPoint = adapterFactory.getFactory().createGpsPoint();
+
+
         //on crée un iterator pour l'objet identity
         Iterator iteratorNewObject = json.keys();
         while (iteratorNewObject.hasNext()) {

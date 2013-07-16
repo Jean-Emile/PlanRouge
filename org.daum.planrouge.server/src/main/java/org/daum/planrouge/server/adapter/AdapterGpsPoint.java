@@ -40,7 +40,7 @@ public class AdapterGpsPoint {
                 value = jsonGPSPoint.getString(keyGPS);
             } catch (JSONException e) {
                 Log.debug(e.getMessage());
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
                 return null;
             }
             if (keyGPS.equals("latitude")) {
