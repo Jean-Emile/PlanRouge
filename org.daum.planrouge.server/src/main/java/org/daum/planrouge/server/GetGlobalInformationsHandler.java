@@ -1,6 +1,5 @@
 package org.daum.planrouge.server;
 
-import org.daum.planrouge.server.adapter.AdapterVictime;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.connections.Connections;
 import org.json.JSONArray;
@@ -46,7 +45,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
 
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         Log.debug("GetGlobalInformationsHandler ::: ON_MESSAGE");
-
+        /*
         AdapterVictime adapterVictime = new AdapterVictime(adapterFactory.getFactory(), containerRoot);
 
         //List victimes;
@@ -62,7 +61,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         informations.put(7, containerRoot.findInterventionsByID("1").getDescription());
         Log.debug(informations.toString());
         connection.send(informations.toString()); // echo back message in upper case
-
+           */
     }
 
 

@@ -1,6 +1,6 @@
 package org.daum.planrouge.server;
 
-import org.daum.planrouge.server.adapter.AdapterVictime;
+
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.connections.Connections;
 import org.json.JSONException;
@@ -8,6 +8,9 @@ import org.json.JSONObject;
 import org.kevoree.planrouge.*;
 import org.kevoree.log.Log;
 import org.webbitserver.*;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,6 +47,23 @@ public class AddVictimHandler extends BaseWebSocketHandler {
 
     }
 
+
+    public  void merge(Object obj, Object update)   {
+        if(!obj.getClass().isAssignableFrom(update.getClass())){
+            return;
+        }
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for(Field f: fields){
+            f.setAccessible(true);
+            try {
+                if(f.get(obj) != null && (f.get(update).equals("") |f.get(update).equals(0))){
+                    f.set(update, f.get(obj));
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         Log.debug("AddVictimHandler ::: ON_MESSAGE");
 
@@ -51,9 +71,11 @@ public class AddVictimHandler extends BaseWebSocketHandler {
         Victime victime = adapterFactory.build(jsonVictime);
 
         if (victime != null) {
-         Victime vicmodel =   containerRoot.findInterventionsByID("1").findVictimesByID(victime.getId());
+            Victime vicmodel =   containerRoot.findInterventionsByID("1").findVictimesByID(victime.getId());
+
             if(vicmodel !=null){
-                //todo jed
+                merge(vicmodel,vicmodel);
+
             } else {
                 containerRoot.findInterventionsByID("1").addVictimes(victime);
             }

@@ -1,6 +1,6 @@
 package org.daum.planrouge.server;
 
-import org.daum.planrouge.server.adapter.AdapterVictime;
+
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.connections.Connections;
 import org.json.JSONException;

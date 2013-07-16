@@ -1,11 +1,10 @@
 package org.daum.planrouge.server;
 
+import org.daum.planrouge.server.store.StoreManager;
 import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.Intervention;
 import org.kevoree.planrouge.PlanrougeFactory;
 import org.kevoree.planrouge.Victime;
-//import org.kevoree.planrouge.events.ModelEvent;
-//import org.kevoree.planrouge.events.ModelTreeListener;
 import org.kevoree.planrouge.factory.MainFactory;
 
 /**
@@ -23,18 +22,16 @@ public class DemoModel {
 
         ContainerRoot containerRoot =f.createContainerRoot();
 
-//
-//        // tree
-//        containerRoot.addModelTreeListener(new ModelTreeListener() {
-//            @Override
-//            public void elementChanged(ModelEvent evt) {
-//                System.out.println(evt);
-//            }
-//        });
+        StoreManager store = new StoreManager(containerRoot);
+        store.addReplica("tcp://10.0.4.1:6666");
+
+        store.open();
+
 
         Intervention intervention =  f.createIntervention();
         intervention.setId("393939");
         intervention.setDescription("un train est rentré dans un avion en plein vol");
+
 
         Victime victime =  f.createVictime();
         victime.setId("tagid");
@@ -42,12 +39,12 @@ public class DemoModel {
         victime.setPrenom("clement");
 
 
+        containerRoot.addInterventions(intervention);
 
 
         intervention.addVictimes(victime);
+        store.close();
 
-
-        containerRoot.addInterventions(intervention);
 
     }
 }
