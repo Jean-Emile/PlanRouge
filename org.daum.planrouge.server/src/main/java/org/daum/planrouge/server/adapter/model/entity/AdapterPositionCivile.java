@@ -44,11 +44,24 @@ public class AdapterPositionCivile extends AbstractAdapter {
     @Override
     public <T> T build(JSONObject json) throws JSONException {
         PositionCivil positionCivile = adapterFactory.getFactory().createPositionCivil();
-        positionCivile.setCp(json.getString("cp").toString());
-        positionCivile.setNomRue(json.getString("nomRue").toString());
-        positionCivile.setNumeroRue(json.getString("numeroRue").toString());
-        positionCivile.setPays(json.getString("pays").toString());
-        positionCivile.setHorodatage(json.getString("heure").toString());
+        if (json.has("cp")) {
+            positionCivile.setCp(json.getString("cp").toString());
+        }
+        if (json.has("nomRue")) {
+            positionCivile.setNomRue(json.getString("nomRue").toString());
+        }
+        if (json.has("numeroRue")) {
+            positionCivile.setNumeroRue(json.getString("numeroRue").toString());
+        }
+        if (json.has("pays")) {
+            positionCivile.setPays(json.getString("pays").toString());
+        }
+        if (json.has("heure")) {
+            positionCivile.setHorodatage(json.getString("heure").toString());
+        }
+        if (json.has("nomVille")) {
+            positionCivile.setHorodatage(json.getString("nomVille").toString());
+        }
         return (T) positionCivile;
     }
 

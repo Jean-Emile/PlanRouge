@@ -1,6 +1,5 @@
 package org.daum.planrouge.server;
 
-import org.daum.planrouge.server.store.StoreManager;
 import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.Intervention;
 import org.kevoree.planrouge.PlanrougeFactory;
@@ -21,12 +20,12 @@ public class DemoModel {
         PlanrougeFactory f = new MainFactory().getPlanrougeFactory();
 
         ContainerRoot containerRoot =f.createContainerRoot();
-
+        /*
         StoreManager store = new StoreManager(containerRoot);
         store.addReplica("tcp://10.0.4.1:6666");
 
         store.open();
-
+          */
 
         Intervention intervention =  f.createIntervention();
         intervention.setId("393939");
@@ -43,7 +42,7 @@ public class DemoModel {
 
 
         intervention.addVictimes(victime);
-        store.close();
+      //  store.close();
 
 
     }

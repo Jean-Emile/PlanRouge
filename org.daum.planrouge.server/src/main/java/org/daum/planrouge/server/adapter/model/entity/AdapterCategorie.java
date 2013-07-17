@@ -2,6 +2,7 @@ package org.daum.planrouge.server.adapter.model.entity;
 
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
+import org.daum.planrouge.server.adapter.model.Entities;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -20,7 +21,7 @@ import java.util.Iterator;
  */
 public class AdapterCategorie extends AbstractAdapter {
 
-    private  AdapterFactory adapterFactory;
+    private AdapterFactory adapterFactory;
 
     public AdapterCategorie(AdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -38,12 +39,15 @@ public class AdapterCategorie extends AbstractAdapter {
     @Override
     public <T> T build(JSONObject json) throws JSONException {
         Categorie categorie = adapterFactory.getFactory().createCategorie();
-        categorie.setId(json.getString("code").toString());
+
+        if (json.has("code")) {
+            categorie.setId(json.getString("code").toString());
+        }
+
         return (T) categorie;
     }
 
-    @Override
-    public AdapterFactory.Adapters getType() {
-       return AdapterFactory.Adapters.AdapterCategorie;
+    public Entities getType() {
+        return Entities.AdapterCategorie;
     }
 }
