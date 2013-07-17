@@ -18,13 +18,19 @@ import org.webbitserver.WebSocketConnection;
  */
 public  class HandlerWebSocket extends BaseWebSocketHandler {
     private Peers peers=null;
-    private AdapterFactory adapterFactory;
+    private AdapterFactory adapterFactory=null;
     private MessageHandler msg =null;
+    private  ACTION current;
+    public enum ACTION {
+        PUT,
+        GET
+    }
 
-    public HandlerWebSocket(AdapterFactory adapterFactory,ContainerRoot root){
+    public HandlerWebSocket(AdapterFactory adapterFactory,ContainerRoot root,ACTION action){
         peers = new Peers();
         this.adapterFactory = adapterFactory;
         msg = new MessageHandler(root);
+        this.current=action;
 
     }
     public void onOpen(WebSocketConnection connection) {
@@ -38,6 +44,6 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         Log.debug("Message from peer");
         JSONObject jsonObject = new JSONObject(message);
-        msg.process(connection,adapterFactory.build(jsonObject));
+        msg.process(connection,adapterFactory.build(jsonObject),current);
     }
 }

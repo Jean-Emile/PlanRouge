@@ -2,11 +2,17 @@ package org.daum.planrouge.server.websocket;
 
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.adapter.model.IAdapter;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.Victime;
 import org.webbitserver.WebSocketConnection;
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,7 +47,7 @@ public class MessageHandler {
 
 
     //todo 
-    public void process(WebSocketConnection connection,Object obj) {
+    public void process(WebSocketConnection connection,Object obj,HandlerWebSocket.ACTION action) throws JSONException {
 
         IAdapter adapter = (IAdapter)obj;
         switch (adapter.getType()){
@@ -63,17 +69,51 @@ public class MessageHandler {
 
 
             case AdapterVictime:
-
                 Victime victime = (Victime)obj;
-                Victime vicmodel =   root.findInterventionsByID("1").findVictimesByID(victime.getId());
+                switch (action){
+                    case GET:
 
-                if(vicmodel !=null)
-                {
-                    merge(vicmodel,vicmodel);
-                } else
-                {
-                    root.findInterventionsByID("1").addVictimes(victime);
+
+                         victime = root.findInterventionsByID("1").findVictimesByID(victime.getId());
+
+                        JSONObject jsonVictime =  AdapterFactory.getInstance().build(victime);
+                        List<Victime> victimeList = new LinkedList();
+                        victimeList = root.findInterventionsByID("1").getVictimes();
+
+                        Iterator iterator
+                                = victimeList.iterator();
+                        while ( iterator.hasNext()){
+                            Victime key = (Victime) iterator.next();
+                            Log.debug(key.getId());
+                        }
+
+                        if (victime != null) {
+                            Log.debug(jsonVictime.toString());
+                            connection.send(String.valueOf(jsonVictime));
+
+
+                        } else {
+                            connection.send("Pas de victime à cet ID");
+                        }
+
+                        break;
+
+
+                    case  PUT:
+
+                        Victime vicmodel =   root.findInterventionsByID("1").findVictimesByID(victime.getId());
+
+                        if(vicmodel !=null)
+                        {
+                            merge(vicmodel,vicmodel);
+                        } else
+                        {
+                            root.findInterventionsByID("1").addVictimes(victime);
+                        }
+
+                        break;
                 }
+
 
                 connection.send("ack");
                 break;

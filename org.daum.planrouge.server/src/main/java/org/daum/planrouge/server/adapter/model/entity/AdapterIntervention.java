@@ -2,6 +2,7 @@ package org.daum.planrouge.server.adapter.model.entity;
 
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
+import org.daum.planrouge.server.adapter.model.Entities;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.planrouge.Categorie;
@@ -24,8 +25,8 @@ public class AdapterIntervention extends AbstractAdapter {
 
     private AdapterFactory adapterFactory;
 
-    public AdapterIntervention(AdapterFactory adapterFactory) {
-        this.adapterFactory = adapterFactory;
+    public AdapterIntervention() {
+        this.adapterFactory =  AdapterFactory.getInstance();
     }
 
     @Override
@@ -55,7 +56,7 @@ public class AdapterIntervention extends AbstractAdapter {
 
 
     @Override
-    public AdapterFactory.Adapters getType() {
-        return AdapterFactory.Adapters.AdapterIntervention;
+    public Entities getType() {
+        return Entities.AdapterIntervention;
     }
 }

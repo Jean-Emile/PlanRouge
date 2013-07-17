@@ -23,6 +23,16 @@ public class AdapterFactory implements IAdapterFactory {
     private PlanrougeFactory factory = new MainFactory().getPlanrougeFactory();
     private LRUMap adapterLRU   = new LRUMap(4);
 
+    private static AdapterFactory singleton = null;
+
+
+    public static AdapterFactory getInstance(){
+        if(singleton == null){
+            singleton   = new AdapterFactory();
+        }
+        return singleton;
+    }
+
     public  synchronized IAdapter getAdapter(Entities id){
         IAdapter instance =null;
         if(adapterLRU.containsKey(id)){
@@ -32,19 +42,19 @@ public class AdapterFactory implements IAdapterFactory {
             switch (id)
             {
                 case  AdapterGpsPoint:
-                    instance  =  new AdapterGpsPoint(this);
+                    instance  =  new AdapterGpsPoint();
                     break;
                 case AdapterPositionCivile:
-                    instance  =new AdapterPositionCivile(this);
+                    instance  =new AdapterPositionCivile();
                     break;
                 case AdapterCategorie:
-                    instance  =new AdapterCategorie(this);
+                    instance  =new AdapterCategorie();
                     break;
                 case AdapterVictime:
-                    instance  =new AdapterVictime(this);
+                    instance  =new AdapterVictime();
                     break;
                 case AdapterIntervention:
-                    instance  =new AdapterIntervention(this);
+                    instance  =new AdapterIntervention();
                     break;
             }
             adapterLRU.put(id,instance);

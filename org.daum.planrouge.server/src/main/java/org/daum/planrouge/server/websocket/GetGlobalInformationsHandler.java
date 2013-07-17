@@ -1,11 +1,11 @@
-package org.daum.planrouge.server;
+package org.daum.planrouge.server.websocket;
 
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
-import org.daum.planrouge.server.websocket.Peers;
 import org.json.JSONException;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
-import org.webbitserver.*;
+import org.webbitserver.BaseWebSocketHandler;
+import org.webbitserver.WebSocketConnection;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +21,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
     private ContainerRoot containerRoot;
     private Peers connections;
 
-    public GetGlobalInformationsHandler(AdapterFactory adapterFactory, ContainerRoot pContainerRoot, Peers connections) {
+    public GetGlobalInformationsHandler(AdapterFactory adapterFactory, ContainerRoot pContainerRoot) {
         this.adapterFactory = adapterFactory;
         this.containerRoot = pContainerRoot;
         this.connections = connections;
@@ -29,14 +29,14 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
 
     public void onOpen(WebSocketConnection connection) {
         Log.debug("Nouvelle connexion");
-        connections.getConnectionGlobalInformations().addConnections(connection);
+
         connection.send("GetGlobalInformationsHandler ::: " + connectionCount + " other connections active");
         connectionCount++;
     }
 
     public void onClose(WebSocketConnection connection) {
         Log.debug("GetGlobalInformationsHandler ::: Connexion fermée ");
-        connections.getConnectionGlobalInformations().removeConnections(connection);
+
         connectionCount--;
 
     }

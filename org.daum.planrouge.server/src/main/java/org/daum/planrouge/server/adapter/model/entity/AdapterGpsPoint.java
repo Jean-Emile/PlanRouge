@@ -2,6 +2,7 @@ package org.daum.planrouge.server.adapter.model.entity;
 
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
+import org.daum.planrouge.server.adapter.model.Entities;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -23,9 +24,8 @@ import java.util.Iterator;
 public class AdapterGpsPoint extends AbstractAdapter {
     private AdapterFactory adapterFactory;
 
-    public AdapterGpsPoint(AdapterFactory adapterFactory) {
-        super();
-        this.adapterFactory = adapterFactory;
+    public AdapterGpsPoint() {
+        this.adapterFactory =  AdapterFactory.getInstance();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class AdapterGpsPoint extends AbstractAdapter {
     }
 
     @Override
-    public AdapterFactory.Adapters getType() {
-        return AdapterFactory.Adapters.AdapterGpsPoint;
+    public Entities getType() {
+        return Entities.AdapterGpsPoint;
     }
 }

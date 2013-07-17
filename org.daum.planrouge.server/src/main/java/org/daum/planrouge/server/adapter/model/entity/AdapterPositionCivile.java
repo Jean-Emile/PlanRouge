@@ -2,6 +2,7 @@ package org.daum.planrouge.server.adapter.model.entity;
 
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
+import org.daum.planrouge.server.adapter.model.Entities;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -23,8 +24,8 @@ public class AdapterPositionCivile extends AbstractAdapter {
 
     private AdapterFactory adapterFactory;
 
-    public AdapterPositionCivile(AdapterFactory adapterFactory) {
-        this.adapterFactory = adapterFactory;
+    public AdapterPositionCivile( ) {
+        this.adapterFactory =  AdapterFactory.getInstance();
     }
 
     @Override
@@ -66,7 +67,7 @@ public class AdapterPositionCivile extends AbstractAdapter {
     }
 
     @Override
-    public AdapterFactory.Adapters getType() {
-        return AdapterFactory.Adapters.AdapterPositionCivile;
+    public Entities getType() {
+        return Entities.AdapterPositionCivile;
     }
 }

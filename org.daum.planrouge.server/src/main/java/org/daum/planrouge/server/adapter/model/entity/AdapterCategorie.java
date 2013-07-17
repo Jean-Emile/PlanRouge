@@ -23,8 +23,8 @@ public class AdapterCategorie extends AbstractAdapter {
 
     private AdapterFactory adapterFactory;
 
-    public AdapterCategorie(AdapterFactory adapterFactory) {
-        this.adapterFactory = adapterFactory;
+    public AdapterCategorie() {
+        this.adapterFactory = AdapterFactory.getInstance();
     }
 
     @Override
