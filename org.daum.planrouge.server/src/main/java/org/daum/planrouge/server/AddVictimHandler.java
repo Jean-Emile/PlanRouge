@@ -2,7 +2,7 @@ package org.daum.planrouge.server;
 
 
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
-import org.daum.planrouge.server.connections.Connections;
+import org.daum.planrouge.server.websocket.Peers;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.planrouge.*;
@@ -10,7 +10,6 @@ import org.kevoree.log.Log;
 import org.webbitserver.*;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,12 +21,12 @@ import java.lang.reflect.Method;
 public class AddVictimHandler extends BaseWebSocketHandler {
 
     private int connectionCount;
-    private Connections connections ;
+    private Peers connections ;
     private AdapterFactory adapterFactory;
     private ContainerRoot containerRoot;
 
 
-    public AddVictimHandler(AdapterFactory adapterFactory, ContainerRoot containerRoot, Connections connections) {
+    public AddVictimHandler(AdapterFactory adapterFactory, ContainerRoot containerRoot, Peers connections) {
         this.adapterFactory = adapterFactory;
         this.containerRoot = containerRoot;
         this.connections = connections;
@@ -35,14 +34,14 @@ public class AddVictimHandler extends BaseWebSocketHandler {
 
     public void onOpen(WebSocketConnection connection) {
         Log.debug("New connection");
-        connections.getConnectionAddVictim().addConnections(connection);
+        connections.addPeer(connection);
         connection.send("AddVictimHandler ::: " + connectionCount + " other connections active");
         connectionCount++;
     }
 
     public void onClose(WebSocketConnection connection) {
         Log.debug("AddVictimHandler ::: Connection close ");
-        connections.getConnectionAddVictim().removeConnections(connection);
+        connections.removePeer(connection);
         connectionCount--;
 
     }
@@ -85,7 +84,7 @@ public class AddVictimHandler extends BaseWebSocketHandler {
             connection.send("Erreur");
         }
 
-        connections.getConnectionGlobalInformations().refresh();
+
     }
 
 

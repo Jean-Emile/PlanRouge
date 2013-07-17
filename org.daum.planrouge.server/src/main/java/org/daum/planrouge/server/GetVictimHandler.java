@@ -2,7 +2,7 @@ package org.daum.planrouge.server;
 
 
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
-import org.daum.planrouge.server.connections.Connections;
+import org.daum.planrouge.server.websocket.Peers;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -26,9 +26,9 @@ public class GetVictimHandler extends BaseWebSocketHandler {
 
     private AdapterFactory adapterFactory;
     private ContainerRoot containerRoot;
-    private Connections connections;
+    private Peers connections;
 
-    public GetVictimHandler(AdapterFactory adapterFactory, ContainerRoot containerRoot, Connections connections) {
+    public GetVictimHandler(AdapterFactory adapterFactory, ContainerRoot containerRoot, Peers connections) {
         this.adapterFactory = adapterFactory;
         this.containerRoot = containerRoot;
         this.connections = connections;

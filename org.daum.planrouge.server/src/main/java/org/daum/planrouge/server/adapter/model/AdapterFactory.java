@@ -2,6 +2,7 @@ package org.daum.planrouge.server.adapter.model;
 
 
 import org.daum.planrouge.server.adapter.model.entity.*;
+import org.daum.planrouge.server.utils.LRUMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.planrouge.*;
@@ -20,52 +21,67 @@ import org.kevoree.planrouge.impl.InterventionImpl;
 public class AdapterFactory implements IAdapterFactory {
 
     private PlanrougeFactory factory = new MainFactory().getPlanrougeFactory();
-    // LRU list
-    private AdapterGpsPoint adapterGpsPoint = null;
-    private AdapterPositionCivile adapterPositionCivile = null;
-    private AdapterCategorie adapterCategorie = null;
-    private AdapterVictime adapterVictime = null;
-    private AdapterIntervention adapterIntervention = null;
+    private LRUMap adapterLRU   = new LRUMap(4);
 
-
-    public AdapterFactory() {
-
-        adapterGpsPoint = new AdapterGpsPoint(this);
-        adapterCategorie = new AdapterCategorie(this);
-        adapterPositionCivile = new AdapterPositionCivile(this);
-        adapterVictime = new AdapterVictime(this);
-        adapterIntervention = new AdapterIntervention(this);
+    public  synchronized IAdapter getAdapter(Entities id){
+        IAdapter instance =null;
+        if(adapterLRU.containsKey(id)){
+            return(IAdapter) adapterLRU.get(id);
+        } else
+        {
+            switch (id)
+            {
+                case  AdapterGpsPoint:
+                    instance  =  new AdapterGpsPoint(this);
+                    break;
+                case AdapterPositionCivile:
+                    instance  =new AdapterPositionCivile(this);
+                    break;
+                case AdapterCategorie:
+                    instance  =new AdapterCategorie(this);
+                    break;
+                case AdapterVictime:
+                    instance  =new AdapterVictime(this);
+                    break;
+                case AdapterIntervention:
+                    instance  =new AdapterIntervention(this);
+                    break;
+            }
+            adapterLRU.put(id,instance);
+            return instance;
+        }
     }
-
     @Override
     public JSONObject build(KMFContainer container) throws JSONException {
 
         if (container instanceof GpsPoint) {
-            return adapterGpsPoint.build(container);
+            return getAdapter(Entities.AdapterGpsPoint).build(container);
         } else if (container instanceof PositionCivil) {
-            return adapterPositionCivile.build(container);
+            return getAdapter(Entities.AdapterPositionCivile).build(container);
         } else if (container instanceof Categorie) {
-            return adapterCategorie.build(container);
+            return getAdapter(Entities.AdapterCategorie).build(container);
         } else if (container instanceof Victime) {
-            return adapterVictime.build(container);
+            return getAdapter(Entities.AdapterVictime).build(container);
         } else if(container instanceof InterventionImpl){
-            return   adapterIntervention.build(container);
+            return   getAdapter(Entities.AdapterIntervention).build(container);
         }
 
         return null;
     }
 
+
+
     @Override
     public <T> T build(JSONObject json) throws JSONException {
-        System.out.println(adapterGpsPoint.getType());
-        if (json.getString("type").equals(adapterGpsPoint.getType())) {
-            return adapterGpsPoint.build(json);
-        } else if (json.getString("type").equals(adapterPositionCivile.getType())) {
-            return adapterPositionCivile.build(json);
-        } else if (json.getString("type").equals(adapterCategorie.getType())) {
-            return adapterCategorie.build(json);
-        } else if (json.getString("type").equals(adapterVictime.getType())) {
-            return adapterVictime.build(json);
+
+        if (json.getString("type").equals(Entities.AdapterGpsPoint.toString())) {
+            return getAdapter(Entities.AdapterGpsPoint).build(json);
+        } else  if (json.getString("type").equals(Entities.AdapterPositionCivile.toString())) {
+            return getAdapter(Entities.AdapterPositionCivile).build(json);
+        } else  if (json.getString("type").equals(Entities.AdapterIntervention.toString())) {
+            return getAdapter(Entities.AdapterIntervention).build(json);
+        } else  if (json.getString("type").equals(Entities.AdapterVictime.toString())) {
+            return getAdapter(Entities.AdapterVictime).build(json);
         }
         return null;
     }

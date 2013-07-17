@@ -51,8 +51,7 @@ public class AdapterGpsPoint extends AbstractAdapter {
     }
 
     @Override
-    public String getType() {
-        return GpsPointImpl.class.getName();
+    public AdapterFactory.Adapters getType() {
+        return AdapterFactory.Adapters.AdapterGpsPoint;
     }
-
 }

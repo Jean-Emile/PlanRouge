@@ -53,7 +53,7 @@ public class AdapterPositionCivile extends AbstractAdapter {
     }
 
     @Override
-    public String getType() {
-        return PositionCivilImpl.class.getName();
+    public AdapterFactory.Adapters getType() {
+        return AdapterFactory.Adapters.AdapterPositionCivile;
     }
 }

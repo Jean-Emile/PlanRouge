@@ -50,8 +50,7 @@ public class AdapterIntervention extends AbstractAdapter {
 
 
     @Override
-    public String getType() {
-        return InterventionImpl.class.getName();
+    public AdapterFactory.Adapters getType() {
+        return AdapterFactory.Adapters.AdapterIntervention;
     }
-
 }

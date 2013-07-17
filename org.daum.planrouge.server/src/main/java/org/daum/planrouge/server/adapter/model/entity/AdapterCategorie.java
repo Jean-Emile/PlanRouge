@@ -43,7 +43,7 @@ public class AdapterCategorie extends AbstractAdapter {
     }
 
     @Override
-    public String getType() {
-       return CategorieImpl.class.getName();
+    public AdapterFactory.Adapters getType() {
+       return AdapterFactory.Adapters.AdapterCategorie;
     }
 }

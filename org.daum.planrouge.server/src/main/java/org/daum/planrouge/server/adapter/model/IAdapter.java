@@ -14,5 +14,5 @@ import org.kevoree.planrouge.container.KMFContainer;
 public interface IAdapter {
     public JSONObject build(KMFContainer container) throws JSONException;
     public  <T> T build(JSONObject json) throws JSONException;
-    public String getType();
+    public  Entities getType();
 }

@@ -265,8 +265,8 @@ public class AdapterVictime extends AbstractAdapter {
     }
 
     @Override
-    public String getType() {
-        return VictimeImpl.class.getName();
+    public AdapterFactory.Adapters getType() {
+        return AdapterFactory.Adapters.AdapterVictime;
     }
 
 

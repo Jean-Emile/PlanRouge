@@ -1,12 +1,10 @@
 package org.daum.planrouge.server;
 
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
-import org.daum.planrouge.server.connections.Connections;
-import org.json.JSONArray;
+import org.daum.planrouge.server.websocket.Peers;
 import org.json.JSONException;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
-import org.kevoree.planrouge.PlanrougeFactory;
 import org.webbitserver.*;
 
 /**
@@ -21,9 +19,9 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
 
     private AdapterFactory adapterFactory;
     private ContainerRoot containerRoot;
-    private Connections connections;
+    private Peers connections;
 
-    public GetGlobalInformationsHandler(AdapterFactory adapterFactory, ContainerRoot pContainerRoot, Connections connections) {
+    public GetGlobalInformationsHandler(AdapterFactory adapterFactory, ContainerRoot pContainerRoot, Peers connections) {
         this.adapterFactory = adapterFactory;
         this.containerRoot = pContainerRoot;
         this.connections = connections;
