@@ -1,0 +1,143 @@
+<!Doctype html>
+<html>
+<head>
+<!-- pour spécifier au naviageteur comment afficher la page -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<!-- le fichier css pour formater nos balises html -->
+<link rel="stylesheet" href="file:///android_asset/www/jquery.mobile-1.1.1.min.css" />
+
+<!-- importation du bibliothèque jquery et jquery pour les mobiles -->
+<script src="file:///android_asset/www/jquery-1.7.1.min.js"></script>
+<script src="file:///android_asset/www/jquery.mobile-1.1.1.min.js"></script>
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script  src="file:///android_asset/www/cordova.js"></script>
+<script charset="ISO-8859-1" src="file:///android_asset/www/js/script.js"></script>
+<script  src="file:///android_asset/www/js/phonegap-nfc.js"></script>
+
+</head>
+<body onload='onload();'>
+	<!-- la page d'identification -->
+	<div data-role="page" id="identitepage" data-add-back-btn=true>
+		<!-- l'entête -->
+		<div data-role="header" data-theme="a" data-position= "fixed" >
+			<h1>Informations sur la victime</h1>
+		</div>
+		<!-- le contenu -->
+		<div data-role="content">
+
+			<p>
+				<input type="button" name="submit" value="Récupérer identité" onclick="readIdentity();" />
+			</p>
+
+
+			<div data-role="fieldcontain">
+				<label for="surname">Nom :</label> <input type="text" name="surname"
+					id="surname" value="" />
+			</div>
+
+			<div data-role="fieldcontain">
+				<label for="firstname">Prénom :</label> <input type="text" name="firstname"
+					id="firstname" value="" />
+			</div>
+
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup" data-type="horizontal"
+					data-role="fieldcontain">
+					<legend>Sexe :</legend>
+					<input type="radio" name="identity_sexe" id="identity_sexe_1"
+						value="1" checked="checked" /> 
+						<label for="identity_sexe_1">F</label> 
+						<input type="radio" name="identity_sexe" id="identity_sexe_2"
+						value="2" /> 
+						<label for="identity_sexe_2">M</label> 
+						<input
+						type="radio" name="identity_sexe" id="identity_sexe_3"
+						value="3" /> 
+						<label for="identity_sexe_3">?</label> 						
+				</fieldset>
+			</div>
+
+			<div data-role="fieldcontain">
+			<fieldset data-role="controlgroup" data-type="horizontal">
+				<legend>Age :</legend>
+				<label for="age">Age</label> 
+				
+				<select name="age" id="age">
+					<option value="999">Age</option>		
+				</select> 
+			</fieldset>
+			
+			</div>
+			
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup" data-type="horizontal"
+					data-role="fieldcontain">
+					<legend>Age en :</legend>
+					<input type="radio" name="identity_age" id="identity_age_1"
+						value="1" checked="checked" /> 
+						<label for="identity_age_1">Jours</label> 
+						<input type="radio" name="identity_age" id="identity_age_2"
+						value="2" /> 
+						<label for="identity_age_2">Mois</label> 
+						<input
+						type="radio" name="identity_age" id="identity_age_3"
+						value="3" /> 
+						<label for="identity_age_3">Années</label> 						
+				</fieldset>
+			</div>
+			
+		
+		
+			<div data-role="fieldcontain">
+			<fieldset data-role="controlgroup" data-type="horizontal">
+				<legend>Date de Naissance :</legend>
+				<label for="selectDay">Jour</label> 
+				
+				<select name="selectDay" id="selectDay">
+					<option value="00">Jour</option>		
+				</select> 
+
+				<label for="selectMonth">Mois</label> 
+				<select name="selectMonth" id="selectMonth">
+					<option value="00" >Mois</option>
+					<option value="01">Janvier</option>
+					<option value="02">Fevrier</option>
+					<option value="03">Mars</option>
+					<option value="04">Avril</option>
+					<option value="05">Mai</option>
+					<option value="06">Juin</option>
+					<option value="07">Juillet</option>
+					<option value="08">Aout</option>
+					<option value="09">Septembre</option>
+					<option value="10">Octobre</option>
+					<option value="11">Novembre</option>
+					<option value="12">Décembre</option>
+				</select> 
+				
+
+				<label for="selectYear">Année</label> 
+				<select name="selectYear" id="selectYear">
+					<option value="00" >Année</option>
+				</select>
+
+			</fieldset>
+		</div>
+
+</div>
+			<p>
+				<input type="button" name="submit" value="Envoyer"
+					onclick="writeIdentity();" />
+			</p>
+			
+			
+	
+
+		<!-- le pied de page -->
+		<div data-role="footer">
+			<h3></h3>
+		</div>
+	</div>
+</body>
+</html>

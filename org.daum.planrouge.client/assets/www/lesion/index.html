@@ -1,0 +1,172 @@
+<!Doctype html>
+<html>
+<head>
+<!-- pour spécifier au naviageteur comment afficher la page -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<!-- le fichier css pour formater nos balises html -->
+<link rel="stylesheet" href="file:///android_asset/www/jquery.mobile-1.1.1.min.css" />
+
+<!-- importation du bibliothèque jquery et jquery pour les mobiles -->
+<script src="file:///android_asset/www/jquery-1.7.1.min.js"></script>
+<script src="file:///android_asset/www/jquery.mobile-1.1.1.min.js"></script>
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script src="file:///android_asset/www/cordova.js"></script>
+<script src="file:///android_asset/www/js/script.js"></script>
+</head>
+<body onload="onload();">
+	<!-- la page d'identification -->
+	<div data-role="page" id="lesion" data-add-back-btn=true>
+		<!-- l'entête -->
+		<div data-role="header" data-theme="a" data-position= "fixed" >
+			<h1> Lésions Corporelles</h1>
+		</div>
+		<!-- le contenu -->
+		<div data-role="content">
+
+			<p>
+				<input type="button" name="submit" value="Récupérer les lésions corporelles" onclick="read_lesion();" />
+			</p>
+
+			<div data-role="table">
+			<TABLE border="1" width="98%"  data-role="table" class="ui-responsive" data-mode="reflow">
+				<CAPTION> Voici le titre du tableau </CAPTION> 
+				<TR align="center" valign="middle"> 
+				<TH width="12.5%" valign="middle">  </TH> 
+				 <TH width="12.5%" align="center" valign="middle"> Gonflement </TH> 
+				 <TH width="12.5%" align="center" valign="middle"> Section </TH> 
+				 <TH width="12.5%" align="center" valign="middle"> Plaie </TH> 
+				 <TH width="12.5%" align="center" valign="middle"> Douleur </TH>
+				 <TH width="12.5%" align="center" valign="middle"> Contusion </TH> 
+				 <TH width="12.5%" align="center" valign="middle"> Brulure </TH> 
+				 <TH width="12.5%" align="center" valign="middle"> Deformation </TH>  
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Crane </TH> 
+				 <TD> <input type="checkbox" id="option1" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option2" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option3" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option4" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option5" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option6" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option7" value="1"></TD>
+				</TR > 
+				<TR align="center" valign="middle"> 
+				 <TH> Face </TH> 
+				 <TD> <input type="checkbox" id="option8" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option9" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option10" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option11" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option12" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option13" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option14" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Cou </TH> 
+				 <TD> <input type="checkbox" id="option15" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option16" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option17" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option18" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option19" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option20" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option21" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Thorax </TH> 
+				 <TD> <input type="checkbox" id="option22" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option23" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option24" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option25" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option26" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option27" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option28" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Adomen </TH> 
+				 <TD> <input type="checkbox" id="option29" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option30" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option31" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option32" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option33" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option34" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option35" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Rachis </TH> 
+				 <TD> <input type="checkbox" id="option36" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option37" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option38" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option39" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option40" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option41" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option42" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Bassin </TH> 
+				 <TD> <input type="checkbox" id="option43" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option44" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option45" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option46" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option47" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option48" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option49" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Mbre sup droit </TH> 
+				 <TD> <input type="checkbox" id="option50" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option51" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option52" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option53" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option54" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option55" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option56" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Mbre sup gauche </TH> 
+				 <TD> <input type="checkbox" id="option57" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option58" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option59" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option60" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option61" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option62" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option63" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Mbre inf droit </TH> 
+				 <TD> <input type="checkbox" id="option64" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option65" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option66" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option67" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option68" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option69" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option70" value="1"></TD>
+				</TR> 
+				<TR align="center" valign="middle"> 
+				 <TH> Mbre inf gauche </TH> 
+				 <TD> <input type="checkbox" id="option71" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option72" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option73" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option74" value="1"></TD> 
+				 <TD> <input type="checkbox" id="option75" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option76" value="1"> </TD> 
+				 <TD> <input type="checkbox" id="option77" value="1"></TD>
+				</TR> 
+				
+			</TABLE> 
+			</div>
+			
+			<p>
+				<input type="button" name="submit" value="Envoyer"
+					onclick="Javascript:write_lesion();" />
+			</p>
+			
+		</div>
+
+		<!-- le pied de page -->
+		<div data-role="footer">
+			<h3></h3>
+		</div>
+	</div>
+</body>
+</html>

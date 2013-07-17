@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="JavascriptInterface">
+        <ignore path="src/com/phone/first_phone_gap/First_Phone_GapActivity.java" />
+    </issue>
+    <issue id="NewApi">
+        <ignore path="src/com/chariotsolutions/nfc/plugin/NfcPlugin.java" />
+        <ignore path="src/com/phonegap/plugins/nfc/Common.java" />
+    </issue>
+</lint>

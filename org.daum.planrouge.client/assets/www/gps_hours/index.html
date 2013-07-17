@@ -1,0 +1,89 @@
+<!Doctype html>
+<html>
+<head>
+<!-- pour spécifier au naviageteur comment afficher la page -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<!-- le fichier css pour formater nos balises html -->
+<link rel="stylesheet" href="file:///android_asset/www/jquery.mobile-1.1.1.min.css" />
+
+<!-- importation du bibliothèque jquery et jquery pour les mobiles -->
+<script src="file:///android_asset/www/jquery-1.7.1.min.js"></script>
+<script src="file:///android_asset/www/jquery.mobile-1.1.1.min.js"></script>
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script src="file:///android_asset/www/cordova.js"></script>
+<script src="file:///android_asset/www/js/script.js"></script>
+<script charset="utf-8" src="file:///android_asset/www/js/phonegap-nfc.js"></script>
+
+</head>
+<body onload="onload();">
+	<!-- la page d'identification -->
+	<div data-role="page" id="gpsHours" data-add-back-btn=true>
+		<!-- l'entête -->
+		<div data-role="header" data-theme="a" data-position= "fixed" >
+			<h1>Date et Lieu</h1>
+		</div>
+		<!-- le contenu -->
+		<div data-role="content">
+			
+			<p>
+				<input type="button" name="buttonSubmit" value="Récupérer les coordonnées GPS et heures" onclick="Javascript:readDateHoursGps();" />
+			</p>
+     
+     		<div id="gps_hours">
+     		
+     		
+     			
+     			<fieldset>
+     			<legend><b>Dernière position connue</b></legend>
+    			<span> Date : </span> <span id=date2></span> <br /> 
+    			<span> Latitude : </span> <span id=latitude2></span> <br />
+			    <span> Longitude : </span> <span id=longitude2></span> <br /> 
+			    <span> Précision : </span> <span id=accuracy2></span> <br />
+			    <span><input type="button" onClick="GoogleMap2()" value='GoogleMap'></span>
+			    </fieldset>
+			    
+			    <fieldset>
+     			<legend><b>Troisième position connue</b></legend>
+			    <span> Date : </span> <span id=date3></span> <br />
+			    <span> Latitude : </span> <span id=latitude3></span> <br />
+			    <span> Longitude : </span> <span id=longitude3></span> <br />
+			 	<span> Précision : </span> <span id=accuracy3></span> <br />
+			    <span><input type="button" onClick="GoogleMap3()" value='GoogleMap'></span>
+			    </fieldset>
+			    
+			    <fieldset>
+     			<legend><b>Deuxième position connue</b></legend>
+			    <span> Date : </span> <span id=date4></span> <br />
+			    <span> Latitude : </span> <span id=latitude4></span> <br />
+			    <span> Longitude : </span> <span id=longitude4></span> <br />
+			 	<span> Précision : </span> <span id=accuracy4></span> <br />
+			    <span><input type="button" onClick="GoogleMap4()" value='GoogleMap'></span>
+			    </fieldset>
+			    
+			    <fieldset>
+     			<legend><b>Première position connue</b></legend>
+     			<span> Date : </span> <span id=date1></span> <br />
+    			<span> Latitude : </span> <span id=latitude1></span> <br />
+     			<span> Longitude : </span> <span id=longitude1></span> <br />
+     			<span> Précision : </span> <span id=accuracy1></span> <br />
+     			
+     			<span><input type="button" onClick="GoogleMap1()" value='GoogleMap'></span>
+     			
+     			</fieldset>
+     		</div>
+                
+			<!--  BOUTON SUBMIT -->
+			<p>
+				<input type="button" name="buttonSubmit" value="Envoyer de nouvelles coordonnées GPS et heures" onclick="writeDateHoursGps();" />
+			</p>
+		</div>
+
+		<!-- le pied de page -->
+		<div data-role="footer">
+			<h3></h3>
+		</div>
+	</div>
+</body>
+</html>

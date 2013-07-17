@@ -1,0 +1,68 @@
+<!Doctype html>
+<html>
+<head>
+<!-- pour spécifier au naviageteur comment afficher la page -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<!-- le fichier css pour formater nos balises html -->
+<link rel="stylesheet" href="file:///android_asset/www/jquery.mobile-1.1.1.min.css" />
+
+<!-- importation du bibliothèque jquery et jquery pour les mobiles -->
+<script src="file:///android_asset/www/jquery-1.7.1.min.js"></script>
+<script src="file:///android_asset/www/jquery.mobile-1.1.1.min.js"></script>
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script src="file:///android_asset/www/cordova.js"></script>
+<script charset="ISO-8859-1" src="file:///android_asset/www/js/script.js"></script>
+<script src="file:///android_asset/www/js/phonegap-nfc.js"></script>
+
+</head>
+<body onload="onload();">
+	<!-- la page d'identification -->
+	<div data-role="page" id="victimCategory" data-add-back-btn=true>
+	
+		<!-- l'entête -->
+		<div data-role="header" data-theme="a" data-position= "fixed" >
+			<h1>Categorie de victime</h1>
+		</div>
+		
+		<!-- le contenu -->
+		<div data-role="content" id='victimCategoryChoice'>
+
+			<p>
+				<input type="button" value="Récupérer la catégorie de la victime" onClick="read_victim_category();" />
+			</p>
+			<form >
+				<fieldset>
+					<legend>Sélectionner la catégorie de la victime</legend>
+					<p>
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_1" value="1" /> 
+						<label for="categorie_victime_1" style="background: #11A600; text-shadow: none; border: 0px; height: 100px;">U3 - Impliqué sans lésion corporelles apparentes</label> 
+						
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_2" value="2" /> 
+						<label for="categorie_victime_2" style="background: #D8E801; text-shadow: none; border: 0px; height: 100px;">U2 - Lesion corporelles ET/OU psychologique (blessé léger)</label> 
+						
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_3" value="3" /> 
+						<label for="categorie_victime_3" style="background: #E88B01; text-shadow: none; border: 0px; height: 100px;">U1 - Urgence absolue</label> 
+						
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_4" value="4" />
+						<label for="categorie_victime_4" style="background: #f00; text-shadow: none; border: 0px; height: 100px;">EU - Extreme Urgence</label> 
+						
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_5" value="5" /> 
+						<label for="categorie_victime_5" style="background: #000; color: white; text-shadow: none; border: 0px; height: 100px; vertical-align: center;">DCD - Personne décédée</label>
+					</p>
+
+					<p>
+						<input type="button" value="Envoyer" onClick="write_victim_category();" />
+					</p>
+				</fieldset>
+			</form>
+
+		</div>
+		<!-- le pied de page -->
+		<div data-role="footer">
+			<h3></h3>
+		</div>
+	</div>
+
+</html>

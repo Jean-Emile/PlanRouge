@@ -1,0 +1,239 @@
+<!Doctype html>
+<html>
+<head>
+<!-- pour spécifier au naviageteur comment afficher la page -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<!-- le fichier css pour formater nos balises html -->
+<link rel="stylesheet" href="file:///android_asset/www/jquery.mobile-1.1.1.min.css" />
+
+<!-- importation du bibliothèque jquery et jquery pour les mobiles -->
+<script src="file:///android_asset/www/jquery-1.7.1.min.js"></script>
+<script src="file:///android_asset/www/jquery.mobile-1.1.1.min.js"></script>
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script src="file:///android_asset/www/cordova.js"></script>
+<script src="file:///android_asset/www/js/script.js"></script>
+</head>
+<body onload="onload();">
+	<!-- la page d'identification -->
+	<div data-role="page" id="urgenceVitale"  data-add-back-btn=true>
+		<!-- l'entête -->
+		<div data-role="header" data-theme="a" data-position= "fixed" >
+			<h1>BILAN D'URGENCE VITALE</h1>
+		</div>
+		<!-- le contenu -->
+		<div data-role="content">
+
+				<p>
+				<input type="button" name="submit" value="Récupérer les informations du Bilan d'urgence vitale"
+					onclick="Javascript:getInfoVitalEmergency();" />
+			</p>
+			
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup">
+					<legend>Conscience :</legend>
+					<input type="checkbox" name="urgence_vitale_1" id="urgence1" class="custom" />
+					<label for="urgence1">NORMALE</label>
+					<input type="checkbox" name="urgence_vitale_2" id="urgence2" class="custom" />
+					<label for="urgence2">ABSENTE</label>
+					<input type="checkbox" name="urgence_vitale_3" id="urgence3" class="custom" />
+					<label for="urgence3">Perte de connaissance </label>
+					<input type="checkbox" name="urgence_vitale_4" id="urgence4" class="custom" />
+					<label for="urgence4">Convulsions</label>
+					<input type="checkbox" name="urgence_vitale_5" id="urgence5" class="custom" />
+					<label for="urgence5">Désorientation</label>
+					<input type="checkbox" name="urgence_vitale_6" id="urgence6" class="custom" />
+					<label for="urgence6">Agitation</label>
+					<input type="checkbox" name="urgence_vitale_7" id="urgence7" class="custom" />
+					<label for="urgence7">Perte de motricité</label>
+					<input type="checkbox" name="urgence_vitale_8" id="urgence8" class="custom" />
+					<label for="urgence8">Sensibilité</label>
+					<input type="checkbox" name="urgence_vitale_9" id="urgence9" class="custom" />
+					<label for="urgence9">Anomalie des pupilles</label>
+				</fieldset>
+			</div>
+			
+<!-- FREQUENCE RESPIRATOIRE -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal
+				style="vertical-align: middle;">
+				<div class=ui-block-a style="vertical-align: middle; padding: 0em;">
+					<label
+						style="text-align: center; vertical-align: middle; padding-top: 10em;">
+						Perte de connaissance</label>
+				</div>
+				<div class=ui-block-b style="vertical-align: middle; padding: 0em;">
+					<input type="number" class=ui-field-contain id="perte_connaissance">
+				</div>
+				<div class=ui-block-c style="vertical-align: middle; padding: 0em;">
+					<select name="perte_connaissance_unite" id="perte_connaissance_unite">
+						<option value="1">Minutes</option>
+						<option value="2">Secondes</option>
+					</select>
+				</div>
+			</div>
+
+<!--  VENTILATION  -->
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup">
+					<legend>Ventilation :</legend>
+					<input type="checkbox" name="urgence_vitale_10" id="urgence10" class="custom" />
+					<label for="urgence10">NORMALE</label>
+					<input type="checkbox" name="urgence_vitale_11" id="urgence11" class="custom" />
+					<label for="urgence11">ABSENTE</label>
+					<input type="checkbox" name="urgence_vitale_12" id="urgence12" class="custom" />
+					<label for="urgence12">Obstruction des voies aériennes</label>
+					<input type="checkbox" name="urgence_vitale_13" id="urgence13" class="custom" />
+					<label for="urgence13">Superficielle</label>
+					<input type="checkbox" name="urgence_vitale_14" id="urgence14" class="custom" />
+					<label for="urgence14">Difficile</label>
+					<input type="checkbox" name="urgence_vitale_15" id="urgence15" class="custom" />
+					<label for="urgence15">Bruyante</label>
+					<input type="checkbox" name="urgence_vitale_16" id="urgence16" class="custom" />
+					<label for="urgence16">FV<6/mn</label>
+					<input type="checkbox" name="urgence_vitale_17" id="urgence17" class="custom" />
+					<label for="urgence17">Fréquence</label>
+					<input type="checkbox" name="urgence_vitale_18" id="urgence18" class="custom" />
+					<label for="urgence18">Saturation</label>
+				</fieldset>
+			</div>
+			
+
+<!-- FREQUENCE RESPIRATOIRE -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal
+				style="vertical-align: middle;">
+				<div class=ui-block-a style="vertical-align: middle; padding: 0em;">
+					<label
+						style="text-align: center; vertical-align: middle; padding-top: 10em;">
+						Fréquence Respiratoire </label>
+				</div>
+				<div class=ui-block-b style="vertical-align: middle; padding: 0em;">
+					<input type="number" class=ui-field-contain id="freq_respiratoire">
+				</div>
+				<div class=ui-block-c style="vertical-align: middle; padding: 0em;">
+					<select name="freq_respiratoire_unite" id="freq_respiratoire_unite">
+						<option value="1">Cyles/Minutes</option>
+						<option value="2">Cyles/30sec</option>
+					</select>
+				</div>
+			</div>
+
+
+			<!-- SATURATION -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Saturation </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="number"  class=ui-field-contain id="saturation" >
+				</div>
+
+				<div class=ui-block-c style="vertical-align:middle; padding: 0em;">
+					<select name="saturation_unite" id="saturation_unite">
+						<option value="1">%</option>
+						
+					</select>
+				</div>
+
+			</div>
+
+				
+<!--  CIRCULATION  -->
+					<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup">
+					<legend>Circulation :</legend>
+					<input type="checkbox" name="urgence_vitale_19" id="urgence19" class="custom" />
+					<label for="urgence19">NORMALE</label>
+					<input type="checkbox" name="urgence_vitale_20" id="urgence20" class="custom" />
+					<label for="urgence20">Hémorragie externe visible</label>
+					<input type="checkbox" name="urgence_vitale_21" id="urgence21" class="custom" />
+					<label for="urgence21">Pouls irrégulier</label>
+					<input type="checkbox" name="urgence_vitale_22" id="urgence22" class="custom" />
+					<label for="urgence22">Pouls filant</label>
+					<input type="checkbox" name="urgence_vitale_23" id="urgence23" class="custom" />
+					<label for="urgence23">Pouls lent</label>
+					<input type="checkbox" name="urgence_vitale_24" id="urgence24" class="custom" />
+					<label for="urgence24">Pouls rapide</label>
+					<input type="checkbox" name="urgence_vitale_25" id="urgence25" class="custom" />
+					<label for="urgence25">Recoloration > 2sec</label>
+					<input type="checkbox" name="urgence_vitale_26" id="urgence26" class="custom" />
+					<label for="urgence26">Modification de l'aspect de la peau</label>
+					<input type="checkbox" name="urgence_vitale_27" id="urgence27" class="custom" />
+					<label for="urgence27">Fréquence cardiaque</label>
+					<input type="checkbox" name="urgence_vitale_28" id="urgence28" class="custom" />
+					<label for="urgence28">Pression Arterielle</label>
+					
+					
+    			</fieldset>
+			</div>
+			
+<!-- FREQUENCE CARDIAQUE -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Fréquence Cardiaque </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="number"  class=ui-field-contain id="freq_cardiaque" >
+				</div>
+
+				<div class=ui-block-c style="vertical-align:middle; padding: 0em;">
+					<select name="freq_cardiaque_unite" id="freq_cardiaque_unite">
+						<option value="1">BPM</option>
+						
+					</select>
+				</div>
+
+			</div>
+
+
+<!-- PRESSION ARTERIELLE -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Pression Arterielle </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="number"  class=ui-field-contain id="pression_arterielle" >
+				</div>
+
+				<div class=ui-block-c style="vertical-align:middle; padding: 0em;">
+					<select name="pression_arterielle_unite" id="pression_arterielle_unite">
+						<option value="1">mmHg</option>
+					</select>
+				</div>
+
+			</div>
+			
+		
+			<p>
+				<input type="button" name="submit" value="Envoyer"
+					onclick="Javascript:tableUrgence();" />
+			</p>
+				
+			
+		</div>
+
+		<!-- le pied de page -->
+		<div data-role="footer">
+			<h3></h3>
+		</div>
+	</div>
+</body>
+</html>
