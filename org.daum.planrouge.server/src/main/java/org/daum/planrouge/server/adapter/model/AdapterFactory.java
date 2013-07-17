@@ -5,6 +5,7 @@ import org.daum.planrouge.server.adapter.model.entity.*;
 import org.daum.planrouge.server.utils.LRUMap;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.kevoree.log.Log;
 import org.kevoree.planrouge.*;
 import org.kevoree.planrouge.container.KMFContainer;
 import org.kevoree.planrouge.factory.MainFactory;
@@ -92,6 +93,8 @@ public class AdapterFactory implements IAdapterFactory {
             return getAdapter(Entities.AdapterIntervention).build(json);
         } else  if (json.getString("type").equals(Entities.AdapterVictime.toString())) {
             return getAdapter(Entities.AdapterVictime).build(json);
+        }  else  if (json.getString("type").equals(Entities.AdapterCategorie.toString())) {
+            return getAdapter(Entities.AdapterCategorie).build(json);
         }
         return null;
     }

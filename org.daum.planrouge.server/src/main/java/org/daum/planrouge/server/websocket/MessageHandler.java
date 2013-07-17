@@ -1,6 +1,7 @@
 package org.daum.planrouge.server.websocket;
 
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
+import org.daum.planrouge.server.adapter.model.Entities;
 import org.daum.planrouge.server.adapter.model.IAdapter;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,18 +26,20 @@ public class MessageHandler {
     private ContainerRoot root;
 
     public MessageHandler(ContainerRoot root) {
-        this.root= root;
+        this.root = root;
     }
 
-    public  void merge(Object obj, Object update)   {
-        if(!obj.getClass().isAssignableFrom(update.getClass())){
+    public void merge(Object obj, Object update) {
+        if (!obj.getClass().isAssignableFrom(update.getClass())) {
             return;
         }
         Field[] fields = obj.getClass().getDeclaredFields();
-        for(Field f: fields){
+        for (Field f : fields) {
             f.setAccessible(true);
             try {
-                if(f.get(obj) != null && (f.get(update).equals("") |f.get(update).equals(0))){
+                if (f.get(update) != null
+                        && (f.get(update).equals("")
+                        | f.get(update).equals(0))) {
                     f.set(update, f.get(obj));
                 }
             } catch (IllegalAccessException e) {
@@ -46,43 +49,39 @@ public class MessageHandler {
     }
 
 
-    //todo 
-    public void process(WebSocketConnection connection,Object obj,HandlerWebSocket.ACTION action) throws JSONException {
 
-        IAdapter adapter = (IAdapter)obj;
-        switch (adapter.getType()){
+    public void process(WebSocketConnection connection, Object obj, HandlerWebSocket.ACTION action) throws JSONException {
+
+//        IAdapter adapter = (IAdapter) obj;         //todo obj cannot be cast
+        Entities x = Entities.AdapterVictime;        //test
+        switch (x) {
 
             case AdapterCategorie:
-
-
                 break;
 
             case AdapterGpsPoint:
-
                 break;
 
 
             case AdapterIntervention:
-
-
                 break;
 
 
             case AdapterVictime:
-                Victime victime = (Victime)obj;
-                switch (action){
+                Victime victime = (Victime) obj;
+                switch (action) {
                     case GET:
 
 
-                         victime = root.findInterventionsByID("1").findVictimesByID(victime.getId());
+                        victime = root.findInterventionsByID("1").findVictimesByID(victime.getId());
 
-                        JSONObject jsonVictime =  AdapterFactory.getInstance().build(victime);
+                        JSONObject jsonVictime = AdapterFactory.getInstance().build(victime);
                         List<Victime> victimeList = new LinkedList();
                         victimeList = root.findInterventionsByID("1").getVictimes();
 
                         Iterator iterator
                                 = victimeList.iterator();
-                        while ( iterator.hasNext()){
+                        while (iterator.hasNext()) {
                             Victime key = (Victime) iterator.next();
                             Log.debug(key.getId());
                         }
@@ -99,15 +98,13 @@ public class MessageHandler {
                         break;
 
 
-                    case  PUT:
+                    case PUT:
 
-                        Victime vicmodel =   root.findInterventionsByID("1").findVictimesByID(victime.getId());
+                        Victime vicmodel = root.findInterventionsByID("1").findVictimesByID(victime.getId());
 
-                        if(vicmodel !=null)
-                        {
-                            merge(vicmodel,vicmodel);
-                        } else
-                        {
+                        if (vicmodel != null) {
+                            merge(vicmodel, victime);
+                        } else {
                             root.findInterventionsByID("1").addVictimes(victime);
                         }
 
@@ -117,7 +114,6 @@ public class MessageHandler {
 
                 connection.send("ack");
                 break;
-
 
 
         }

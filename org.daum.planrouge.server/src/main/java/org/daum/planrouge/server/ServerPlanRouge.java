@@ -33,6 +33,7 @@ public class ServerPlanRouge extends AbstractComponentType {
 
     private HandlerWebSocket handlerWebSocketget;
     private HandlerWebSocket handlerWebSocketput;
+    private GetGlobalInformationsHandler handlerGlobalInformations;
 
     @Start
     public void start() {
@@ -45,11 +46,14 @@ public class ServerPlanRouge extends AbstractComponentType {
         intervention.setDescription("un train est rentré dans un avion en plein vol");
         containerRoot.addInterventions(intervention);
 
-        createWebServer();
-        webServer.start();
+
+
         handlerWebSocketget =new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.GET);
         handlerWebSocketput =new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.PUT);
+        handlerGlobalInformations =  new GetGlobalInformationsHandler(adapterFactory,containerRoot);
 
+        createWebServer();
+        webServer.start();
         Log.info("Server running at " + webServer.getUri());
 
     }
@@ -74,7 +78,7 @@ public class ServerPlanRouge extends AbstractComponentType {
         webServer = WebServers.createWebServer(Integer.parseInt(getDictionary().get("port").toString()))
                 .add("/add",handlerWebSocketput)
                 .add("/get", handlerWebSocketget)
-                .add("/getGlobalInformations", new GetGlobalInformationsHandler(adapterFactory,containerRoot))
+                .add("/getGlobalInformations", handlerGlobalInformations)
                 .add(new StaticFileHandler("/web"));
     }
 

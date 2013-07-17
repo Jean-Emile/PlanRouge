@@ -21,6 +21,7 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
     private AdapterFactory adapterFactory=null;
     private MessageHandler msg =null;
     private  ACTION current;
+    private int connexion;
     public enum ACTION {
         PUT,
         GET
@@ -34,10 +35,13 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
 
     }
     public void onOpen(WebSocketConnection connection) {
+        connexion++;
+        connection.send("Other connection :: "+connexion );
         peers.addPeer(connection);
     }
 
     public void onClose(WebSocketConnection connection) {
+        connexion--;
         peers.removePeer(connection);
     }
 

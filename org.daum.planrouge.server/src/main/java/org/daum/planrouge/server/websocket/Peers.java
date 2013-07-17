@@ -25,7 +25,7 @@ public class Peers {
     }
 
     public void removePeer(WebSocketConnection webSocketConnection){
-        connections.add(webSocketConnection);
+        connections.remove(webSocketConnection);
         notifyConnection.notifyConnection(webSocketConnection);
     }
 
