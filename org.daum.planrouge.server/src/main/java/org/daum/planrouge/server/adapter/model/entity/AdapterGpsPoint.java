@@ -22,6 +22,7 @@ import java.util.Iterator;
  */
 public class AdapterGpsPoint extends AbstractAdapter {
     private AdapterFactory adapterFactory;
+
     public AdapterGpsPoint(AdapterFactory adapterFactory) {
         super();
         this.adapterFactory = adapterFactory;
@@ -30,7 +31,7 @@ public class AdapterGpsPoint extends AbstractAdapter {
     @Override
     public JSONObject build(KMFContainer container) throws JSONException {
         JSONObject jsonGps = new JSONObject();
-        GpsPoint  gpsPoint =    (GpsPoint)  container;
+        GpsPoint gpsPoint = (GpsPoint) container;
         jsonGps.put("latitude", gpsPoint.getLatitude());
         jsonGps.put("longitude", gpsPoint.getLongitude());
         jsonGps.put("precision", gpsPoint.getMode());
@@ -41,12 +42,23 @@ public class AdapterGpsPoint extends AbstractAdapter {
 
     // Parse JSONObject to GPSPoint
     @Override
-    public  <T> T  build(JSONObject json) throws JSONException {
+    public <T> T build(JSONObject json) throws JSONException {
         GpsPoint gpsPoint = adapterFactory.getFactory().createGpsPoint();
-        gpsPoint.setHorodatage(json.getString("heure").toString());
-        gpsPoint.setLongitude(Integer.parseInt(json.getString("longitude").toString()));
-        gpsPoint.setLatitude(Integer.parseInt(json.getString("latitude").toString()));
-        gpsPoint.setMode(Integer.parseInt(json.getString("precision").toString()));
+
+        if (json.has("heure")) {
+            gpsPoint.setHorodatage(json.getString("heure").toString());
+        }
+        if (json.has("longitude")) {
+            gpsPoint.setLongitude(Integer.parseInt(json.getString("longitude").toString()));
+        }
+        if (json.has("latitude")) {
+            gpsPoint.setLatitude(Integer.parseInt(json.getString("latitude").toString()));
+        }
+        if (json.has("precision")) {
+            gpsPoint.setMode(Integer.parseInt(json.getString("precision").toString()));
+        }
+
+
         return (T) gpsPoint;
     }
 

@@ -31,7 +31,7 @@ public class AdapterIntervention extends AbstractAdapter {
     @Override
     public JSONObject build(KMFContainer container) throws JSONException {
         JSONObject jsonCategorie = new JSONObject();
-        InterventionImpl intervention = (InterventionImpl)container;
+        InterventionImpl intervention = (InterventionImpl) container;
         jsonCategorie.put("id", intervention.getId());
         jsonCategorie.put("description", intervention.get_description());
         jsonCategorie.put("position", adapterFactory.build(intervention.get_position()));
@@ -43,9 +43,14 @@ public class AdapterIntervention extends AbstractAdapter {
     @Override
     public <T> T build(JSONObject json) throws JSONException {
         Intervention intervention = adapterFactory.getFactory().createIntervention();
-        intervention.setId(json.getString("id").toString());
-        intervention.setDescription(json.getString("description").toString());
-        return null;
+        if (json.has("id")) {
+            intervention.setId(json.getString("id").toString());
+        }
+        if (json.has("description")) {
+            intervention.setDescription(json.getString("description").toString());
+        }
+
+        return (T) intervention;
     }
 
 

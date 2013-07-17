@@ -20,7 +20,7 @@ import java.util.Iterator;
  */
 public class AdapterCategorie extends AbstractAdapter {
 
-    private  AdapterFactory adapterFactory;
+    private AdapterFactory adapterFactory;
 
     public AdapterCategorie(AdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -38,12 +38,16 @@ public class AdapterCategorie extends AbstractAdapter {
     @Override
     public <T> T build(JSONObject json) throws JSONException {
         Categorie categorie = adapterFactory.getFactory().createCategorie();
-        categorie.setId(json.getString("code").toString());
+
+        if (json.has("code")) {
+            categorie.setId(json.getString("code").toString());
+        }
+
         return (T) categorie;
     }
 
     @Override
     public String getType() {
-       return CategorieImpl.class.getName();
+        return CategorieImpl.class.getName();
     }
 }

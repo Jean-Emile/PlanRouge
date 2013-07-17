@@ -10,6 +10,7 @@ import org.kevoree.planrouge.container.KMFContainer;
 import org.kevoree.planrouge.impl.VictimeImpl;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -105,171 +106,78 @@ public class AdapterVictime extends AbstractAdapter {
     @Override
     public <T> T build(JSONObject json) throws JSONException {
 
-        Victime victime =  adapterFactory.getFactory().createVictime();
-
-              // todo refactor
-        //iterarateur pour parcourir les différentes valeurs du message reçu
-        Iterator iterator = json.keys();
-        while (iterator.hasNext()) {
-            // On récupère une clé du message
-            String key = iterator.next().toString();
-             // todo jed
-            //Si la clé correspond à Identity
-            if (key.equals("identity")) {
-                // Get Identity Object
-                JSONObject IdentityObject = null;
-                try {
-                    IdentityObject = json.getJSONObject(key);
-                } catch (JSONException e) {
-                    Log.debug(e.getMessage());
-
-                    return null;
-                }
-                //on crée un iterator pour l'objet identity
-                Iterator iteratorNewObject = IdentityObject.keys();
-                while (iteratorNewObject.hasNext()) {
-                    String keyIdentity = iteratorNewObject.next().toString();
-                    String value = null;
-                    try {
-                        value = IdentityObject.getString(keyIdentity);
-                    } catch (JSONException e) {
-                        Log.debug(e.getMessage());
-                        return null;
-                    }
-                    if (keyIdentity.equals("id")) {
-                        victime.setId(value);
-                    } else if (keyIdentity.equals("nom")) {
-                        victime.setNom(value);
-                    } else if (keyIdentity.equals("prenom")) {
-                        victime.setPrenom(value);
-                    } else if (keyIdentity.equals("age")) {
-                        victime.setAge(Integer.parseInt(value));
-                    } else if (keyIdentity.equals("sexe")) {
-                        victime.setSexe(value);
-                    } else if (keyIdentity.equals("dateNaissance")) {
-                        victime.setDateNaissance(value);
-                    }
-                }
-            } else if (key.equals("positionRef")) {
-
-                JSONObject jsonPositionRef = null;
-                try {
-                    jsonPositionRef = json.getJSONObject(key);
-                } catch (JSONException e) {
-                    Log.debug(e.getMessage());
-                    return null;
-                }
-                Iterator iteratorPositionRef = jsonPositionRef.keys();
-                while (iteratorPositionRef.hasNext()) {
-                    String keyPositionRef = iteratorPositionRef.next().toString();
-
-                    if (keyPositionRef.equals("gpsPoint")) {
-                        // On récupére l'objet JSON GPSPoint
-                        JSONObject jsonGPSPoint = null;
-                        try {
-                            jsonGPSPoint = jsonPositionRef.getJSONObject(keyPositionRef);
-                        } catch (JSONException e) {
-                            Log.debug(e.getMessage());
-                            return null;
-                        }
-
-                        GpsPoint gpsPoint = adapterFactory.build(jsonGPSPoint);
-
-                        if (gpsPoint != null) {
-                            victime.setPosRef(gpsPoint);
-                        }
-                    } else if (keyPositionRef.equals("positionCivile")) {
-                        // On récupére l'objet JSON PositionCivile
-                        JSONObject jsonGPSPoint = null;
-                        try {
-                            jsonGPSPoint = jsonPositionRef.getJSONObject(keyPositionRef);
-                        } catch (JSONException e) {
-                            Log.debug(e.getMessage());
-                            return null;
-                        }
-
-                        PositionCivil positionCivile = adapterFactory.build(jsonGPSPoint);
-
-                        if (positionCivile != null) {
-                            victime.setPosRef(positionCivile);
-                        }
-                    }
-                }
-            } else if (key.equals("positionDestination")) {
-                JSONObject jsonPositionDestination = null;
-                try {
-                    jsonPositionDestination = json.getJSONObject(key);
-                } catch (JSONException e) {
-                    Log.debug(e.getMessage());
-                    return null;
-                }
-                Iterator iteratorpositionDestination = jsonPositionDestination.keys();
-                while (iteratorpositionDestination.hasNext()) {
-                    String keyPositionRef = iteratorpositionDestination.next().toString();
-                    if (keyPositionRef.equals("gpsPoint")) {
-                        // On récupére l'objet JSON GPSPoint
-                        JSONObject jsonGPSPoint = null;
-                        try {
-                            jsonGPSPoint = jsonPositionDestination.getJSONObject(keyPositionRef);
-                        } catch (JSONException e) {
-                            Log.debug(e.getMessage());
-                            return null;
-                        }
-
-                        Position gpsPoint = adapterFactory.build(jsonGPSPoint);
-                        if (gpsPoint != null) {
-                            victime.addPosDestination(gpsPoint);
-                        }
-                    } else if (keyPositionRef.equals("positionCivile")) {
-                        // On récupére l'objet JSON PositionCivile
-                        JSONObject jsonGPSPoint = null;
-                        try {
-                            jsonGPSPoint = jsonPositionDestination.getJSONObject(keyPositionRef);
-                        } catch (JSONException e) {
-                            Log.debug(e.getMessage());
-                            return null;
-                        }
-
-                        Position positionCivile = adapterFactory.build(jsonGPSPoint);
-                        if (positionCivile != null) {
-                            victime.addPosDestination(positionCivile);
-                        }
-                    }
-                }
-            } else if (key.equals("categorie")) {
-                // On récupére l'objet JSON Categorie
-                JSONObject jsonPriorite = null;
-                try {
-                    jsonPriorite = json.getJSONObject(key);
-                } catch (JSONException e) {
-                    Log.debug(e.getMessage());
-                    return null;
-                }
-                Categorie categorie = adapterFactory.build(jsonPriorite);
-                if (categorie != null) {
-                    victime.setPriorite(categorie);
-                }
-            } else if(key.equals("type")){
-
-            } else {
-                return null;
+        Victime victime = adapterFactory.getFactory().createVictime();
+        if (json.has("identity")) {
+            Log.info("has identity");
+            if (json.getJSONObject("identity").has("prenom")) {
+                Log.info("has prenom");
+                victime.setPrenom(json.getJSONObject("identity").getString("prenom").toString());
             }
+            if (json.getJSONObject("identity").has("nom")) {
+                Log.info("has nom");
+                victime.setPrenom(json.getJSONObject("identity").getString("nom").toString());
+            }
+            if (json.getJSONObject("identity").has("id")) {
+                Log.info("has id");
+                victime.setId(json.getJSONObject("identity").getString("id").toString());
+            }
+            if (json.has("dateNaissance")) {
+                Log.info("has dateNaissance");
+                victime.setDateNaissance(json.getJSONObject("identity").getString("dateNaissance").toString());
+            }
+            if (json.has("sexe")) {
+                Log.info("has sexe");
+                victime.setSexe(json.getJSONObject("identity").getString("sexe").toString());
+            }
+            if (json.has("age")) {
+                Log.info("has age");
+                victime.setAge(json.getJSONObject("identity").getInt("age"));
+            }
+        }
+        if (json.has("categorie")) {
+            Log.info("has category");
+            victime.setPriorite((Categorie) adapterFactory.build(json.getJSONObject("categorie")));
+        }
+
+        if (json.has("positionRef")) {
+            Log.info("has positionRef");
+            if (json.getJSONObject("positionRef").has("gpsPoint")) {
+                Log.info("has gpsPoint");
+                victime.setPosRef((GpsPoint) adapterFactory.build(json.getJSONObject("positionRef").getJSONObject("gpsPoint")));
+            }
+            if (json.getJSONObject("positionRef").has("positionCivile")) {
+                Log.info("has positionCivile");
+                victime.setPosRef((PositionCivil) adapterFactory.build(json.getJSONObject("positionRef").getJSONObject("positionCivile")));
+            }
+
+        }
+        if (json.has("positionDestination")) {
+            Log.info("has positionDestination");
+            if (json.getJSONObject("positionDestination").has("gpsPoint")) {
+                Log.info("has gpsPoint");
+                victime.setPosRef((GpsPoint) adapterFactory.build(json.getJSONObject("positionDestination").getJSONObject("gpsPoint")));
+            }
+            if (json.getJSONObject("positionDestination").has("positionCivile")) {
+                Log.info("has positionCivile");
+                victime.setPosRef((PositionCivil) adapterFactory.build(json.getJSONObject("positionDestination").getJSONObject("positionCivile")));
+            }
+
         }
 
         if (victime.getId() == null || victime.getId().equals("")) {
-            Log.info(victime.getId());
+            Log.info("ID victime null  :: "+victime.getId());
             return null;
         }
 
         return (T) victime;
+
+
     }
 
     @Override
     public String getType() {
         return VictimeImpl.class.getName();
     }
-
-
 
 
 }

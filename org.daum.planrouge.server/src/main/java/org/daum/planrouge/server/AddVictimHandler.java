@@ -47,7 +47,7 @@ public class AddVictimHandler extends BaseWebSocketHandler {
 
     }
 
-
+              // Hack due to perf read tag we can do better !!
     public  void merge(Object obj, Object update)   {
         if(!obj.getClass().isAssignableFrom(update.getClass())){
             return;
@@ -75,12 +75,13 @@ public class AddVictimHandler extends BaseWebSocketHandler {
 
             if(vicmodel !=null){
                 merge(vicmodel,vicmodel);
-
+                connection.send("Victim update");
             } else {
                 containerRoot.findInterventionsByID("1").addVictimes(victime);
+                connection.send("Victim added to database");
             }
 
-            connection.send("Victim added to database");
+
         } else {
             connection.send("Erreur");
         }
