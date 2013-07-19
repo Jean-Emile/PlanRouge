@@ -6,8 +6,8 @@ import org.daum.planrouge.server.adapter.model.IAdapter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
-import org.kevoree.planrouge.ContainerRoot;
-import org.kevoree.planrouge.Victime;
+import org.kevoree.planrouge.*;
+import org.kevoree.planrouge.impl.InterventionImpl;
 import org.webbitserver.WebSocketConnection;
 
 import java.lang.reflect.Field;
@@ -49,12 +49,11 @@ public class MessageHandler {
     }
 
 
+    public void process(WebSocketConnection connection, AdapterFactory adapterFactory, JSONObject message, HandlerWebSocket.ACTION action) throws JSONException {
 
-    public void process(WebSocketConnection connection, Object obj, HandlerWebSocket.ACTION action) throws JSONException {
+        Object obj = AdapterFactory.getInstance().build(message);
 
-//        IAdapter adapter = (IAdapter) obj;         //todo obj cannot be cast
-        Entities x = Entities.AdapterVictime;        //test
-        switch (x) {
+        switch (adapterFactory.getType(obj)) {
 
             case AdapterCategorie:
                 break;
@@ -69,7 +68,12 @@ public class MessageHandler {
 
             case AdapterVictime:
                 Victime victime = (Victime) obj;
+                if (victime.getId().length() == 0){
+                    Log.error("AdapterVictime ::: No ID");
+                    return;
+                }
                 switch (action) {
+
                     case GET:
 
 
@@ -103,11 +107,17 @@ public class MessageHandler {
                         Victime vicmodel = root.findInterventionsByID("1").findVictimesByID(victime.getId());
 
                         if (vicmodel != null) {
-                            merge(vicmodel, victime);
+                           // merge(vicmodel, victime);
+                            root.findInterventionsByID("1").removeVictimes(vicmodel);
+                            root.findInterventionsByID("1").addVictimes(victime);
+
                         } else {
                             root.findInterventionsByID("1").addVictimes(victime);
                         }
 
+                        Victime test = root.findInterventionsByID("1").findVictimesByID(victime.getId());
+                        JSONObject jtest = AdapterFactory.getInstance().build(test);
+                        Log.info(jtest.toString());
                         break;
                 }
 

@@ -1,8 +1,6 @@
 package org.daum.planrouge.server.adapter.model;
 
-import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.PlanrougeFactory;
-import org.kevoree.planrouge.factory.MainFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +9,9 @@ import org.kevoree.planrouge.factory.MainFactory;
  * Time: 10:41
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractAdapter implements IAdapter {
+public abstract class AbstractAdapter
+//        implements IAdapter
+    {
 
     private PlanrougeFactory modelfactory = null;
 

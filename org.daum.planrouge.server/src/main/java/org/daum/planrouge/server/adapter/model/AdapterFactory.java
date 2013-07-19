@@ -22,46 +22,45 @@ import org.kevoree.planrouge.impl.InterventionImpl;
 public class AdapterFactory implements IAdapterFactory {
 
     private PlanrougeFactory factory = new MainFactory().getPlanrougeFactory();
-    private LRUMap adapterLRU   = new LRUMap(4);
+    private LRUMap adapterLRU = new LRUMap(4);
 
     private static AdapterFactory singleton = null;
 
 
-    public static AdapterFactory getInstance(){
-        if(singleton == null){
-            singleton   = new AdapterFactory();
+    public static AdapterFactory getInstance() {
+        if (singleton == null) {
+            singleton = new AdapterFactory();
         }
         return singleton;
     }
 
-    public  synchronized IAdapter getAdapter(Entities id){
-        IAdapter instance =null;
-        if(adapterLRU.containsKey(id)){
-            return(IAdapter) adapterLRU.get(id);
-        } else
-        {
-            switch (id)
-            {
-                case  AdapterGpsPoint:
-                    instance  =  new AdapterGpsPoint();
+    public synchronized IAdapter getAdapter(Entities id) {
+        IAdapter instance = null;
+        if (adapterLRU.containsKey(id)) {
+            return (IAdapter) adapterLRU.get(id);
+        } else {
+            switch (id) {
+                case AdapterGpsPoint:
+                    instance = new AdapterGpsPoint();
                     break;
                 case AdapterPositionCivile:
-                    instance  =new AdapterPositionCivile();
+                    instance = new AdapterPositionCivile();
                     break;
                 case AdapterCategorie:
-                    instance  =new AdapterCategorie();
+                    instance = new AdapterCategorie();
                     break;
                 case AdapterVictime:
-                    instance  =new AdapterVictime();
+                    instance = new AdapterVictime();
                     break;
                 case AdapterIntervention:
-                    instance  =new AdapterIntervention();
+                    instance = new AdapterIntervention();
                     break;
             }
-            adapterLRU.put(id,instance);
+            adapterLRU.put(id, instance);
             return instance;
         }
     }
+
     @Override
     public JSONObject build(KMFContainer container) throws JSONException {
 
@@ -73,13 +72,28 @@ public class AdapterFactory implements IAdapterFactory {
             return getAdapter(Entities.AdapterCategorie).build(container);
         } else if (container instanceof Victime) {
             return getAdapter(Entities.AdapterVictime).build(container);
-        } else if(container instanceof InterventionImpl){
-            return   getAdapter(Entities.AdapterIntervention).build(container);
+        } else if (container instanceof InterventionImpl) {
+            return getAdapter(Entities.AdapterIntervention).build(container);
         }
 
         return null;
     }
 
+
+    public Entities getType(Object container) {
+        if (container instanceof GpsPoint) {
+            return Entities.AdapterGpsPoint;
+        } else if (container instanceof PositionCivil) {
+            return Entities.AdapterPositionCivile;
+        } else if (container instanceof Categorie) {
+            return Entities.AdapterCategorie;
+        } else if (container instanceof Victime) {
+            return Entities.AdapterVictime;
+        } else if (container instanceof InterventionImpl) {
+            return Entities.AdapterIntervention;
+        }
+        return null;
+    }
 
 
     @Override
@@ -87,13 +101,13 @@ public class AdapterFactory implements IAdapterFactory {
 
         if (json.getString("type").equals(Entities.AdapterGpsPoint.toString())) {
             return getAdapter(Entities.AdapterGpsPoint).build(json);
-        } else  if (json.getString("type").equals(Entities.AdapterPositionCivile.toString())) {
+        } else if (json.getString("type").equals(Entities.AdapterPositionCivile.toString())) {
             return getAdapter(Entities.AdapterPositionCivile).build(json);
-        } else  if (json.getString("type").equals(Entities.AdapterIntervention.toString())) {
+        } else if (json.getString("type").equals(Entities.AdapterIntervention.toString())) {
             return getAdapter(Entities.AdapterIntervention).build(json);
-        } else  if (json.getString("type").equals(Entities.AdapterVictime.toString())) {
+        } else if (json.getString("type").equals(Entities.AdapterVictime.toString())) {
             return getAdapter(Entities.AdapterVictime).build(json);
-        }  else  if (json.getString("type").equals(Entities.AdapterCategorie.toString())) {
+        } else if (json.getString("type").equals(Entities.AdapterCategorie.toString())) {
             return getAdapter(Entities.AdapterCategorie).build(json);
         }
         return null;

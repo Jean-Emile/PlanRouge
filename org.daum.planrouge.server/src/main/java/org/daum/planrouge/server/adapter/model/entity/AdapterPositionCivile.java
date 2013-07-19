@@ -3,6 +3,7 @@ package org.daum.planrouge.server.adapter.model.entity;
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.adapter.model.Entities;
+import org.daum.planrouge.server.adapter.model.IAdapter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -20,7 +21,7 @@ import java.util.Iterator;
  * Time: 15:28
  * To change this template use File | Settings | File Templates.
  */
-public class AdapterPositionCivile extends AbstractAdapter {
+public class AdapterPositionCivile implements IAdapter {
 
     private AdapterFactory adapterFactory;
 
@@ -38,7 +39,7 @@ public class AdapterPositionCivile extends AbstractAdapter {
         jsonGps.put("nomRue", positionCivile.getNomRue());
         jsonGps.put("nomVille", positionCivile.getNomVille());
         jsonGps.put("heure", positionCivile.getNomRue());
-        jsonGps.put("type", container.getClass().getName());
+        jsonGps.put("type", getType());
         return jsonGps;
     }
 

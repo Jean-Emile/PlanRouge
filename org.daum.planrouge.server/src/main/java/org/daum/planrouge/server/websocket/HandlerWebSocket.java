@@ -48,6 +48,6 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         Log.debug("Message from peer");
         JSONObject jsonObject = new JSONObject(message);
-        msg.process(connection,adapterFactory.build(jsonObject),current);
+        msg.process(connection,adapterFactory,jsonObject,current);
     }
 }

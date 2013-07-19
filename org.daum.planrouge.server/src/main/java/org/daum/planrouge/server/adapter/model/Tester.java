@@ -44,11 +44,12 @@ public class Tester {
 
 
         Victime victime = adapterFactory.getFactory().createVictime();
-
+         victime.setId("111");
         victime.setPrenom("jed");
         victime.setAge(10);
 
         Victime victime2 = adapterFactory.getFactory().createVictime();
+        victime.setId("111");
         victime2.setNom("dartois");
         victime.setPrenom("jed2");
 
@@ -56,7 +57,8 @@ public class Tester {
         merge(victime, victime2);
         System.out.println(victime2.getPrenom()+" "+victime2.getNom()+" ");
 
-
+        Object obj = victime;
+        System.out.println(obj.getClass().getName());
 
     }
 }

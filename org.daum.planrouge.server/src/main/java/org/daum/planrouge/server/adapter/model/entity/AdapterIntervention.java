@@ -3,6 +3,7 @@ package org.daum.planrouge.server.adapter.model.entity;
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.adapter.model.Entities;
+import org.daum.planrouge.server.adapter.model.IAdapter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.planrouge.Categorie;
@@ -21,7 +22,7 @@ import java.lang.reflect.Field;
  * Time: 15:38
  * To change this template use File | Settings | File Templates.
  */
-public class AdapterIntervention extends AbstractAdapter {
+public class AdapterIntervention implements IAdapter {
 
     private AdapterFactory adapterFactory;
 
@@ -36,7 +37,7 @@ public class AdapterIntervention extends AbstractAdapter {
         jsonCategorie.put("id", intervention.getId());
         jsonCategorie.put("description", intervention.get_description());
         jsonCategorie.put("position", adapterFactory.build(intervention.get_position()));
-        jsonCategorie.put("type", container.getClass().getName());
+        jsonCategorie.put("type", getType());
 
         return jsonCategorie;
     }

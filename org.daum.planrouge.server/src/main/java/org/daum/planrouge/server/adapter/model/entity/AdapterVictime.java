@@ -3,6 +3,8 @@ package org.daum.planrouge.server.adapter.model.entity;
 import org.daum.planrouge.server.adapter.model.AbstractAdapter;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.adapter.model.Entities;
+import org.daum.planrouge.server.adapter.model.IAdapter;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
@@ -20,12 +22,12 @@ import java.util.List;
  * Time: 15:17
  * To change this template use File | Settings | File Templates.
  */
-public class AdapterVictime extends AbstractAdapter {
+public class AdapterVictime implements IAdapter {
 
-   private AdapterFactory adapterFactory;
+    private AdapterFactory adapterFactory;
 
     public AdapterVictime() {
-        this.adapterFactory =  AdapterFactory.getInstance();
+        this.adapterFactory = AdapterFactory.getInstance();
     }
 
     @Override
@@ -33,7 +35,7 @@ public class AdapterVictime extends AbstractAdapter {
 
         JSONObject jsonVictime = new JSONObject();
         Victime victime = (Victime) container;
-        jsonVictime.put("type", container.getClass().getName());
+        jsonVictime.put("type", getType());
         //Identité
         JSONObject jsonIdentity = new JSONObject();
 
@@ -42,6 +44,7 @@ public class AdapterVictime extends AbstractAdapter {
         jsonIdentity.put("id", victime.getId());
         jsonIdentity.put("age", victime.getAge());
         jsonIdentity.put("dateNaissance", victime.getDateNaissance());
+        jsonIdentity.put("sexe", victime.getSexe());
 
         jsonVictime.put("identite", jsonIdentity);
 
@@ -72,24 +75,30 @@ public class AdapterVictime extends AbstractAdapter {
 
         if (victime.getPosDestination() != null) {
             //Destination
-            JSONObject position = new JSONObject();
+            List<Position> listGpsPoint = victime.getPosDestination();
+            JSONArray arrayGpsPoint = new JSONArray();
 
-            if (victime.getPosRef() instanceof GpsPoint) {
-                //Position GPS
-                GpsPoint gpsPoint = (GpsPoint) victime.getPosDestination();
-                JSONObject jGpsPoint = adapterFactory.build(gpsPoint);
+            for (int i = 0; i < listGpsPoint.size(); i++) {
+                Position element = listGpsPoint.get(i);
+                if (element instanceof GpsPoint) {
+                    //Position GPS
 
-                position.put("gpsPoint", jGpsPoint);
+                    JSONObject jGpsPoint = adapterFactory.build(element);
 
-            } else if (victime.getPosRef() instanceof PositionCivil) {
-                //Position Civile
-                PositionCivil positionCivile = (PositionCivil) victime.getPosDestination();
-                JSONObject jPositionCivile = adapterFactory.build(positionCivile);
+                    arrayGpsPoint.put(new JSONObject().put("gpsPoint", jGpsPoint));
 
-                position.put("positionCivile", jPositionCivile);
+                } else if (element instanceof PositionCivil) {
+                    //Position Civile
+
+                    JSONObject jPositionCivile = adapterFactory.build(element);
+
+                    arrayGpsPoint.put(new JSONObject().put("positionCivile", jPositionCivile));
+                }
             }
 
-            jsonVictime.put("positionDestination", position);
+
+            jsonVictime.put("posDestination", arrayGpsPoint);
+
         }
         if (victime.getPriorite() != null) {
             //Priority
@@ -116,21 +125,23 @@ public class AdapterVictime extends AbstractAdapter {
             }
             if (json.getJSONObject("identity").has("nom")) {
                 Log.info("has nom");
-                victime.setPrenom(json.getJSONObject("identity").getString("nom").toString());
+                victime.setNom(json.getJSONObject("identity").getString("nom").toString());
             }
             if (json.getJSONObject("identity").has("id")) {
                 Log.info("has id");
                 victime.setId(json.getJSONObject("identity").getString("id").toString());
+            } else {
+                victime.setId("");
             }
-            if (json.has("dateNaissance")) {
+            if (json.getJSONObject("identity").has("dateNaissance")) {
                 Log.info("has dateNaissance");
                 victime.setDateNaissance(json.getJSONObject("identity").getString("dateNaissance").toString());
             }
-            if (json.has("sexe")) {
+            if (json.getJSONObject("identity").has("sexe")) {
                 Log.info("has sexe");
                 victime.setSexe(json.getJSONObject("identity").getString("sexe").toString());
             }
-            if (json.has("age")) {
+            if (json.getJSONObject("identity").has("age")) {
                 Log.info("has age");
                 victime.setAge(json.getJSONObject("identity").getInt("age"));
             }
@@ -140,34 +151,31 @@ public class AdapterVictime extends AbstractAdapter {
             victime.setPriorite((Categorie) adapterFactory.build(json.getJSONObject("categorie")));
         }
 
-        if (json.has("positionRef")) {
+        if (json.has("posRef")) {
             Log.info("has positionRef");
-            if (json.getJSONObject("positionRef").has("gpsPoint")) {
+            if (json.getJSONObject("posRef").has("gpsPoint")) {
                 Log.info("has gpsPoint");
-                victime.setPosRef((GpsPoint) adapterFactory.build(json.getJSONObject("positionRef").getJSONObject("gpsPoint")));
+                victime.setPosRef((GpsPoint) adapterFactory.build(json.getJSONObject("posRef").getJSONObject("gpsPoint")));
             }
-            if (json.getJSONObject("positionRef").has("positionCivile")) {
+            if (json.getJSONObject("posRef").has("positionCivile")) {
                 Log.info("has positionCivile");
-                victime.setPosRef((PositionCivil) adapterFactory.build(json.getJSONObject("positionRef").getJSONObject("positionCivile")));
+                victime.setPosRef((PositionCivil) adapterFactory.build(json.getJSONObject("posRef").getJSONObject("positionCivile")));
             }
 
         }
-        if (json.has("positionDestination")) {
+        if (json.has("posDestination")) {
             Log.info("has positionDestination");
-            if (json.getJSONObject("positionDestination").has("gpsPoint")) {
-                Log.info("has gpsPoint");
-                victime.setPosRef((GpsPoint) adapterFactory.build(json.getJSONObject("positionDestination").getJSONObject("gpsPoint")));
+            JSONArray array = json.getJSONArray("posDestination");
+            for (int i = 0; i < array.length(); i++) {
+                if (array.getJSONObject(i).has("gpsPoint")) {
+                    Log.info("has gpsPoint");
+                    victime.addPosDestination((GpsPoint) adapterFactory.build(array.getJSONObject(i).getJSONObject("gpsPoint")));
+                }
+                if (array.getJSONObject(i).has("positionCivile")) {
+                    Log.info("has positionCivile");
+                    victime.addPosDestination((PositionCivil) adapterFactory.build(array.getJSONObject(i).getJSONObject("positionCivile")));
+                }
             }
-            if (json.getJSONObject("positionDestination").has("positionCivile")) {
-                Log.info("has positionCivile");
-                victime.setPosRef((PositionCivil) adapterFactory.build(json.getJSONObject("positionDestination").getJSONObject("positionCivile")));
-            }
-
-        }
-
-        if (victime.getId() == null || victime.getId().equals("")) {
-            Log.info("ID victime null  :: "+victime.getId());
-            return null;
         }
 
         return (T) victime;

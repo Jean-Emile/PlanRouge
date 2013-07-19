@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
+import org.kevoree.planrouge.events.ModelEvent;
+import org.kevoree.planrouge.events.ModelTreeListener;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
 
@@ -17,7 +19,7 @@ import org.webbitserver.WebSocketConnection;
  */
 public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
     private int connectionCount;
-    private Peers peers=null;
+    private Peers peers = null;
     private AdapterFactory adapterFactory;
     private static ContainerRoot containerRoot;
 
@@ -26,7 +28,25 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         this.adapterFactory = adapterFactory;
         this.containerRoot = pContainerRoot;
         peers = new Peers();
+
+        containerRoot.addModelTreeListener(new ModelTreeListener() {
+            @Override
+            public void elementChanged(ModelEvent modelEvent) {
+                try {
+                    test();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(modelEvent);
+
+            }
+        });
     }
+
+    public Peers getPeers() {
+        return peers;
+    }
+
 
     public void onOpen(WebSocketConnection connection) {
         Log.debug("Nouvelle connexion");
@@ -93,11 +113,13 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         int nbVictimeC3 = 0;
         int nbVictimeC4 = 0;
         int nbVictimeC5 = 0;
-
+        String victime="";
 
         for (int i = 0; i < nbVictime; i++) {
+            victime+="\n"+adapterFactory.build(containerRoot.findInterventionsByID("1").getVictimes().get(i)).toString();
             if (containerRoot.findInterventionsByID("1").getVictimes().get(i).getPriorite() != null) {
                 String cat = containerRoot.findInterventionsByID("1").getVictimes().get(i).getPriorite().getId();
+
                 if (cat.equals("1")) {
                     nbVictimeC1++;
                 } else if (cat.equals("2")) {
@@ -113,7 +135,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         }
 
         // /List victimes;
-
+         Log.info(victime);
         JSONArray informations = new JSONArray();
         informations.put(0, "graph");
         informations.put(1, nbVictime);
@@ -123,6 +145,9 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         informations.put(5, nbVictimeC4);
         informations.put(6, nbVictimeC5);
         informations.put(7, containerRoot.findInterventionsByID("1").getDescription());
-        return  informations.toString();
+
+
+        peers.broadcast(informations.toString());
+        return informations.toString();
     }
 }
