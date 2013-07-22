@@ -32,11 +32,12 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         containerRoot.addModelTreeListener(new ModelTreeListener() {
             @Override
             public void elementChanged(ModelEvent modelEvent) {
+                /*
                 try {
                     test();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                } */
                 System.out.println(modelEvent);
 
             }

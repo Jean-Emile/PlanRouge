@@ -24,7 +24,8 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
     private int connexion;
     public enum ACTION {
         PUT,
-        GET
+        GET,
+        GETALL
     }
 
     public HandlerWebSocket(AdapterFactory adapterFactory,ContainerRoot root,ACTION action){
@@ -46,7 +47,7 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
     }
 
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
-        Log.debug("Message from peer");
+        Log.debug("Message from peer "+message);
         JSONObject jsonObject = new JSONObject(message);
         msg.process(connection,adapterFactory,jsonObject,current);
     }

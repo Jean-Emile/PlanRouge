@@ -29,24 +29,6 @@ public class MessageHandler {
         this.root = root;
     }
 
-    public void merge(Object obj, Object update) {
-        if (!obj.getClass().isAssignableFrom(update.getClass())) {
-            return;
-        }
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-            f.setAccessible(true);
-            try {
-                if (f.get(update) != null
-                        && (f.get(update).equals("")
-                        | f.get(update).equals(0))) {
-                    f.set(update, f.get(obj));
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
 
     public void process(WebSocketConnection connection, AdapterFactory adapterFactory, JSONObject message, HandlerWebSocket.ACTION action) throws JSONException {
@@ -63,37 +45,27 @@ public class MessageHandler {
 
 
             case AdapterIntervention:
+                Intervention intervention = (Intervention) obj;
+                root.addInterventions(intervention);
                 break;
 
 
             case AdapterVictime:
                 Victime victime = (Victime) obj;
                 if (victime.getId().length() == 0){
-                    Log.error("AdapterVictime ::: No ID");
+                    Log.error("AdapterVictime ::: No ID "+victime.getId().length()+" "+action);
                     return;
                 }
                 switch (action) {
 
                     case GET:
 
-
-                        victime = root.findInterventionsByID("1").findVictimesByID(victime.getId());
-
-                        JSONObject jsonVictime = AdapterFactory.getInstance().build(victime);
-                        List<Victime> victimeList = new LinkedList();
-                        victimeList = root.findInterventionsByID("1").getVictimes();
-
-                        Iterator iterator
-                                = victimeList.iterator();
-                        while (iterator.hasNext()) {
-                            Victime key = (Victime) iterator.next();
-                            Log.debug(key.getId());
-                        }
+                        victime = root.findInterventionsByID(victime.getIntervention().getId()).findVictimesByID(victime.getId());
+                       JSONObject jsonVictime = AdapterFactory.getInstance().build(victime);
 
                         if (victime != null) {
                             Log.debug(jsonVictime.toString());
                             connection.send(String.valueOf(jsonVictime));
-
 
                         } else {
                             connection.send("Pas de victime à cet ID");
@@ -101,21 +73,23 @@ public class MessageHandler {
 
                         break;
 
+                          case GETALL:
 
+                              break;
                     case PUT:
 
-                        Victime vicmodel = root.findInterventionsByID("1").findVictimesByID(victime.getId());
+                        Victime vicmodel = root.findInterventionsByID(victime.getIntervention().getId()).findVictimesByID(victime.getId());
 
                         if (vicmodel != null) {
                            // merge(vicmodel, victime);
-                            root.findInterventionsByID("1").removeVictimes(vicmodel);
-                            root.findInterventionsByID("1").addVictimes(victime);
+                            root.findInterventionsByID(victime.getIntervention().getId()).removeVictimes(vicmodel);
+                            root.findInterventionsByID(victime.getIntervention().getId()).addVictimes(victime);
 
                         } else {
-                            root.findInterventionsByID("1").addVictimes(victime);
+                            root.findInterventionsByID(victime.getIntervention().getId()).addVictimes(victime);
                         }
 
-                        Victime test = root.findInterventionsByID("1").findVictimesByID(victime.getId());
+                        Victime test = root.findInterventionsByID(victime.getIntervention().getId()).findVictimesByID(victime.getId());
                         JSONObject jtest = AdapterFactory.getInstance().build(test);
                         Log.info(jtest.toString());
                         break;

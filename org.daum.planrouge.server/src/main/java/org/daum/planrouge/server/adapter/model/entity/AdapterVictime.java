@@ -35,19 +35,17 @@ public class AdapterVictime implements IAdapter {
 
         JSONObject jsonVictime = new JSONObject();
         Victime victime = (Victime) container;
+
+        Intervention intervention = (Intervention) container.eContainer();
+
         jsonVictime.put("type", getType());
-        //Identité
-        JSONObject jsonIdentity = new JSONObject();
-
-        jsonIdentity.put("nom", victime.getNom());
-        jsonIdentity.put("prenom", victime.getPrenom());
-        jsonIdentity.put("id", victime.getId());
-        jsonIdentity.put("age", victime.getAge());
-        jsonIdentity.put("dateNaissance", victime.getDateNaissance());
-        jsonIdentity.put("sexe", victime.getSexe());
-
-        jsonVictime.put("identite", jsonIdentity);
-
+        jsonVictime.put("nom", victime.getNom());
+        jsonVictime.put("prenom", victime.getPrenom());
+        jsonVictime.put("id", victime.getId());
+        jsonVictime.put("intervention",adapterFactory.build(intervention));
+        jsonVictime.put("age", victime.getAge());
+        jsonVictime.put("dateNaissance", victime.getDateNaissance());
+        jsonVictime.put("sexe", victime.getSexe());
 
         if (victime.getPosRef() != null) {
             //Poistion de Référence
@@ -117,35 +115,34 @@ public class AdapterVictime implements IAdapter {
     public <T> T build(JSONObject json) throws JSONException {
 
         Victime victime = adapterFactory.getFactory().createVictime();
-        if (json.has("identity")) {
-            Log.info("has identity");
-            if (json.getJSONObject("identity").has("prenom")) {
-                Log.info("has prenom");
-                victime.setPrenom(json.getJSONObject("identity").getString("prenom").toString());
-            }
-            if (json.getJSONObject("identity").has("nom")) {
-                Log.info("has nom");
-                victime.setNom(json.getJSONObject("identity").getString("nom").toString());
-            }
-            if (json.getJSONObject("identity").has("id")) {
-                Log.info("has id");
-                victime.setId(json.getJSONObject("identity").getString("id").toString());
-            } else {
-                victime.setId("");
-            }
-            if (json.getJSONObject("identity").has("dateNaissance")) {
-                Log.info("has dateNaissance");
-                victime.setDateNaissance(json.getJSONObject("identity").getString("dateNaissance").toString());
-            }
-            if (json.getJSONObject("identity").has("sexe")) {
-                Log.info("has sexe");
-                victime.setSexe(json.getJSONObject("identity").getString("sexe").toString());
-            }
-            if (json.getJSONObject("identity").has("age")) {
-                Log.info("has age");
-                victime.setAge(json.getJSONObject("identity").getInt("age"));
-            }
+
+        if (json.has("prenom")) {
+            Log.info("has prenom");
+            victime.setPrenom(json.getString("prenom").toString());
         }
+        if (json.has("nom")) {
+            Log.info("has nom");
+            victime.setNom(json.getString("nom").toString());
+        }
+        if (json.has("id")) {
+            Log.info("has id");
+            victime.setId(json.getString("id").toString());
+        } else {
+            victime.setId("");
+        }
+        if (json.has("dateNaissance")) {
+            Log.info("has dateNaissance");
+            victime.setDateNaissance(json.getString("dateNaissance").toString());
+        }
+        if (json.has("sexe")) {
+            Log.info("has sexe");
+            victime.setSexe(json.getString("sexe").toString());
+        }
+        if (json.has("age")) {
+            Log.info("has age");
+            victime.setAge(json.getInt("age"));
+        }
+
         if (json.has("categorie")) {
             Log.info("has category");
             victime.setPriorite((Categorie) adapterFactory.build(json.getJSONObject("categorie")));
@@ -176,6 +173,10 @@ public class AdapterVictime implements IAdapter {
                     victime.addPosDestination((PositionCivil) adapterFactory.build(array.getJSONObject(i).getJSONObject("positionCivile")));
                 }
             }
+        }
+
+        if (json.has("intervention")) {
+            victime.setIntervention((Intervention) adapterFactory.build(json.getJSONObject("intervention"))) ;
         }
 
         return (T) victime;

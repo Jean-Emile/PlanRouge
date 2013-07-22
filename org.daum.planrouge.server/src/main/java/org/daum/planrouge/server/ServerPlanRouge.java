@@ -40,12 +40,12 @@ public class ServerPlanRouge extends AbstractComponentType {
         adapterFactory = AdapterFactory.getInstance();
         containerRoot = adapterFactory.getFactory().createContainerRoot();
 
-
+       /*
         Intervention intervention = adapterFactory.getFactory().createIntervention();
         intervention.setId("1");
         intervention.setDescription("un train est rentré dans un avion en plein vol");
         containerRoot.addInterventions(intervention);
-
+              */
 
 
         handlerWebSocketget =new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.GET);

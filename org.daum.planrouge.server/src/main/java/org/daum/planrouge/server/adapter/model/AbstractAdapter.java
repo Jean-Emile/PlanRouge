@@ -10,18 +10,8 @@ import org.kevoree.planrouge.PlanrougeFactory;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractAdapter
-//        implements IAdapter
-    {
+{
 
-    private PlanrougeFactory modelfactory = null;
-
-    public PlanrougeFactory getModelfactory() {
-        return modelfactory;
-    }
-
-    public void setModelfactory(PlanrougeFactory modelfactory) {
-        this.modelfactory = modelfactory;
-    }
 
 
 }

@@ -1,12 +1,9 @@
 package org.daum.planrouge.server.adapter.model;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.kevoree.planrouge.*;
-import org.kevoree.planrouge.factory.MainFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import org.daum.planrouge.server.store.ObjectSpace;
+import org.kevoree.planrouge.*;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,46 +16,41 @@ public class Tester {
 
 
 
-    public static  void merge(Object obj, Object update) throws IllegalAccessException {
-        if(!obj.getClass().isAssignableFrom(update.getClass())){
-            return;
-        }
-
-        Field[] fields = obj.getClass().getDeclaredFields();
-
-        for(Field f: fields){
-            f.setAccessible(true);
-            if(f.get(obj) != null && f.get(update).toString().isEmpty() ){
-                f.set(update, f.get(obj));
-            }
-        }
-    }
-    public static  void main(String argv[]) throws IllegalAccessException {
-
-
-
+    public static  void main(String argv[]) throws IllegalAccessException, InterruptedException {
 
         AdapterFactory adapterFactory = new AdapterFactory();
 
 
 
 
-        Victime victime = adapterFactory.getFactory().createVictime();
-         victime.setId("111");
-        victime.setPrenom("jed");
-        victime.setAge(10);
 
-        Victime victime2 = adapterFactory.getFactory().createVictime();
-        victime.setId("111");
-        victime2.setNom("dartois");
-        victime.setPrenom("jed2");
+        PlanrougeFactory factory = adapterFactory.getFactory();
+
+        ContainerRoot root = factory.createContainerRoot();
 
 
-        merge(victime, victime2);
-        System.out.println(victime2.getPrenom()+" "+victime2.getNom()+" ");
 
-        Object obj = victime;
-        System.out.println(obj.getClass().getName());
+        ObjectSpace objectSpace = new ObjectSpace(root);
+
+        objectSpace.addReplica("tcp://10.0.4.1:6666");
+
+        objectSpace.open("kevoree");
+
+
+
+
+
+Thread.sleep(10000);
+
+
+
+
+        objectSpace.close();
+
+
+
+
+
 
     }
 }
