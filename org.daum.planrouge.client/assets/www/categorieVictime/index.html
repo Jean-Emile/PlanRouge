@@ -15,20 +15,24 @@
 <script src="file:///android_asset/www/cordova.js"></script>
 <script charset="ISO-8859-1" src="file:///android_asset/www/js/script.js"></script>
 <script src="file:///android_asset/www/js/phonegap-nfc.js"></script>
-
+<script src="file:///android_asset/www/js/readWriteNFC.js"></script>
+<script src="file:///android_asset/www/js/clientWebSocket.js"></script>
+<script src="file:///android_asset/www/js/toast.js"></script>
+<script src="file:///android_asset/www/phonegap-websocket.js"></script>
 </head>
-<body onload="onload();">
+<body onload= "onload();">
 	<!-- la page d'identification -->
-	<div data-role="page" id="victimCategory" data-add-back-btn=true>
+	<div data-role="page" id="victimCategory">
 	
 		<!-- l'entête -->
 		<div data-role="header" data-theme="a" data-position= "fixed" >
+		<a href="file:///android_asset/www/index.html" data-role="button" data-icon="home" data-inline="true">Back</a>
 			<h1>Categorie de victime</h1>
 		</div>
 		
+
 		<!-- le contenu -->
 		<div data-role="content" id='victimCategoryChoice'>
-
 			<p>
 				<input type="button" value="Récupérer la catégorie de la victime" onClick="read_victim_category();" />
 			</p>

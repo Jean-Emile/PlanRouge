@@ -1,82 +1,68 @@
 package com.phonegap.websocket;
 
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
-import org.apache.cordova.api.CallbackContext;
-import org.apache.cordova.api.CordovaPlugin;
-import org.apache.cordova.api.PluginResult;
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.apache.http.message.BasicNameValuePair;
 
-/**
- * WebSocket Cordova Plugin
- */
-public class WebSocket extends CordovaPlugin {
+import android.util.Log;
 
-  // actions
-  private static final String ACTION_CONNECT = "connect";
-  private static final String ACTION_SEND = "send";
-  private static final String ACTION_CLOSE = "close";
-  private CordovaClient socketClient;
-  private URI uri;
+import com.phonegap.plugins.nfc.Common;
 
-  @Override
-  public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-    final WebSocket plugin = this;
+public class WebSocket {
 
-    if (ACTION_CONNECT.equals(action)) {
-      final String url = args.getString(0);
-      cordova.getThreadPool().execute(new Runnable() {
-        public void run() {
-          plugin.connect(url, callbackContext);
-        }
-      });
-      return true;
-    }
-    else if (ACTION_SEND.equals(action)) {
-      final String data = args.getString(0);
-      cordova.getThreadPool().execute(new Runnable() {
-        public void run() {
-          plugin.send(data);
-        }
-      });
-      return true;
-    }
-    else if (ACTION_CLOSE.equals(action)) {
-      cordova.getThreadPool().execute(new Runnable() {
-        public void run() {
-          plugin.socketClient.close();
-        }
-      });
-      return true;
-    }
+	WebSocketClient client;
+	List<BasicNameValuePair> extraHeaders = Arrays.asList(new BasicNameValuePair("Cookie", "session=abcd"));
+	
+	public WebSocket(String address, int port, String handler) {
 
-    return false;
-  }
+		client = new WebSocketClient(URI.create("http://192.168.1.101:8080/add"), new WebSocketClient.Listener() {
+			String TAG = "WebSocketClient";
 
-  private void connect(String url, CallbackContext callbackContext) {
+			@Override
+			public void onConnect() {
+				Log.d(TAG, "Connected!");
+			}
 
-    if (url != null && url.length() > 0) {
-      try {
-        this.uri = new URI(url);
-        this.socketClient = new CordovaClient(uri, callbackContext);
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
-        pluginResult.setKeepCallback(true);
-        callbackContext.sendPluginResult(pluginResult);
-        this.socketClient.connect();
-      } catch (URISyntaxException e) {
-        callbackContext.error("Not a valid URL");
-      }
-    } else {
-      callbackContext.error("Not a valid URL");
-    }
-  }
+			@Override
+			public void onMessage(String message) {
+				Log.d(TAG, String.format("Got string message! %s", message));
+			}
 
-  private void send(String data) {
-    if (data != null && data.length() > 0 && 
-      this.socketClient.getConnection().isOpen()) {
-      this.socketClient.send(data);
-    }
-  }
+			@Override
+			public void onMessage(byte[] data) {
+				Log.d(TAG, String.format("Got binary message! %s", Common.byte2HexString(data)));
+			}
+
+			@Override
+			public void onDisconnect(int code, String reason) {
+				Log.d(TAG, String.format("Disconnected! Code: %d Reason: %s", code, reason));
+			}
+
+			@Override
+			public void onError(Exception error) {
+				Log.e(TAG, "Error!", error);
+			}
+
+		}, extraHeaders);
+	}
+	
+	public void connect(){
+		client.connect();
+	}
+	
+	public void disconnect(){
+		client.disconnect();
+	}
+	
+	public void send(String data){
+		client.send(data);
+	}
+
+	public boolean isConnected(){
+		return client.isConnected();
+	}
+
+
 }

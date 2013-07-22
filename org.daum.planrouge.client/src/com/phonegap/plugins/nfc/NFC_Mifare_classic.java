@@ -572,6 +572,7 @@ public class NFC_Mifare_classic implements INfc {
 	 */
 	public String getId() {
 		MCReader mcReader = Common.checkForTagAndCreateReader(null);
+		
 		if (mcReader != null) {
 			mcReader.close();
 			return Common.byte2HexString(Common.getUID());
@@ -609,6 +610,7 @@ public class NFC_Mifare_classic implements INfc {
 
 			} catch (TagLostException e) {
 				e.printStackTrace();
+				mcReader.close();
 				throw new TagActionException(e.getMessage());
 			}
 			if (string2 != null && block >= 0 && block < mcReader.getBlockCountInSector(sector)) {
@@ -618,6 +620,7 @@ public class NFC_Mifare_classic implements INfc {
 			mcReader.close();
 			throw new TagActionException("Erreur Authentification secteur " + sector);
 		}
+	
 		throw new TagActionException("Pas de connection avec le TAG");
 	}
 

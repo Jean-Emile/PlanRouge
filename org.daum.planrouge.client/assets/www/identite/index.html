@@ -15,18 +15,21 @@
 <script  src="file:///android_asset/www/cordova.js"></script>
 <script charset="ISO-8859-1" src="file:///android_asset/www/js/script.js"></script>
 <script  src="file:///android_asset/www/js/phonegap-nfc.js"></script>
-
+<script src="file:///android_asset/www/js/readWriteNFC.js"></script>
+<script src="file:///android_asset/www/js/toast.js"></script>
 </head>
+
 <body onload='onload();'>
 	<!-- la page d'identification -->
-	<div data-role="page" id="identitepage" data-add-back-btn=true>
+	<div data-role="page" id="identitepage" >
 		<!-- l'entête -->
 		<div data-role="header" data-theme="a" data-position= "fixed" >
+			<a href="file:///android_asset/www/index.html" data-role="button" data-icon="home" data-inline="true">Back</a>
 			<h1>Informations sur la victime</h1>
 		</div>
 		<!-- le contenu -->
 		<div data-role="content">
-
+		
 			<p>
 				<input type="button" name="submit" value="Récupérer identité" onclick="readIdentity();" />
 			</p>

@@ -9,6 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.phonegap.plugins.nfc.Common;
+import com.phonegap.plugins.nfc.NFC_Mifare_classic;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,14 +51,15 @@ public class Util {
         }
         return json;
     }
-
+       
     static JSONObject tagToJSON(Tag tag) {
         JSONObject json = new JSONObject();
 
         if (tag != null) {
             try {
-                json.put("id", byteArrayToJSON(tag.getId()));
+                json.put("id", Common.byte2HexString(tag.getId()));
                 json.put("techTypes", new JSONArray(Arrays.asList(tag.getTechList())));
+                Log.i("TAAGTAG" , json + "tagToJSON");
             } catch (JSONException e) {
                 Log.e(TAG, "Failed to convert tag into json: " + tag.toString(), e);
             }

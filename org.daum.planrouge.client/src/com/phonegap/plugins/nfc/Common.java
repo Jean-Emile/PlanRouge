@@ -248,6 +248,10 @@ public class Common {
 	 * @see #mUID
 	 */
 	public static int treatAsNewTag(Intent intent, Context context) {
+		Log.i("TreatAsNewTag",intent.getAction());
+		if(intent == null){
+			return -1;
+		}
 		try{// Check if Intent has a NFC Tag.
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);

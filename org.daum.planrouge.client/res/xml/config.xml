@@ -149,33 +149,25 @@ Hello Cordova
     </feature>
     <!-- Deprecated plugins element. Remove in 3.0 -->
     <plugins>
-        <plugin
-            name="Geolocation"
-            value="org.apache.cordova.GeoBroker" />
-        <plugin
-            name="HelloWorldPlugin"
-            value="com.phone.first_phone_gap.HelloWorldPlugin" />
-        <plugin
-            name="ChildBrowser"
-            value="com.phonegap.plugins.childBrowser.ChildBrowser" />
-        <plugin
-            name="Mifare"
-            value="com.phonegap.plugins.nfc.Mifare" />
-        <plugin
-            name="WebIntent"
-            value="com.phonegap.plugins.nfc.WebIntent" />
+<!--         <plugin -->
+<!--             name="Geolocation" -->
+<!--             value="org.apache.cordova.GeoBroker" /> -->
+<!--         <plugin -->
+<!--             name="InAppBrowser" -->
+<!--             value="org.apache.cordova.InAppBrowser" /> -->
+<!--         <plugin -->
+<!--             name="WebSocket" -->
+<!--             value="org.apache.cordova.WebSocket" /> -->
         <plugin
             name="NfcPlugin"
             value="com.chariotsolutions.nfc.plugin.NfcPlugin" />
-        <plugin
-            name="InAppBrowser"
-            value="org.apache.cordova.InAppBrowser" />
-        <plugin
-            name="WebSocket"
-            value="org.apache.cordova.WebSocket" />
+
         <plugin
             name="WebSocket"
             value="com.phonegap.websocket.WebSocket" />
+        <plugin 
+            name="ToastPlugin"
+			value="com.phonegap.plugins.ToastPlugin"/>
     </plugins>
 
 </widget>

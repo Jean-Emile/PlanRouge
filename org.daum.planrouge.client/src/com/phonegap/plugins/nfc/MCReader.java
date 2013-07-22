@@ -66,8 +66,7 @@ public class MCReader {
 	}
 
 	/**
-	 * Get new instance of {@link MCReader}. If the tag is "null" or if it is not a Mifare Classic
-	 * tag, "null" will be returned.
+	 * Get new instance of {@link MCReader}. If the tag is "null" or if it is not a Mifare Classic tag, "null" will be returned.
 	 * 
 	 * @param tag The tag to operate on.
 	 * @return {@link MCReader} object or "null" if tag is "null" or tag is not Mifare Classic.
@@ -87,12 +86,10 @@ public class MCReader {
 	 * Read as much as possible from the tag with the given key information.
 	 * 
 	 * @param keyMap Keys (A and B) mapped to a sector. See {@link #buildNextKeyMapPart()}.
-	 * @return A Key-Value Pair. Keys are the sector numbers, values are the tag data. This tag data
-	 *         (values) are arrays containing one block per field (index 0-3 or 0-15). If a block is
-	 *         "null" it means that the block couldn't be read with the given key information.<br />
-	 *         On Error "null" will be returned (tag was removed during reading or keyMap is null).
-	 *         If none of the keys in the key map is valid for reading and therefore no sector is
-	 *         read, an empty set (SparseArray.size() == 0) will be returned.
+	 * @return A Key-Value Pair. Keys are the sector numbers, values are the tag data. This tag data (values) are arrays containing one block per
+	 *         field (index 0-3 or 0-15). If a block is "null" it means that the block couldn't be read with the given key information.<br />
+	 *         On Error "null" will be returned (tag was removed during reading or keyMap is null). If none of the keys in the key map is valid for
+	 *         reading and therefore no sector is read, an empty set (SparseArray.size() == 0) will be returned.
 	 * @see #buildNextKeyMapPart()
 	 */
 	public SparseArray<String[]> readAsMuchAsPossible(SparseArray<byte[][]> keyMap) {
@@ -131,17 +128,13 @@ public class MCReader {
 	}
 
 	/**
-	 * Read as much as possible from the tag depending on the mapping range and the given key
-	 * information. The key information must be set before calling this method (use
-	 * {@link #setKeyFile(File[])}). Also the mapping range must be specified before calling this
-	 * method (use {@link #setMappingRange(int, int)}). Attention: This method builds a key map.
-	 * Depending on the key count in the given key file, this could take up to minutes and more. The
-	 * old key map from {@link #getKeyMap()} will be destroyed and the full new one is getable
-	 * afterwards.
+	 * Read as much as possible from the tag depending on the mapping range and the given key information. The key information must be set before
+	 * calling this method (use {@link #setKeyFile(File[])}). Also the mapping range must be specified before calling this method (use
+	 * {@link #setMappingRange(int, int)}). Attention: This method builds a key map. Depending on the key count in the given key file, this could take
+	 * up to minutes and more. The old key map from {@link #getKeyMap()} will be destroyed and the full new one is getable afterwards.
 	 * 
-	 * @return A Key-Value Pair. Keys are the sector numbers, values are the tag data. This tag data
-	 *         (values) are arrays containing one block per field (index 0-3 or 0-15). If a block is
-	 *         "null" it means that the block couldn't be read with the given key information.
+	 * @return A Key-Value Pair. Keys are the sector numbers, values are the tag data. This tag data (values) are arrays containing one block per
+	 *         field (index 0-3 or 0-15). If a block is "null" it means that the block couldn't be read with the given key information.
 	 * @see #buildNextKeyMapPart()
 	 * @see #setKeyFile(File[])
 	 */
@@ -155,20 +148,18 @@ public class MCReader {
 	}
 
 	/**
-	 * Read a as much as possible from a sector with the given key. Best results are gained from a
-	 * valid key B (except key B is marked as readable in the access conditions).
+	 * Read a as much as possible from a sector with the given key. Best results are gained from a valid key B (except key B is marked as readable in
+	 * the access conditions).
 	 * 
 	 * @param sectorIndex Index of the Sector to read. (For Mifare Classic 1K: 0-63)
 	 * @param key Key for the authentication.
 	 * @param useAsKeyB If true, key will be treated as key B for authentication.
-	 * @return Array of blocks (index 0-3 or 0-15). If a block or a key is marked with
-	 *         {@link #NO_DATA} or {@link #NO_KEY} it means that this data could be read or found.
-	 *         On authentication error "null" will be returned.
+	 * @return Array of blocks (index 0-3 or 0-15). If a block or a key is marked with {@link #NO_DATA} or {@link #NO_KEY} it means that this data
+	 *         could be read or found. On authentication error "null" will be returned.
 	 * @throws TagLostException When tag is lost.
 	 * @see #mergeSectorData(String[], String[])
 	 */
-	public String[] readSector(int sectorIndex, byte[] key, boolean useAsKeyB)
-			throws TagLostException {
+	public String[] readSector(int sectorIndex, byte[] key, boolean useAsKeyB) throws TagLostException {
 		boolean auth = authenticate(sectorIndex, key, useAsKeyB);
 		String[] ret = null;
 		// Read sector.
@@ -241,8 +232,7 @@ public class MCReader {
 	 *         </ul>
 	 * @see #authenticate(int, byte[], boolean)
 	 */
-	public int writeBlock(int sectorIndex, int blockIndex, byte[] data, byte[] key,
-			boolean useAsKeyB) {
+	public int writeBlock(int sectorIndex, int blockIndex, byte[] data, byte[] key, boolean useAsKeyB) {
 		if (mMFC.getSectorCount() - 1 < sectorIndex) {
 			return 1;
 		}
@@ -267,21 +257,17 @@ public class MCReader {
 	}
 
 	/**
-	 * Build Key-Value Pairs in which keys represent the sector and values are one or both of the
-	 * Mifare keys (A/B). The Mifare key information must be set before calling this method (use
-	 * {@link #setKeyFile(File[])}). Also the mapping range must be specified before calling this
-	 * method (use {@link #setMappingRange(int, int)}).<br />
+	 * Build Key-Value Pairs in which keys represent the sector and values are one or both of the Mifare keys (A/B). The Mifare key information must
+	 * be set before calling this method (use {@link #setKeyFile(File[])}). Also the mapping range must be specified before calling this method (use
+	 * {@link #setMappingRange(int, int)}).<br />
 	 * <br />
-	 * The mapping works like some kind of dictionary attack. All keys are checked against the next
-	 * sector with both authentication methods (A/B). If at least one key was found for a sector,
-	 * the map will be extended with an entry, containing the key(s) and the information for what
-	 * sector the key(s) are. You can get this Key-Value Pairs by calling {@link #getKeyMap()}. A
-	 * full key map can be gained by calling this method as often as there are sectors on the tag
-	 * (See {@link #getSectorCount()}). If you call this method once more after a full key map was
-	 * created, it resets the key map an starts all over.
+	 * The mapping works like some kind of dictionary attack. All keys are checked against the next sector with both authentication methods (A/B). If
+	 * at least one key was found for a sector, the map will be extended with an entry, containing the key(s) and the information for what sector the
+	 * key(s) are. You can get this Key-Value Pairs by calling {@link #getKeyMap()}. A full key map can be gained by calling this method as often as
+	 * there are sectors on the tag (See {@link #getSectorCount()}). If you call this method once more after a full key map was created, it resets the
+	 * key map an starts all over.
 	 * 
-	 * @return The sector that was checked at the moment. On error it returns "-1" and resets the
-	 *         key map to "null".
+	 * @return The sector that was checked at the moment. On error it returns "-1" and resets the key map to "null".
 	 * @see #getKeyMap()
 	 * @see #setKeyFile(File[])
 	 * @see #setMappingRange(int, int)
@@ -348,35 +334,30 @@ public class MCReader {
 	}
 
 	/**
-	 * Merge the result of two {@link #readSector(int, byte[], boolean)} calls on the same sector
-	 * (with different keys or authentication methods). In this case merging means empty blocks will
-	 * be overwritten with non empty ones and the keys will be added correctly to the sector
-	 * trailer. The access conditions will be taken from the first (firstResult) parameter if it is
-	 * not null.
+	 * Merge the result of two {@link #readSector(int, byte[], boolean)} calls on the same sector (with different keys or authentication methods). In
+	 * this case merging means empty blocks will be overwritten with non empty ones and the keys will be added correctly to the sector trailer. The
+	 * access conditions will be taken from the first (firstResult) parameter if it is not null.
 	 * 
 	 * @param firstResult First {@link #readSector(int, byte[], boolean)} result.
 	 * @param secondResult Second {@link #readSector(int, byte[], boolean)} result.
-	 * @return Array (sector) as result of merging the given sectors. If a block is {@link #NO_DATA}
-	 *         it means that none of the given sectors contained data from this block.
+	 * @return Array (sector) as result of merging the given sectors. If a block is {@link #NO_DATA} it means that none of the given sectors contained
+	 *         data from this block.
 	 * @see #readSector(int, byte[], boolean)
 	 * @see #authenticate(int, byte[], boolean)
 	 */
 	public String[] mergeSectorData(String[] firstResult, String[] secondResult) {
 		String[] ret = null;
 		if (firstResult != null || secondResult != null) {
-			if ((firstResult != null && secondResult != null)
-					&& firstResult.length != secondResult.length) {
+			if ((firstResult != null && secondResult != null) && firstResult.length != secondResult.length) {
 				return null;
 			}
 			int length = (firstResult != null) ? firstResult.length : secondResult.length;
 			ArrayList<String> blocks = new ArrayList<String>();
 			// Merge data blocks.
 			for (int i = 0; i < length - 1; i++) {
-				if (firstResult != null && firstResult[i] != null
-						&& !firstResult[i].equals(NO_DATA)) {
+				if (firstResult != null && firstResult[i] != null && !firstResult[i].equals(NO_DATA)) {
 					blocks.add(firstResult[i]);
-				} else if (secondResult != null && secondResult[i] != null
-						&& !secondResult[i].equals(NO_DATA)) {
+				} else if (secondResult != null && secondResult[i] != null && !secondResult[i].equals(NO_DATA)) {
 					blocks.add(secondResult[i]);
 				} else {
 					// Non of the results got the data for the block.
@@ -386,17 +367,14 @@ public class MCReader {
 			ret = blocks.toArray(new String[blocks.size() + 1]);
 			int last = length - 1;
 			// Merge sector trailer.
-			if (firstResult != null && firstResult[last] != null
-					&& !firstResult[last].equals(NO_DATA)) {
+			if (firstResult != null && firstResult[last] != null && !firstResult[last].equals(NO_DATA)) {
 				// Take first for sector trailer.
 				ret[last] = firstResult[last];
-				if (secondResult != null && secondResult[last] != null
-						&& !secondResult[last].equals(NO_DATA)) {
+				if (secondResult != null && secondResult[last] != null && !secondResult[last].equals(NO_DATA)) {
 					// Merge key form second result to sector trailer.
 					ret[last] = ret[last].substring(0, 20) + secondResult[last].substring(20);
 				}
-			} else if (secondResult != null && secondResult[last] != null
-					&& !secondResult[last].equals(NO_DATA)) {
+			} else if (secondResult != null && secondResult[last] != null && !secondResult[last].equals(NO_DATA)) {
 				// No first result. Take second result as sector trailer.
 				ret[last] = secondResult[last];
 			} else {
@@ -408,19 +386,17 @@ public class MCReader {
 	}
 
 	/**
-	 * This method checks if the present tag is writable with the provided keys on the given
-	 * positions (sectors, blocks). This is done by authenticating with one of the keys followed by
-	 * reading and interpreting (
-	 * {@link Common#getOperationInfoForBlock(byte, byte, byte, de.syss.MifareClassicTool.Common.Operations, boolean, boolean)}
-	 * ) of the Access Conditions.
+	 * This method checks if the present tag is writable with the provided keys on the given positions (sectors, blocks). This is done by
+	 * authenticating with one of the keys followed by reading and interpreting (
+	 * {@link Common#getOperationInfoForBlock(byte, byte, byte, de.syss.MifareClassicTool.Common.Operations, boolean, boolean)} ) of the Access
+	 * Conditions.
 	 * 
-	 * @param pos A map of positions (key = sector, value = Array of blocks). For each of these
-	 *            positions you will get the write information (see return values).
+	 * @param pos A map of positions (key = sector, value = Array of blocks). For each of these positions you will get the write information (see
+	 *            return values).
 	 * @param keyMap A key map a generated by {@link Activities.CreateKeyMapActivity}.
-	 * @return A map within a map (all with type = Integer). The key of the outer map is the sector
-	 *         number and the value is another map with key = block number and value = write
-	 *         information. The write information indicates which key is needed to write to the
-	 *         present tag on the given position.<br />
+	 * @return A map within a map (all with type = Integer). The key of the outer map is the sector number and the value is another map with key =
+	 *         block number and value = write information. The write information indicates which key is needed to write to the present tag on the
+	 *         given position.<br />
 	 * <br />
 	 *         Write informations are:<br />
 	 *         <ul>
@@ -435,8 +411,7 @@ public class MCReader {
 	 *         <li>Inner map == null - Whole sector is dead (IO Error)</li>
 	 *         </ul>
 	 */
-	public HashMap<Integer, HashMap<Integer, Integer>> isWritableOnPositions(
-			HashMap<Integer, int[]> pos, SparseArray<byte[][]> keyMap) {
+	public HashMap<Integer, HashMap<Integer, Integer>> isWritableOnPositions(HashMap<Integer, int[]> pos, SparseArray<byte[][]> keyMap) {
 		HashMap<Integer, HashMap<Integer, Integer>> ret = new HashMap<Integer, HashMap<Integer, Integer>>();
 		for (int i = 0; i < keyMap.size(); i++) {
 			int sector = keyMap.keyAt(i);
@@ -465,8 +440,7 @@ public class MCReader {
 				}
 				ac = Arrays.copyOfRange(ac, 6, 9);
 				byte[][] acMatrix = Common.acToACMatrix(ac);
-				boolean isKeyBReadable = Common.isKeyBReadable(acMatrix[0][3], acMatrix[1][3],
-						acMatrix[2][3]);
+				boolean isKeyBReadable = Common.isKeyBReadable(acMatrix[0][3], acMatrix[1][3], acMatrix[2][3]);
 
 				// Check all Blocks with data (!= null).
 				HashMap<Integer, Integer> blockWithWriteInfo = new HashMap<Integer, Integer>();
@@ -474,14 +448,12 @@ public class MCReader {
 					if ((block == 3 && sector <= 31) || (block == 15 && sector >= 32)) {
 						// Sector Trailer.
 						// Are the Access Bits writable?
-						int acValue = Common.getOperationInfoForBlock(acMatrix[0][3],
-								acMatrix[1][3], acMatrix[2][3], Common.Operations.WriteAC, true,
-								isKeyBReadable);
+						int acValue = Common.getOperationInfoForBlock(acMatrix[0][3], acMatrix[1][3], acMatrix[2][3], Common.Operations.WriteAC,
+								true, isKeyBReadable);
 						// Is key A writable? (If so, key B will be writable
 						// with the same key.)
-						int keyABValue = Common.getOperationInfoForBlock(acMatrix[0][3],
-								acMatrix[1][3], acMatrix[2][3], Common.Operations.WriteKeyA, true,
-								isKeyBReadable);
+						int keyABValue = Common.getOperationInfoForBlock(acMatrix[0][3], acMatrix[1][3], acMatrix[2][3], Common.Operations.WriteKeyA,
+								true, isKeyBReadable);
 
 						int result = keyABValue;
 						if (acValue == 0 && keyABValue != 0) {
@@ -506,10 +478,8 @@ public class MCReader {
 								acBitsForBlock = 2;
 							}
 						}
-						blockWithWriteInfo.put(block, Common.getOperationInfoForBlock(
-								acMatrix[0][acBitsForBlock], acMatrix[1][acBitsForBlock],
-								acMatrix[2][acBitsForBlock], Common.Operations.Write, false,
-								isKeyBReadable));
+						blockWithWriteInfo.put(block, Common.getOperationInfoForBlock(acMatrix[0][acBitsForBlock], acMatrix[1][acBitsForBlock],
+								acMatrix[2][acBitsForBlock], Common.Operations.Write, false, isKeyBReadable));
 					}
 
 				}
@@ -522,11 +492,10 @@ public class MCReader {
 	}
 
 	/**
-	 * Set the key files for {@link #buildNextKeyMapPart()}. Key duplicates from the key file will
-	 * be removed.
+	 * Set the key files for {@link #buildNextKeyMapPart()}. Key duplicates from the key file will be removed.
 	 * 
-	 * @param keyFiles One or more key files. These files are simple text files with one key per
-	 *            line. Empty lines and lines STARTING with "#" will not be interpreted.
+	 * @param keyFiles One or more key files. These files are simple text files with one key per line. Empty lines and lines STARTING with "#" will
+	 *            not be interpreted.
 	 */
 	public void setKeyFile(/* File[] keyFiles */) {
 
@@ -545,11 +514,9 @@ public class MCReader {
 		mKeysWithOrder = new ArrayList<byte[]>(keys);
 
 		/*
-		 * HashSet<byte[]> keys = new HashSet<byte[]>(); for (File file : keyFiles) { String[] lines
-		 * = Common.readFileLineByLine(file, false); if (lines != null) { for (String line : lines)
-		 * { if (!line.equals("") && line.length() == 12 && line.matches("[0-9A-Fa-f]+")) {
-		 * keys.add(Common.hexStringToByteArray(line)); } } } } if (keys.size() > 0) {
-		 * mKeysWithOrder = new ArrayList<byte[]>(keys); }
+		 * HashSet<byte[]> keys = new HashSet<byte[]>(); for (File file : keyFiles) { String[] lines = Common.readFileLineByLine(file, false); if
+		 * (lines != null) { for (String line : lines) { if (!line.equals("") && line.length() == 12 && line.matches("[0-9A-Fa-f]+")) {
+		 * keys.add(Common.hexStringToByteArray(line)); } } } } if (keys.size() > 0) { mKeysWithOrder = new ArrayList<byte[]>(keys); }
 		 */
 	}
 
@@ -616,15 +583,12 @@ public class MCReader {
 	}
 
 	/**
-	 * Get the key map build from {@link #buildNextKeyMapPart()} with the given key file (
-	 * {@link #setKeyFile(File[])}). If you want a full key map, you have to call
-	 * {@link #buildNextKeyMapPart()} as often as there are sectors on the tag (See
-	 * {@link #getSectorCount()}).
+	 * Get the key map build from {@link #buildNextKeyMapPart()} with the given key file ( {@link #setKeyFile(File[])}). If you want a full key map,
+	 * you have to call {@link #buildNextKeyMapPart()} as often as there are sectors on the tag (See {@link #getSectorCount()}).
 	 * 
-	 * @return A Key-Value Pair. Keys are the sector numbers, values are the Mifare keys. The Mifare
-	 *         keys are 2D arrays with key type (first dimension, 0-1, 0 = KeyA / 1 = KeyB) and key
-	 *         (second dimension, 0-6). If a key "null" it means that the key A or B (depending of
-	 *         first dimension) could not be found.
+	 * @return A Key-Value Pair. Keys are the sector numbers, values are the Mifare keys. The Mifare keys are 2D arrays with key type (first
+	 *         dimension, 0-1, 0 = KeyA / 1 = KeyB) and key (second dimension, 0-6). If a key "null" it means that the key A or B (depending of first
+	 *         dimension) could not be found.
 	 * @see #getSectorCount()
 	 * @see #buildNextKeyMapPart()
 	 */
@@ -689,6 +653,7 @@ public class MCReader {
 	 * Connect the reader to the tag.
 	 */
 	public void connect() {
+
 		try {
 			mMFC.connect();
 

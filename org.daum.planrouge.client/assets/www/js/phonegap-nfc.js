@@ -364,10 +364,14 @@ var ndef = {
 
 };
 
+
+
 var nfc = {
 
 	addTagDiscoveredListener : function(callback, win, fail) {
-		document.addEventListener("tag", callback, false);
+		document.addEventListener("tag", function(){
+			Toast.shortshow("BOUM");
+		}, false);
 		cordova.exec(win, fail, "NfcPlugin", "registerTag", []);
 	},
 
@@ -504,10 +508,10 @@ var util = {
 function fireNfcTagEvent(eventType, tagAsJson) {
 
 	setTimeout(function() {
-
 		var e = document.createEvent('Events');
 		e.initEvent(eventType, true, false);
 		e.tag = JSON.parse(tagAsJson);
+		
 		console.log(e.tag);
 		document.dispatchEvent(e);
 	}, 10);
@@ -520,7 +524,8 @@ var tagid = {
 		cordova.exec(function(success) {
 			navigator.notification.alert(success, null, 'Success : ', 'Ok');
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 		}, "NfcPlugin", "getID", [ data, perteConnaissace, freqRespi, sat, freqCard, pArt ]);
 	},
 
@@ -530,7 +535,8 @@ var tagid = {
 			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
 			x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 			x = false;
 		}, "NfcPlugin", "read_vital_emergency", []);
 		return x;
@@ -542,7 +548,8 @@ var tagid = {
 			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
 			x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 			x = false;
 		}, "NfcPlugin", "read_bilan_complementaire", []);
 		return x;
@@ -553,31 +560,34 @@ var tagid = {
 		cordova.exec(function(success) {
 			navigator.notification.alert(success, null, 'Success : ', 'Ok');
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 		}, "NfcPlugin", "write_bilan_complementaire", [ data, oxygene, chocs, immobilisation, extension, maladies, hospitalisations, traitements,
 				allergies ]);
 	},
 
 	write_date_hours_gps : function(date, latitude, longitude, signe, accuracy) {
-		var x;
+		
 		cordova.exec(function(success) {
-			x = success;
+			
 			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
 
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			x = false;
+
+			Toast.shortshow(error);
+		
 		}, "NfcPlugin", "write_date_hours_gps", [ date, latitude, longitude, signe, accuracy ]);
-		return x;
+
 	},
 
 	read_date_hours_gps : function() {
 		var x;
 		cordova.exec(function(success) {
-			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
+
 			x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+
+			Toast.shortshow(error);
 			x = false;
 		}, "NfcPlugin", "read_date_hours_gps", []);
 		return x;
@@ -589,22 +599,38 @@ var tagid = {
 			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
 			x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 			x = false;
 		}, "NfcPlugin", "read_identity", []);
 		return x;
 	},
 
 	write_identity : function(prenom, nom, sexe, age, age_unite, date_naissance, win, fail) {
-		var x;
+		//var x;
 		cordova.exec(function(success) {
 			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
-			x = success;
+			//x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			x = false;
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
+			//x = false;
 		}, "NfcPlugin", "write_identity", [ prenom, nom, sexe, age, age_unite, date_naissance ]);
-		return x;
+		//return x;
+	},
+
+	write_victim_category : function(category, win, fail) {
+
+		cordova.exec(function(id) {
+				
+			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
+			GPSUpdate();
+			
+		}, function(error) {
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
+		}, "NfcPlugin", "write_victim_category", [ category ]);
+
 	},
 
 	read_destination : function() {
@@ -613,9 +639,9 @@ var tagid = {
 			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
 			x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
 			x = false;
-
+			Toast.shortshow(error);
 		}, "NfcPlugin", "read_destination", []);
 
 		return x;
@@ -625,7 +651,8 @@ var tagid = {
 		cordova.exec(function(success) {
 			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 		}, "NfcPlugin", "write_destination", [ evacuation, destination, ville, code_postal ]);
 	},
 
@@ -635,7 +662,8 @@ var tagid = {
 			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
 			x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 			x = false;
 		}, "NfcPlugin", "read_champlibre", []);
 		return x;
@@ -645,8 +673,8 @@ var tagid = {
 		cordova.exec(function(success) {
 			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 		}, "NfcPlugin", "write_champlibre", [ textfield ]);
 	},
 
@@ -656,7 +684,8 @@ var tagid = {
 			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
 			x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 			x = false;
 		}, "NfcPlugin", "read_lesion", []);
 		return x;
@@ -666,8 +695,8 @@ var tagid = {
 		cordova.exec(function(success) {
 			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-
+//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 		}, "NfcPlugin", "write_lesion", [ lesion ]);
 	},
 
@@ -677,26 +706,51 @@ var tagid = {
 			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
 			x = success;
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			//navigator.notification.alert(error, null, 'Error : ', 'Ok');
+			Toast.shortshow(error);
 			x = false;
 		}, "NfcPlugin", "read_victim_category", []);
 		return x;
 	},
-
-	write_victim_category : function(category) {
+	
+	read : function(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
 		var x;
+	
 		cordova.exec(function(success) {
+			Toast.shortshow(success);
 			x = success;
-			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
-			GPSUpdate();
 		}, function(error) {
-			navigator.notification.alert(error, null, 'Error : ', 'Ok');
 			x = false;
-		}, "NfcPlugin", "write_victim_category", [ category ]);
-		return x;
-	}
+			Toast.shortshow(error);
 
+		}, "NfcPlugin", "read", [type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10]);
+		return x;
+	},
+	
+	write : function(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
+		var x;
+	
+		cordova.exec(function(success) {
+			Toast.shortshow(success);
+			x = success;
+		}, function(error) {
+			x = false;
+			Toast.shortshow(error);
+			
+			
+			
+		}, "NfcPlugin", "write", [type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10]);
+		return x;
+	},
+	
 };
+
+
+function alertCallback(buttonIndex,type,param1, param2, param3, param4, param5, param6, param7, param8, param9, param10){
+	alert('Envoi Annulé' +buttonIndex);
+	
+	window.tagid.write(type,param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+}
 
 // kludge some global variables for plugman js-module support
 // eventually these should be replaced and referenced via the module
