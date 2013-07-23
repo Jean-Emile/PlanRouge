@@ -30,6 +30,7 @@ public class BenchServer implements Runnable {
    intervention = adapterFactory.getFactory() .createIntervention();
         intervention.setId("1991991");
         intervention.setDescription("pofrpf");
+
         try {
             send (url,adapterFactory.build(intervention).toString());
         } catch (JSONException e) {
@@ -51,6 +52,7 @@ public class BenchServer implements Runnable {
                v.setNom("edef");
                v.setId("tag"+r.nextInt());
                intervention.addVictimes(v);
+               v.setIntervention(intervention);
                try {
 
                    send(url,adapterFactory.build(v).toString());

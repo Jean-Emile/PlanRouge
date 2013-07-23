@@ -1,0 +1,129 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Plan Rouge</title>
+
+    <meta charset="utf-8"/>
+    <title>Kevoree Model viewer</title>
+    <script src="lib/reconnecting-websocket.min.js"></script>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="lib/bootstrap-notify.js"></script>
+    <script src="lib/kotlin-lib-ecma3.js"></script>
+    <script src="lib/kotlin-lib.js"></script>
+    <script src="lib/kotlin-maps.js"></script>
+    <script type="text/javascript" src="lib/org.daum.planrouge.model.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="css/bootstrap-notify.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div id="text">
+
+</div>
+<script type="text/javascript" charset="utf-8">
+
+    /* Global variables */
+    var PlanRougeJSModule, factory, loader, saver, model, ws = {};
+
+    function showMessage(text)
+    {
+        document.getElementById('text').innerHTML = text;
+    }
+
+
+
+    $(function () {
+
+        /* Model manipulation objects */
+        PlanRougeJSModule = Kotlin.modules['org.daum.planrouge.model'];
+        loader = new PlanRougeJSModule.org.planrouge.loader.JSONModelLoader();
+        saver = new PlanRougeJSModule.org.planrouge.serializer.JSONModelSerializer();
+        factory = new PlanRougeJSModule.org.planrouge.impl.DefaultPlanrougeFactory();
+
+
+        ws = new ReconnectingWebSocket('ws://' + document.location.host + '/add');
+        showMessage('Connecting...');
+        ws.onopen = function (msg) {
+            showMessage('Connected!');
+        };
+        ws.onclose /*= ws.onerror*/ = function (msg) {
+            showMessage('Lost connection');
+        };
+        ws.onmessage = function (evt) {
+            var data = evt.data;
+
+        };
+
+
+        $("#submitCreateIntervention").click(function () {
+
+            var description = jQuery("#descriptionInput").get(0).value;
+            var intervention =  factory.createIntervention();
+            intervention.setDescription(description);
+
+
+            var oo3 = new PlanRougeJSModule.java.io.OutputStream();
+            saver.serialize(intervention, oo3);
+            ws.send(oo3.$result);
+
+
+        }) ;
+
+
+    });
+</script>
+
+<div class="container-fluid">
+
+
+    <a class="btn btn-primary" id="btnCreateIntevention" data-toggle="modal" data-target="#add-modal" title="Create Intervention ">Creation d'une Intervention</a>
+
+
+
+
+    <div class="modal fade" id="add-modal" style="display: none;">
+        <!-- display: none; is needed to avoid bug in bootstrap which forbid to click on start/stop and remove buttons -->
+        <div class="modal-header">
+            <a id="closeButton" class="close" data-dismiss="modal">&times;</a>
+
+            <h3>Creation d'une intevention</h3>
+        </div>
+        <div class="modal-body form-horizontal" style="max-height: 800px;">
+
+            <div class="control-group" id="NomRueControlGroup">
+                <label class="control-label mandatory" id="NomRueLabel">Nom de la rue</label>
+
+                <div class="controls" id="NomRueControls"><input id="NomRueInput"></div>
+            </div>
+
+
+            <div class="control-group" id="villeControlGroup">
+                <label class="control-label mandatory" id="villeLabel">Ville</label>
+
+                <div class="controls" id="villeControls"><input id="villeInput"></div>
+            </div>
+
+
+            <div class="control-group" id="cpControlGroup">
+                <label class="control-label mandatory" id="nameLabel">CP</label>
+
+                <div class="controls" id="cpControls"><input id="cpInput"></div>
+            </div>
+
+            <div class="control-group" id="descriptionControlGroup">
+                <label class="control-label mandatory" id="descriptionLabel">Description</label>
+
+                <div class="controls" id="descriptionControls"><textarea id="descriptionInput"></textarea></div>
+            </div>
+
+
+
+            <div style="text-align:center"><a id="submitCreateIntervention" class="btn">Submit</a><br/></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

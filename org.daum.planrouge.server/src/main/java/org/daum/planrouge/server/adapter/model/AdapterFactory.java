@@ -5,12 +5,12 @@ import org.daum.planrouge.server.adapter.model.entity.*;
 import org.daum.planrouge.server.utils.LRUMap;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.kevoree.log.Log;
+import org.kevoree.loader.JSONModelLoader;
 import org.kevoree.planrouge.*;
 import org.kevoree.planrouge.container.KMFContainer;
 import org.kevoree.planrouge.factory.MainFactory;
-import org.kevoree.planrouge.impl.GpsPointImpl;
 import org.kevoree.planrouge.impl.InterventionImpl;
+import org.kevoree.planrouge.serializer.JSONModelSerializer;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +25,7 @@ public class AdapterFactory implements IAdapterFactory {
     private LRUMap adapterLRU = new LRUMap(4);
 
     private static AdapterFactory singleton = null;
-
+     private JSONModelLoader jsonModelLoader = new JSONModelLoader();
 
     public static AdapterFactory getInstance() {
         if (singleton == null) {
@@ -99,17 +99,27 @@ public class AdapterFactory implements IAdapterFactory {
     @Override
     public <T> T build(JSONObject json) throws JSONException {
 
-        if (json.getString("type").equals(Entities.AdapterGpsPoint.toString())) {
-            return getAdapter(Entities.AdapterGpsPoint).build(json);
-        } else if (json.getString("type").equals(Entities.AdapterPositionCivile.toString())) {
-            return getAdapter(Entities.AdapterPositionCivile).build(json);
-        } else if (json.getString("type").equals(Entities.AdapterIntervention.toString())) {
-            return getAdapter(Entities.AdapterIntervention).build(json);
-        } else if (json.getString("type").equals(Entities.AdapterVictime.toString())) {
-            return getAdapter(Entities.AdapterVictime).build(json);
-        } else if (json.getString("type").equals(Entities.AdapterCategorie.toString())) {
-            return getAdapter(Entities.AdapterCategorie).build(json);
-        }
+
+            if(json.has("eClass")){
+
+             // todo
+
+            } else {
+                if (json.getString("type").equals(Entities.AdapterGpsPoint.toString())) {
+                    return getAdapter(Entities.AdapterGpsPoint).build(json);
+                } else if (json.getString("type").equals(Entities.AdapterPositionCivile.toString())) {
+                    return getAdapter(Entities.AdapterPositionCivile).build(json);
+                } else if (json.getString("type").equals(Entities.AdapterIntervention.toString())) {
+                    return getAdapter(Entities.AdapterIntervention).build(json);
+                } else if (json.getString("type").equals(Entities.AdapterVictime.toString())) {
+                    return getAdapter(Entities.AdapterVictime).build(json);
+                } else if (json.getString("type").equals(Entities.AdapterCategorie.toString())) {
+                    return getAdapter(Entities.AdapterCategorie).build(json);
+                }
+
+            }
+
+
         return null;
     }
 

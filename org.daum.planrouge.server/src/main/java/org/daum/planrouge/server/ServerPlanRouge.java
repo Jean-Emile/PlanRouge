@@ -1,14 +1,13 @@
 package org.daum.planrouge.server;
 
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
+import org.daum.planrouge.server.web.EmbedHandler;
 import org.daum.planrouge.server.websocket.GetGlobalInformationsHandler;
 import org.daum.planrouge.server.websocket.HandlerWebSocket;
-import org.daum.planrouge.server.websocket.Peers;
 import org.kevoree.annotation.*;
 import org.kevoree.framework.AbstractComponentType;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
-import org.kevoree.planrouge.Intervention;
 import org.webbitserver.WebServer;
 import org.webbitserver.WebServers;
 import org.webbitserver.handler.StaticFileHandler;
@@ -79,7 +78,7 @@ public class ServerPlanRouge extends AbstractComponentType {
                 .add("/add",handlerWebSocketput)
                 .add("/get", handlerWebSocketget)
                 .add("/getGlobalInformations", handlerGlobalInformations)
-                .add(new StaticFileHandler("/web"));
+                .add(new StaticFileHandler("/web")).add(new EmbedHandler());
     }
 
 }
