@@ -59,6 +59,8 @@
 
     <eStructuralFeatures xsi:type="ecore:EReference" name="priorite" eType="#//Categorie"/>
 
+     <eStructuralFeatures xsi:type="ecore:EReference" name="intervention" upperBound="1" eType="#//Intervention" />
+
     <eStructuralFeatures xsi:type="ecore:EReference" name="posRef" eType="#//Position" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="posDestination" upperBound="-1" eType="#//Position" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="bilans" upperBound="-1" eType="#//Bilan"/>
