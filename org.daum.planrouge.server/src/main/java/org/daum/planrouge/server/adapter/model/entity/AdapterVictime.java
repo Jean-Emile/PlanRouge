@@ -36,18 +36,24 @@ public class AdapterVictime implements IAdapter {
         JSONObject jsonVictime = new JSONObject();
         Victime victime = (Victime) container;
 
-        Intervention intervention = (Intervention) container.eContainer();
+      //  Intervention intervention = (Intervention) container.eContainer();
 
         jsonVictime.put("type", getType());
         jsonVictime.put("nom", victime.getNom());
         jsonVictime.put("prenom", victime.getPrenom());
         jsonVictime.put("id", victime.getId());
-        jsonVictime.put("intervention", adapterFactory.build(intervention));
+      //  jsonVictime.put("intervention", adapterFactory.build(intervention));
         jsonVictime.put("age", victime.getAge());
         jsonVictime.put("dateNaissance", victime.getDateNaissance());
         jsonVictime.put("sexe", victime.getSexe());
         if (victime.getAgent() != null) {
-            jsonVictime.put("agent", victime.getAgent());
+            JSONArray arrayAgents = new JSONArray();
+            List<Agent> listAgents = victime.getAgent();
+            for (int i = 0; i < listAgents.size(); i++) {
+                arrayAgents.put(adapterFactory.build(listAgents.get(i)));
+
+            }
+            jsonVictime.put("agents", arrayAgents);
         }
         if (victime.getPosRef() != null) {
             //Poistion de Référence
@@ -177,14 +183,14 @@ public class AdapterVictime implements IAdapter {
             }
         }
 
-        if (json.has("intervention")) {
-            Log.info("has intervention");
-            victime.setIntervention((Intervention) adapterFactory.build(json.getJSONObject("intervention")));
-        }
+//        if (json.has("intervention")) {
+//            Log.info("has intervention");
+//            victime.setIntervention((Intervention) adapterFactory.build(json.getJSONObject("intervention")));
+//        }
 
         if (json.has("agent")) {
             Log.info("has agent");
-            victime.setAgent((Agent) adapterFactory.build(json.getJSONObject("agent")));
+            victime.addAgent((Agent) adapterFactory.build(json.getJSONObject("agent")));
 
         }
         return (T) victime;

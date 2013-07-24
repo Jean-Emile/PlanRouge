@@ -22,11 +22,11 @@ import org.kevoree.planrouge.impl.InterventionImpl;
 public class AdapterIntervention implements IAdapter {
 
     private AdapterFactory adapterFactory;
-    private ContainerRoot root;
+
 
     public AdapterIntervention() {
         this.adapterFactory = AdapterFactory.getInstance();
-//        this.root = containerRoot;
+
     }
 
     @Override
@@ -37,8 +37,8 @@ public class AdapterIntervention implements IAdapter {
         jsonIntervention.put("id", intervention.getId());
         jsonIntervention.put("description", intervention.get_description());
         jsonIntervention.put("position", adapterFactory.build(intervention.get_position()));
-        for (int i = 0; i < intervention.getAgents().size(); i++) {
-           arrayAgents.put(adapterFactory.build((Agent) intervention.getAgents().get(i)));
+        for (int i = 0; i < intervention.getAffecte().size(); i++) {
+           arrayAgents.put(adapterFactory.build((Agent) intervention.getAffecte().get(i)));
 
         }
         jsonIntervention.put("agents",arrayAgents);
@@ -62,7 +62,7 @@ public class AdapterIntervention implements IAdapter {
             JSONArray jsonAgents = json.getJSONArray("agents");
             for (int i = 0; i < jsonAgents.length(); i++) {
                  Log.debug(jsonAgents.get(i).toString());
-                intervention.addAgents((Agent) adapterFactory.build(jsonAgents.getJSONObject(i)));
+                intervention.addAffecte((Agent) adapterFactory.build(jsonAgents.getJSONObject(i)));
 
             }
         }

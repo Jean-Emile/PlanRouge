@@ -29,17 +29,17 @@ public class BenchServer implements Runnable {
     public BenchServer() {
         t = new Thread(this);
         intervention = adapterFactory.getFactory().createIntervention();
-        intervention.setId("1991991");
-        intervention.setDescription("Un sous-marin entre dans un A380");
+        intervention.setId("1000");
+        intervention.setDescription("un elephant crée un accident sur l'A13");
         for(int i = 0 ; i<=10 ; i++)          {
             Agent agent = adapterFactory.getFactory().createAgent();
-            agent.setMatricule(i+"");
+            agent.setMatricule("d"+i+"");
             try {
                 send(url, adapterFactory.build(agent).toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            intervention.addAgents(agent);
+            intervention.addAffecte(agent);
         }
 
         try {
@@ -67,7 +67,7 @@ public class BenchServer implements Runnable {
             v.setNom("edef");
             v.setId("tag" + r.nextInt());
             intervention.addVictimes(v);
-            v.setIntervention(intervention);
+         //   v.setIntervention(intervention);
             try {
 
                 send(url, adapterFactory.build(v).toString());

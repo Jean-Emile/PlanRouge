@@ -50,7 +50,7 @@ public class test {
 
 
         agent2.setIntervention(intervention);
-        intervention.setAgents(listAgents);
+        intervention.setAffecte(listAgents);
 
          containerRoot.addInterventions(intervention);
         System.out.println(containerRoot.findAgentsByID("2222").getIntervention().getId());

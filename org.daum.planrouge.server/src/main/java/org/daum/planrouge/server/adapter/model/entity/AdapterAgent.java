@@ -21,21 +21,21 @@ import org.kevoree.planrouge.impl.InterventionImpl;
  */
 public class AdapterAgent implements IAdapter{
 
-    private ContainerRoot root;
+
     private AdapterFactory adapterFactory;
 
     public AdapterAgent() {
         this.adapterFactory =  AdapterFactory.getInstance();
-//        this.root = containerRoot;
+
     }
     @Override
     public JSONObject build(KMFContainer container) throws JSONException {
         JSONObject jsonAgent = new JSONObject();
         AgentImpl agent = (AgentImpl) container;
-        jsonAgent.put("matricule", agent.get_matricule());
-        if (agent.get_intervention() !=null){
-        jsonAgent.put("idIntervention", agent.get_intervention().getId());
-        }
+        jsonAgent.put("matricule", agent.getMatricule());
+//        if (agent.get_intervention() !=null){
+//        jsonAgent.put("idIntervention", agent.get_intervention().getId());
+//        }
         jsonAgent.put("type", getType());
 
         return jsonAgent;
@@ -48,14 +48,12 @@ public class AdapterAgent implements IAdapter{
         if(json.has("matricule")){
             agent.setMatricule(json.getString("matricule"));
         }
-        if(json.has("idIntervention")){
-            agent.setIntervention(root.findInterventionsByID(json.getString("idIntervention")));
-        }
+
         return (T) agent;
     }
 
     @Override
     public Entities getType() {
-        return Entities.AdapterAgent;  //To change body of implemented methods use File | Settings | File Templates.
+        return Entities.AdapterAgent;
     }
 }

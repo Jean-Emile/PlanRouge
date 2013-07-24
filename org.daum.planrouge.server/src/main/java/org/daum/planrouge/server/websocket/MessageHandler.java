@@ -58,7 +58,7 @@ public class MessageHandler {
                 String idIntervention = intervention.getId();
 
                 // AgentList of this intervention
-                List<Agent> agentList = intervention.getAgents();
+                List<Agent> agentList = intervention.getAffecte();
                 // Adding this intervention to concerned agents
                 for (int i = 0; i < agentList.size(); i++) {
                     Log.info("Ajout intervention a l'agent ::: "+agentList.get(i).getMatricule()+" de l'intervention :: "+root.findInterventionsByID(intervention.getId()).getId());
@@ -77,7 +77,7 @@ public class MessageHandler {
 
                     case GET:
 
-                        victime = root.findInterventionsByID(victime.getIntervention().getId()).findVictimesByID(victime.getId());
+                        victime = root.findInterventionsByID(victime.getAgent().get(0).getIntervention().getId()).findVictimesByID(victime.getId());
                         JSONObject jsonVictime = AdapterFactory.getInstance().build(victime);
 
                         if (victime != null) {
@@ -94,21 +94,30 @@ public class MessageHandler {
                         break;
 
                     case PUT:
-                        Agent agentmodel = root.findAgentsByID(victime.getAgent().getMatricule());
-                        victime.setAgent(agentmodel);
-                        Victime vicmodel = root.findInterventionsByID(victime.getAgent().getIntervention().getId()).findVictimesByID(victime.getId());
+
+                        Agent agentmodel = root.findAgentsByID(victime.getAgent().get(0).getMatricule());
+                        victime.addAgent(agentmodel);
+                        Victime vicmodel = root.findInterventionsByID(agentmodel.getIntervention().getId()).findVictimesByID(victime.getId());
+
+
 
 
                         if (vicmodel != null) {
                             // merge(vicmodel, victime);
-                            root.findInterventionsByID(victime.getAgent().getIntervention().getId()).removeVictimes(vicmodel);
-                            root.findInterventionsByID(victime.getAgent().getIntervention().getId()).addVictimes(victime);
+                            for(int i = 0 ; i<root.getInterventions().size();i++){
+                                root.getInterventions().get(i).removeVictimes(vicmodel);
+                            }
+                            root.findInterventionsByID(agentmodel.getIntervention().getId()).removeVictimes(vicmodel);
+                            root.findInterventionsByID(agentmodel.getIntervention().getId()).addVictimes(victime);
 
                         } else {
-                            root.findInterventionsByID(victime.getAgent().getIntervention().getId()).addVictimes(victime);
+                            for(int i = 0 ; i<root.getInterventions().size();i++){
+                                root.getInterventions().get(i).removeVictimes(victime);
+                            }
+                            root.findInterventionsByID(agentmodel.getIntervention().getId()).addVictimes(victime);
                         }
 
-                        Victime test = root.findInterventionsByID(victime.getIntervention().getId()).findVictimesByID(victime.getId());
+                        Victime test = root.findInterventionsByID(agentmodel.getIntervention().getId()).findVictimesByID(victime.getId());
                         JSONObject jtest = AdapterFactory.getInstance().build(test);
                         Log.info(jtest.toString());
                         break;
