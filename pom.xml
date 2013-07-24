@@ -27,10 +27,7 @@
             <id>kevoree-libs-release-local-daum</id>
             <url>http://maven.kevoree.org/daum/release</url>
         </repository>
-        <repository>
-            <id>daum-snapshots</id>
-            <url>http://maven.kevoree.org/daum/snapshots</url>
-        </repository>
+
     </repositories>
 
     <pluginRepositories>

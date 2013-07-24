@@ -1,5 +1,6 @@
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.json.JSONException;
+import org.kevoree.planrouge.Agent;
 import org.kevoree.planrouge.Intervention;
 import org.kevoree.planrouge.Victime;
 import org.webbitserver.WebSocketConnection;
@@ -21,57 +22,71 @@ public class BenchServer implements Runnable {
 
     private Thread t;
     private AdapterFactory adapterFactory = new AdapterFactory();
-    private   Intervention intervention;
+    private Intervention intervention;
     private Random r = new Random();
-    private String url = "ws://127.0.0.1:8080/add";
-    public BenchServer()   {
-      t  = new Thread(this);
+    private String url = "ws://192.168.1.101:8080/add";
 
-   intervention = adapterFactory.getFactory() .createIntervention();
+    public BenchServer() {
+        t = new Thread(this);
+        intervention = adapterFactory.getFactory().createIntervention();
         intervention.setId("1991991");
-        intervention.setDescription("pofrpf");
+        intervention.setDescription("Un sous-marin entre dans un A380");
+        for(int i = 0 ; i<=10 ; i++)          {
+            Agent agent = adapterFactory.getFactory().createAgent();
+            agent.setMatricule(i+"");
+            try {
+                send(url, adapterFactory.build(agent).toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            intervention.addAgents(agent);
+        }
 
         try {
-            send (url,adapterFactory.build(intervention).toString());
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        try {
+            send(url, adapterFactory.build(intervention).toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        t.start();
+  //      t.start();
 
     }
 
     @Override
     public void run() {
 
-           while (Thread.currentThread().isAlive())
-           {
+        while (Thread.currentThread().isAlive()) {
 
 
-               Victime v =adapterFactory.getFactory().createVictime();
-               v.setNom("edef");
-               v.setId("tag"+r.nextInt());
-               intervention.addVictimes(v);
-               v.setIntervention(intervention);
-               try {
+            Victime v = adapterFactory.getFactory().createVictime();
+            v.setNom("edef");
+            v.setId("tag" + r.nextInt());
+            intervention.addVictimes(v);
+            v.setIntervention(intervention);
+            try {
 
-                   send(url,adapterFactory.build(v).toString());
-               } catch (JSONException e) {
-                   e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-               }
+                send(url, adapterFactory.build(v).toString());
+            } catch (JSONException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
 
-               try {
-                   Thread.sleep(100);
-               } catch (InterruptedException e) {
-                   e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-               }
-           }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
 
 
     }
 
 
-    public  void send(String url,final String data){
+    public void send(String url, final String data) {
 
         WebSocketClient client = new WebSocketClient(URI.create(url), new WebSocketHandler() {
             @Override

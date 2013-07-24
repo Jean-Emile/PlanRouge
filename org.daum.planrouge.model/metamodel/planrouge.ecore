@@ -11,7 +11,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"  containment="true"/>
 
     <eStructuralFeatures xsi:type="ecore:EReference" name="victimes" upperBound="-1" eType="#//Victime" containment="true"/>
-
+    <eStructuralFeatures xsi:type="ecore:EReference" name="agents" upperBound="-1" eType="#//Agent" containment="true"/>
   </eClassifiers>
 
 
@@ -45,6 +45,7 @@
 
   <eClassifiers xsi:type="ecore:EClass" name="Agent">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="matricule" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" iD="true"/>
+     <eStructuralFeatures xsi:type="ecore:EReference" name="intervention" eType="#//Intervention"/>
   </eClassifiers>
 
 
@@ -56,7 +57,7 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="age" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="sexe" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateNaissance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
-
+        <eStructuralFeatures xsi:type="ecore:EReference" name="agent" eType="#//Agent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="priorite" eType="#//Categorie"/>
 
      <eStructuralFeatures xsi:type="ecore:EReference" name="intervention" upperBound="1" eType="#//Intervention" />

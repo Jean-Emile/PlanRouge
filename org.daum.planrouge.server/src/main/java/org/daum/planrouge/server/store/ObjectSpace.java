@@ -1,5 +1,5 @@
 package org.daum.planrouge.server.store;
-
+/*
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +27,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.List;   */
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,7 +37,11 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ObjectSpace implements  Runnable {
-
+    @Override
+    public void run() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+   /*
     private  List<String> voldemort_ips = new ArrayList<String>();
     private StoreClientFactory factory    =null;
     private StoreClient store=null;
@@ -227,5 +231,6 @@ public class ObjectSpace implements  Runnable {
 
             }
         }
-    }
+    } */
 }
+

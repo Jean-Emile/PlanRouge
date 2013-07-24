@@ -9,6 +9,7 @@ import org.kevoree.loader.JSONModelLoader;
 import org.kevoree.planrouge.*;
 import org.kevoree.planrouge.container.KMFContainer;
 import org.kevoree.planrouge.factory.MainFactory;
+import org.kevoree.planrouge.impl.AgentImpl;
 import org.kevoree.planrouge.impl.InterventionImpl;
 import org.kevoree.planrouge.serializer.JSONModelSerializer;
 
@@ -25,7 +26,7 @@ public class AdapterFactory implements IAdapterFactory {
     private LRUMap adapterLRU = new LRUMap(4);
 
     private static AdapterFactory singleton = null;
-     private JSONModelLoader jsonModelLoader = new JSONModelLoader();
+    private JSONModelLoader jsonModelLoader = new JSONModelLoader();
 
     public static AdapterFactory getInstance() {
         if (singleton == null) {
@@ -55,6 +56,9 @@ public class AdapterFactory implements IAdapterFactory {
                 case AdapterIntervention:
                     instance = new AdapterIntervention();
                     break;
+                case AdapterAgent:
+                    instance = new AdapterAgent();
+                    break;
             }
             adapterLRU.put(id, instance);
             return instance;
@@ -74,6 +78,8 @@ public class AdapterFactory implements IAdapterFactory {
             return getAdapter(Entities.AdapterVictime).build(container);
         } else if (container instanceof InterventionImpl) {
             return getAdapter(Entities.AdapterIntervention).build(container);
+        }else if (container instanceof AgentImpl) {
+            return getAdapter(Entities.AdapterAgent).build(container);
         }
 
         return null;
@@ -91,6 +97,8 @@ public class AdapterFactory implements IAdapterFactory {
             return Entities.AdapterVictime;
         } else if (container instanceof InterventionImpl) {
             return Entities.AdapterIntervention;
+        } else if (container instanceof AgentImpl) {
+            return Entities.AdapterAgent;
         }
         return null;
     }
@@ -100,24 +108,26 @@ public class AdapterFactory implements IAdapterFactory {
     public <T> T build(JSONObject json) throws JSONException {
 
 
-            if(json.has("eClass")){
+        if (json.has("eClass")) {
 
-             // todo
+            // todo
 
-            } else {
-                if (json.getString("type").equals(Entities.AdapterGpsPoint.toString())) {
-                    return getAdapter(Entities.AdapterGpsPoint).build(json);
-                } else if (json.getString("type").equals(Entities.AdapterPositionCivile.toString())) {
-                    return getAdapter(Entities.AdapterPositionCivile).build(json);
-                } else if (json.getString("type").equals(Entities.AdapterIntervention.toString())) {
-                    return getAdapter(Entities.AdapterIntervention).build(json);
-                } else if (json.getString("type").equals(Entities.AdapterVictime.toString())) {
-                    return getAdapter(Entities.AdapterVictime).build(json);
-                } else if (json.getString("type").equals(Entities.AdapterCategorie.toString())) {
-                    return getAdapter(Entities.AdapterCategorie).build(json);
-                }
-
+        } else {
+            if (json.getString("type").equals(Entities.AdapterGpsPoint.toString())) {
+                return getAdapter(Entities.AdapterGpsPoint).build(json);
+            } else if (json.getString("type").equals(Entities.AdapterPositionCivile.toString())) {
+                return getAdapter(Entities.AdapterPositionCivile).build(json);
+            } else if (json.getString("type").equals(Entities.AdapterIntervention.toString())) {
+                return getAdapter(Entities.AdapterIntervention).build(json);
+            } else if (json.getString("type").equals(Entities.AdapterVictime.toString())) {
+                return getAdapter(Entities.AdapterVictime).build(json);
+            } else if (json.getString("type").equals(Entities.AdapterCategorie.toString())) {
+                return getAdapter(Entities.AdapterCategorie).build(json);
+            } else if (json.getString("type").equals(Entities.AdapterAgent.toString())) {
+                return getAdapter(Entities.AdapterAgent).build(json);
             }
+
+        }
 
 
         return null;

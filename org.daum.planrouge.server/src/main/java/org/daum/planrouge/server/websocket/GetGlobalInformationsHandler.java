@@ -3,12 +3,16 @@ package org.daum.planrouge.server.websocket;
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
+import org.kevoree.planrouge.Intervention;
 import org.kevoree.planrouge.events.ModelEvent;
 import org.kevoree.planrouge.events.ModelTreeListener;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,13 +36,13 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         containerRoot.addModelTreeListener(new ModelTreeListener() {
             @Override
             public void elementChanged(ModelEvent modelEvent) {
-                /*
+
                 try {
                     test();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                } */
-                System.out.println(modelEvent);
+                }
+          //      System.out.println(modelEvent);
 
             }
         });
@@ -65,7 +69,8 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
 
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         Log.debug("GetGlobalInformationsHandler ::: ON_MESSAGE");
-        int nbVictime = this.containerRoot.findInterventionsByID("1").getVictimes().size();
+        String idIntervention = new JSONObject(message).getString("idIntervention");
+        int nbVictime = this.containerRoot.findInterventionsByID(idIntervention).getVictimes().size();
         int nbVictimeC1 = 0;
         int nbVictimeC2 = 0;
         int nbVictimeC3 = 0;
@@ -74,7 +79,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
 
 
         for (int i = 0; i < nbVictime; i++) {
-            if (this.containerRoot.findInterventionsByID("1").getVictimes().get(i).getPriorite() != null) {
+            if (this.containerRoot.findInterventionsByID(idIntervention).getVictimes().get(i).getPriorite() != null) {
                 String cat = this.containerRoot.findInterventionsByID("1").getVictimes().get(i).getPriorite().getId();
                 if (cat.equals("1")) {
                     nbVictimeC1++;
@@ -108,47 +113,55 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
 
 
     public String test() throws JSONException {
-        int nbVictime = containerRoot.findInterventionsByID("1").getVictimes().size();
-        int nbVictimeC1 = 0;
-        int nbVictimeC2 = 0;
-        int nbVictimeC3 = 0;
-        int nbVictimeC4 = 0;
-        int nbVictimeC5 = 0;
-        String victime="";
 
-        for (int i = 0; i < nbVictime; i++) {
-            victime+="\n"+adapterFactory.build(containerRoot.findInterventionsByID("1").getVictimes().get(i)).toString();
-            if (containerRoot.findInterventionsByID("1").getVictimes().get(i).getPriorite() != null) {
-                String cat = containerRoot.findInterventionsByID("1").getVictimes().get(i).getPriorite().getId();
+        List<Intervention> listInterventions = containerRoot.getInterventions();
+              JSONArray jsonObject = new JSONArray();
+        for (int i = 0; i < listInterventions.size(); i++) {
+            Intervention intervention = listInterventions.get(i);
+            int nbVictime = intervention.getVictimes().size();
+            int nbVictimeC1 = 0;
+            int nbVictimeC2 = 0;
+            int nbVictimeC3 = 0;
+            int nbVictimeC4 = 0;
+            int nbVictimeC5 = 0;
+            String victime = "";
 
-                if (cat.equals("1")) {
-                    nbVictimeC1++;
-                } else if (cat.equals("2")) {
-                    nbVictimeC2++;
-                } else if (cat.equals("3")) {
-                    nbVictimeC3++;
-                } else if (cat.equals("4")) {
-                    nbVictimeC4++;
-                } else if (cat.equals("5")) {
-                    nbVictimeC5++;
+            for (int j = 0; j < nbVictime; j++) {
+                victime += "\n" + adapterFactory.build(intervention.getVictimes().get(i)).toString();
+                if (intervention.getVictimes().get(i).getPriorite() != null) {
+                    String cat = containerRoot.findInterventionsByID("1").getVictimes().get(i).getPriorite().getId();
+
+                    if (cat.equals("1")) {
+                        nbVictimeC1++;
+                    } else if (cat.equals("2")) {
+                        nbVictimeC2++;
+                    } else if (cat.equals("3")) {
+                        nbVictimeC3++;
+                    } else if (cat.equals("4")) {
+                        nbVictimeC4++;
+                    } else if (cat.equals("5")) {
+                        nbVictimeC5++;
+                    }
                 }
             }
+
+            // /List victimes;
+            Log.info(victime);
+            JSONArray informations = new JSONArray();
+            informations.put(0, "graph");
+            informations.put(1, nbVictime);
+            informations.put(2, nbVictimeC1);
+            informations.put(3, nbVictimeC2);
+            informations.put(4, nbVictimeC3);
+            informations.put(5, nbVictimeC4);
+            informations.put(6, nbVictimeC5);
+            informations.put(7, intervention.getDescription());
+
+            jsonObject.put(informations);
         }
 
-        // /List victimes;
-         Log.info(victime);
-        JSONArray informations = new JSONArray();
-        informations.put(0, "graph");
-        informations.put(1, nbVictime);
-        informations.put(2, nbVictimeC1);
-        informations.put(3, nbVictimeC2);
-        informations.put(4, nbVictimeC3);
-        informations.put(5, nbVictimeC4);
-        informations.put(6, nbVictimeC5);
-        informations.put(7, containerRoot.findInterventionsByID("1").getDescription());
 
-
-        peers.broadcast(informations.toString());
-        return informations.toString();
+        peers.broadcast(jsonObject.toString());
+        return jsonObject.toString();
     }
 }

@@ -30,7 +30,6 @@ public class MessageHandler {
     }
 
 
-
     public void process(WebSocketConnection connection, AdapterFactory adapterFactory, JSONObject message, HandlerWebSocket.ACTION action) throws JSONException {
 
         Object obj = AdapterFactory.getInstance().build(message);
@@ -43,17 +42,35 @@ public class MessageHandler {
             case AdapterGpsPoint:
                 break;
 
+            case AdapterAgent:
+                Log.info("AdapterAgent");
+                Agent agent = (Agent) obj;
+                root.addAgents(agent);
+                Log.info("Ajout agent au containerRoot :: "+agent.getMatricule());
+               break;
 
             case AdapterIntervention:
+                Log.info("AdapterIntervention");
                 Intervention intervention = (Intervention) obj;
+
+                // Add intervention to ContainerRoot
                 root.addInterventions(intervention);
+                String idIntervention = intervention.getId();
+
+                // AgentList of this intervention
+                List<Agent> agentList = intervention.getAgents();
+                // Adding this intervention to concerned agents
+                for (int i = 0; i < agentList.size(); i++) {
+                    Log.info("Ajout intervention a l'agent ::: "+agentList.get(i).getMatricule()+" de l'intervention :: "+root.findInterventionsByID(intervention.getId()).getId());
+                    root.findAgentsByID(agentList.get(i).getMatricule()).setIntervention(root.findInterventionsByID(idIntervention));
+                }
                 break;
 
 
             case AdapterVictime:
                 Victime victime = (Victime) obj;
-                if (victime.getId().length() == 0){
-                    Log.error("AdapterVictime ::: No ID "+victime.getId().length()+" "+action);
+                if (victime.getId().length() == 0) {
+                    Log.error("AdapterVictime ::: No ID " + victime.getId().length() + " " + action);
                     return;
                 }
                 switch (action) {
@@ -61,7 +78,7 @@ public class MessageHandler {
                     case GET:
 
                         victime = root.findInterventionsByID(victime.getIntervention().getId()).findVictimesByID(victime.getId());
-                       JSONObject jsonVictime = AdapterFactory.getInstance().build(victime);
+                        JSONObject jsonVictime = AdapterFactory.getInstance().build(victime);
 
                         if (victime != null) {
                             Log.debug(jsonVictime.toString());
@@ -73,20 +90,22 @@ public class MessageHandler {
 
                         break;
 
-                          case GETALL:
+                    case GETALL:
+                        break;
 
-                              break;
                     case PUT:
+                        Agent agentmodel = root.findAgentsByID(victime.getAgent().getMatricule());
+                        victime.setAgent(agentmodel);
+                        Victime vicmodel = root.findInterventionsByID(victime.getAgent().getIntervention().getId()).findVictimesByID(victime.getId());
 
-                        Victime vicmodel = root.findInterventionsByID(victime.getIntervention().getId()).findVictimesByID(victime.getId());
 
                         if (vicmodel != null) {
-                           // merge(vicmodel, victime);
-                            root.findInterventionsByID(victime.getIntervention().getId()).removeVictimes(vicmodel);
-                            root.findInterventionsByID(victime.getIntervention().getId()).addVictimes(victime);
+                            // merge(vicmodel, victime);
+                            root.findInterventionsByID(victime.getAgent().getIntervention().getId()).removeVictimes(vicmodel);
+                            root.findInterventionsByID(victime.getAgent().getIntervention().getId()).addVictimes(victime);
 
                         } else {
-                            root.findInterventionsByID(victime.getIntervention().getId()).addVictimes(victime);
+                            root.findInterventionsByID(victime.getAgent().getIntervention().getId()).addVictimes(victime);
                         }
 
                         Victime test = root.findInterventionsByID(victime.getIntervention().getId()).findVictimesByID(victime.getId());
