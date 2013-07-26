@@ -43,7 +43,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-          //      System.out.println(modelEvent);
+                //      System.out.println(modelEvent);
 
             }
         });
@@ -70,72 +70,82 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
 
     public void onMessage(WebSocketConnection connection, String message) throws JSONException {
         Log.debug("GetGlobalInformationsHandler ::: ON_MESSAGE");
-        List<Intervention> listInterventions = containerRoot.getInterventions();
-        JSONArray jsonArray  = new JSONArray();
-        for (int i = 0; i < listInterventions.size(); i++) {
-            Intervention intervention = listInterventions.get(i);
-            int nbAgent = intervention.getAffecte().size();
-            int nbVictime = intervention.getVictimes().size();
-            int nbVictimeC1 = 0;
-            int nbVictimeC2 = 0;
-            int nbVictimeC3 = 0;
-            int nbVictimeC4 = 0;
-            int nbVictimeC5 = 0;
-            String victime = "";
+        if (message.equals("getid")) {
+            JSONArray jsonArray = new JSONArray();
+            List<Intervention> listInterventions = containerRoot.getInterventions();
+            for (int i = 0; i < listInterventions.size(); i++) {
+                jsonArray.put(listInterventions.get(i).getId());
 
-            for (int j = 0; j < nbVictime; j++) {
-                victime += "\n\n\n" + adapterFactory.build(intervention.getVictimes().get(j)).toString();
+            }
+            connection.send(new JSONObject().put("idIntervention",jsonArray).toString());
 
-                if (intervention.getVictimes().get(j).getPriorite() != null) {
-                    String cat = containerRoot.findInterventionsByID(intervention.getId()).getVictimes().get(j).getPriorite().getId();
+        } else {
+            List<Intervention> listInterventions = containerRoot.getInterventions();
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < listInterventions.size(); i++) {
+                Intervention intervention = listInterventions.get(i);
+                int nbAgent = intervention.getAffecte().size();
+                int nbVictime = intervention.getVictimes().size();
+                int nbVictimeC1 = 0;
+                int nbVictimeC2 = 0;
+                int nbVictimeC3 = 0;
+                int nbVictimeC4 = 0;
+                int nbVictimeC5 = 0;
+                String victime = "";
 
-                    if (cat.equals("1")) {
-                        nbVictimeC1++;
-                        Log.info("cat 1");
-                    } else if (cat.equals("2")) {
-                        nbVictimeC2++;
-                        Log.info("cat 2");
-                    } else if (cat.equals("3")) {
-                        nbVictimeC3++;
-                        Log.info("cat 3");
-                    } else if (cat.equals("4")) {
-                        nbVictimeC4++;
-                        Log.info("cat 4");
-                    } else if (cat.equals("5")) {
-                        nbVictimeC5++;
-                        Log.info("cat 5");
+                for (int j = 0; j < nbVictime; j++) {
+                    victime += "\n\n\n" + adapterFactory.build(intervention.getVictimes().get(j)).toString();
+
+                    if (intervention.getVictimes().get(j).getPriorite() != null) {
+                        String cat = containerRoot.findInterventionsByID(intervention.getId()).getVictimes().get(j).getPriorite().getId();
+
+                        if (cat.equals("1")) {
+                            nbVictimeC1++;
+                            Log.info("cat 1");
+                        } else if (cat.equals("2")) {
+                            nbVictimeC2++;
+                            Log.info("cat 2");
+                        } else if (cat.equals("3")) {
+                            nbVictimeC3++;
+                            Log.info("cat 3");
+                        } else if (cat.equals("4")) {
+                            nbVictimeC4++;
+                            Log.info("cat 4");
+                        } else if (cat.equals("5")) {
+                            nbVictimeC5++;
+                            Log.info("cat 5");
+                        }
                     }
                 }
+
+                // /List victimes;
+                Log.info("INFORAMTION GET INFORMATIONS victimes :::::::::::::::::::::::::  " + victime);
+                JSONArray informations = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+
+                informations.put(0, "graph");
+                informations.put(1, nbVictime);
+                informations.put(2, nbVictimeC1);
+                informations.put(3, nbVictimeC2);
+                informations.put(4, nbVictimeC3);
+                informations.put(5, nbVictimeC4);
+                informations.put(6, nbVictimeC5);
+                informations.put(7, intervention.getDescription());
+                informations.put(8, nbAgent);
+                jsonObject.put("informations", informations);
+                jsonObject.put("id", intervention.getId());
+                jsonArray.put(jsonObject);
             }
 
-            // /List victimes;
-            Log.info("INFORAMTION GET INFORMATIONS victimes :::::::::::::::::::::::::  " +victime);
-            JSONArray informations = new JSONArray();
-            JSONObject jsonObject = new JSONObject();
-
-            informations.put(0, "graph");
-            informations.put(1, nbVictime);
-            informations.put(2, nbVictimeC1);
-            informations.put(3, nbVictimeC2);
-            informations.put(4, nbVictimeC3);
-            informations.put(5, nbVictimeC4);
-            informations.put(6, nbVictimeC5);
-            informations.put(7, intervention.getDescription());
-            informations.put(8, nbAgent);
-            jsonObject.put("informations",informations);
-            jsonObject.put("id", intervention.getId());
-            jsonArray.put(jsonObject);
+            connection.send(jsonArray.toString()); // echo back message in upper case
         }
-
-        connection.send(jsonArray.toString()); // echo back message in upper case
-
     }
 
 
     public String test() throws JSONException {
 
         List<Intervention> listInterventions = containerRoot.getInterventions();
-        JSONArray jsonArray  = new JSONArray();
+        JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < listInterventions.size(); i++) {
             Intervention intervention = listInterventions.get(i);
             int nbAgent = intervention.getAffecte().size();
@@ -173,7 +183,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             }
 
             // /List victimes;
-            Log.info("INFORAMTION GET INFORMATIONS victimes :::::::::::::::::::::::::  " +victime);
+            Log.info("INFORAMTION GET INFORMATIONS victimes :::::::::::::::::::::::::  " + victime);
             JSONArray informations = new JSONArray();
             JSONObject jsonObject = new JSONObject();
 
@@ -186,7 +196,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             informations.put(6, nbVictimeC5);
             informations.put(7, intervention.getDescription());
             informations.put(8, nbAgent);
-            jsonObject.put("informations",informations);
+            jsonObject.put("informations", informations);
             jsonObject.put("id", intervention.getId());
             jsonArray.put(jsonObject);
         }

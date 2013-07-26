@@ -47,8 +47,8 @@ public class ServerPlanRouge extends AbstractComponentType {
               */
 
 
-        handlerWebSocketget =new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.GET);
-        handlerWebSocketput =new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.PUT);
+        handlerWebSocketget = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.GET);
+        handlerWebSocketput = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.PUT);
         handlerGlobalInformations =  new GetGlobalInformationsHandler(adapterFactory,containerRoot);
 
         createWebServer();

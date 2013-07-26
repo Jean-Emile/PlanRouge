@@ -45,8 +45,22 @@ public class MessageHandler {
             case AdapterAgent:
                 Log.info("AdapterAgent");
                 Agent agent = (Agent) obj;
-                root.addAgents(agent);
-                Log.info("Ajout agent au containerRoot :: "+agent.getMatricule());
+
+                switch (action) {
+                    case GET:
+
+                        if (root.findAgentsByID(agent.getMatricule()) != null) {
+                            connection.send("true");
+
+                        } else {
+                            connection.send("false");
+                        }
+                        return;
+
+                    case PUT :
+                        root.addAgents(agent);
+                        return;
+                }
                break;
 
             case AdapterIntervention:
@@ -59,9 +73,15 @@ public class MessageHandler {
 
                 // AgentList of this intervention
                 List<Agent> agentList = intervention.getAffecte();
+
                 // Adding this intervention to concerned agents
                 for (int i = 0; i < agentList.size(); i++) {
                     Log.info("Ajout intervention a l'agent ::: "+agentList.get(i).getMatricule()+" de l'intervention :: "+root.findInterventionsByID(intervention.getId()).getId());
+//                    for (int j = 0; j< root.getInterventions().size(); j++){
+//                        if (root.getInterventions().get(j).getAffecte().contains(agentList.get(i))){
+//                            root.getInterventions().get(j).removeAffecte(agentList.get(i));
+//                        }
+//                    }
                     root.findAgentsByID(agentList.get(i).getMatricule()).setIntervention(root.findInterventionsByID(idIntervention));
                 }
                 break;
@@ -77,7 +97,7 @@ public class MessageHandler {
 
                     case GET:
 
-                        victime = root.findInterventionsByID(victime.getAgent().get(0).getIntervention().getId()).findVictimesByID(victime.getId());
+                        victime = root.findInterventionsByID(victime.getIntervenants().get(0).getIntervention().getId()).findVictimesByID(victime.getId());
                         JSONObject jsonVictime = AdapterFactory.getInstance().build(victime);
 
                         if (victime != null) {
@@ -95,12 +115,9 @@ public class MessageHandler {
 
                     case PUT:
 
-                        Agent agentmodel = root.findAgentsByID(victime.getAgent().get(0).getMatricule());
-                        victime.addAgent(agentmodel);
+                        Agent agentmodel = root.findAgentsByID(victime.getIntervenants().get(0).getMatricule());
+                        victime.addIntervenants(agentmodel);
                         Victime vicmodel = root.findInterventionsByID(agentmodel.getIntervention().getId()).findVictimesByID(victime.getId());
-
-
-
 
                         if (vicmodel != null) {
                             // merge(vicmodel, victime);

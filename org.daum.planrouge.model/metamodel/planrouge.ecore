@@ -30,7 +30,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="latitude" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="longitude" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="satellites_used" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="precision" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="altitude" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 
@@ -57,7 +57,7 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="age" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="sexe" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateNaissance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
-      <eStructuralFeatures xsi:type="ecore:EReference" name="agent" upperBound="-1" eType="#//Agent" eKeys="#//Agent/matricule"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="intervenants" upperBound="-1" eType="#//Agent" eKeys="#//Agent/matricule"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="priorite" eType="#//Categorie"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="posRef" eType="#//Position" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="posDestination" upperBound="-1" eType="#//Position" containment="true"/>

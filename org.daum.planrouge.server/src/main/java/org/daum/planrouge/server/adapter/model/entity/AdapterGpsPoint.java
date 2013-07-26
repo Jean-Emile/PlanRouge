@@ -35,7 +35,7 @@ public class AdapterGpsPoint implements IAdapter {
         GpsPoint gpsPoint = (GpsPoint) container;
         jsonGps.put("latitude", gpsPoint.getLatitude());
         jsonGps.put("longitude", gpsPoint.getLongitude());
-        jsonGps.put("precision", gpsPoint.getMode());
+        jsonGps.put("precision", gpsPoint.getPrecision());
         jsonGps.put("heure", gpsPoint.getHorodatage());
         jsonGps.put("type", getType());
         return jsonGps;
@@ -56,7 +56,7 @@ public class AdapterGpsPoint implements IAdapter {
             gpsPoint.setLatitude(Integer.parseInt(json.getString("latitude").toString()));
         }
         if (json.has("precision")) {
-            gpsPoint.setMode(Integer.parseInt(json.getString("precision").toString()));
+            gpsPoint.setPrecision(Integer.parseInt(json.getString("precision").toString()));
         }
 
 

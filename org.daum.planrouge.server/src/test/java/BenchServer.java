@@ -29,11 +29,11 @@ public class BenchServer implements Runnable {
     public BenchServer() {
         t = new Thread(this);
         intervention = adapterFactory.getFactory().createIntervention();
-        intervention.setId("1000");
-        intervention.setDescription("un elephant crée un accident sur l'A13");
-        for(int i = 0 ; i<=10 ; i++)          {
+        intervention.setId("2");
+        intervention.setDescription("accident");
+        for(int i = 0 ; i<100 ; i++)          {
             Agent agent = adapterFactory.getFactory().createAgent();
-            agent.setMatricule("d"+i+"");
+            agent.setMatricule("t"+i+"");
             try {
                 send(url, adapterFactory.build(agent).toString());
             } catch (JSONException e) {

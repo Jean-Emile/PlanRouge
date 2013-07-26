@@ -27,32 +27,57 @@ function showMessage(text) {
 		ws.onmessage = function(msg) {
 		
 			var jsonObj = JSON.parse(msg.data);
+            if( jsonObj.idIntervention != null){
 
-			for (var i in jsonObj) {
+                var select = document.getElementById("idIntervention");
+                document.getElementById('idIntervention').options.length=0;
+                for ( var i in jsonObj.idIntervention) {
+                    select.options[select.length] = new Option(jsonObj.idIntervention[i], jsonObj.idIntervention[i]);
+                }
 
-			    var jsonObj2 = jsonObj[i];
+            }else{
+                for (var i in jsonObj) {
 
-				if(jsonObj2.id == id){
-					if(jsonObj2.informations[0] == "graph"){
-					graph(jsonObj2.informations);
-					}else{
-					showMessage(msg.data);
-					}
-				}
-			}
+                    var jsonObj2 = jsonObj[i];
+
+                    if(jsonObj2.id == id){
+                        if(jsonObj2.informations[0] == "graph"){
+                        graph(jsonObj2.informations);
+                        }else{
+                        showMessage(msg.data);
+                        }
+                    }
+                }
+            }
 		};
 		
 function setId(){
-	id = $("#idIntervention").val();
+    var idIntervention = document.getElementById("idIntervention");
+    id = idIntervention.options[idIntervention.selectedIndex].value;
 	ws.send("");
-}		
+}
+
+function getId(){
+    ws.send("getid");
+    id = $("#idIntervention").val();
+
+}
 
 </script>
 </head>
+<div data-role="page">
+
+    <div data-role="content">
 			<div data-role="collapsible" data-collapsed="true" data-theme="b">
                 <h2>ID Intervention</h2>
-                <label for="idIntervention">Nom :</label> <input type="text" name="idIntervention" id="idIntervention" value="" />
-                <input type="button" name="submit" value="Récupérer intervention" onclick="setId();" />
+
+                <label for="idIntervention">Id Intervention</label>
+                <select name="idIntervention" id="idIntervention">
+                    <option value="0000" >Id Intervention</option>
+                </select>
+
+                <input type="button" name="submit" value="Récupérer les interventions" onclick="getId();" />
+                <input type="button" name="submit2" value="Récupérer l'intervention sélectionné" onclick="setId();" />
 			</div>
 
 
@@ -76,6 +101,9 @@ function setId(){
                 <h2>Nombre de victimes par catégorie</h2>
                 <canvas id="canvas" height="450" width="800"></canvas>
 		    </div>
+
+        </div>
+    </div>
 
 <script>
 
