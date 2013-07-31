@@ -63,8 +63,10 @@ public class AdapterIntervention implements IAdapter {
             for (int i = 0; i < jsonAgents.length(); i++) {
                  Log.debug(jsonAgents.get(i).toString());
                 intervention.addAffecte((Agent) adapterFactory.build(jsonAgents.getJSONObject(i)));
-
             }
+        }
+        if (json.has("position")) {
+            intervention.setPosition((Position) adapterFactory.build(json.getJSONObject("position")));
         }
 
         return (T) intervention;

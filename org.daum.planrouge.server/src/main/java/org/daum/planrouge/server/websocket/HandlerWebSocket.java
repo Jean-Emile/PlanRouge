@@ -25,7 +25,8 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
     public enum ACTION {
         PUT,
         GET,
-        GETALL
+        GETALL,
+        DELETE
     }
 
     public HandlerWebSocket(AdapterFactory adapterFactory,ContainerRoot root,ACTION action){

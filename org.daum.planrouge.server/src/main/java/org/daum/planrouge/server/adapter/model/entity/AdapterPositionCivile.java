@@ -62,7 +62,7 @@ public class AdapterPositionCivile implements IAdapter {
             positionCivile.setHorodatage(json.getString("heure").toString());
         }
         if (json.has("nomVille")) {
-            positionCivile.setHorodatage(json.getString("nomVille").toString());
+            positionCivile.setNomVille(json.getString("nomVille").toString());
         }
         return (T) positionCivile;
     }

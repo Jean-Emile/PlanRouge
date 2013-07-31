@@ -30,10 +30,10 @@ public class BenchServer implements Runnable {
         t = new Thread(this);
         intervention = adapterFactory.getFactory().createIntervention();
         intervention.setId("2");
-        intervention.setDescription("accident");
-        for(int i = 0 ; i<100 ; i++)          {
+        intervention.setDescription("accident 2");
+        for(int i = 0 ; i<10 ; i++)          {
             Agent agent = adapterFactory.getFactory().createAgent();
-            agent.setMatricule("t"+i+"");
+            agent.setMatricule("t"+i);
             try {
                 send(url, adapterFactory.build(agent).toString());
             } catch (JSONException e) {
@@ -43,7 +43,7 @@ public class BenchServer implements Runnable {
         }
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

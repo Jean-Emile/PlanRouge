@@ -46,9 +46,9 @@ public class AdapterVictime implements IAdapter {
         jsonVictime.put("age", victime.getAge());
         jsonVictime.put("dateNaissance", victime.getDateNaissance());
         jsonVictime.put("sexe", victime.getSexe());
-        if (victime.getAgent() != null) {
+        if (victime.getIntervenants() != null) {
             JSONArray arrayAgents = new JSONArray();
-            List<Agent> listAgents = victime.getAgent();
+            List<Agent> listAgents = victime.getIntervenants();
             for (int i = 0; i < listAgents.size(); i++) {
                 arrayAgents.put(adapterFactory.build(listAgents.get(i)));
 
@@ -190,7 +190,7 @@ public class AdapterVictime implements IAdapter {
 
         if (json.has("agent")) {
             Log.info("has agent");
-            victime.addAgent((Agent) adapterFactory.build(json.getJSONObject("agent")));
+            victime.addIntervenants((Agent) adapterFactory.build(json.getJSONObject("agent")));
 
         }
         return (T) victime;

@@ -1,148 +1,309 @@
-
 <!Doctype html>
 <html>
 <head>
-<!-- pour spécifier au naviageteur comment afficher la page -->
-<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+    <!-- pour spécifier au naviageteur comment afficher la page -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
 
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
-<script src="lib/Chart.js"></script>
-<script>
-function showMessage(text) {
-	//alert(text);
-}
-		var id=0;
-	
-		var ws = new WebSocket('ws://192.168.1.101:8080/getGlobalInformations');
-		showMessage('Connecting...');
-		ws.onopen = function() {
-			showMessage('Connected !');
-			//ws.send("");
-		};
-		ws.onclose = function() {
-			showMessage('Lost connection');
-		};
-		ws.onmessage = function(msg) {
-		
-			var jsonObj = JSON.parse(msg.data);
+
+    <link rel="stylesheet" href="css/jquery.mobile.flatui.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <script src="lib/Chart.js"></script>
+    <!--<script rel="stylesheet"  src="css/style.css"></script>-->
+    <link rel="stylesheet" type="text/css" href="themeMetro.css">
+    </script>
+    <script>
+
+        function adpaterALaTailleDeLaFenetre(){
+
+            var largeur = document.documentElement.clientWidth;
+           // hauteur = document.documentElement.clientHeight;
+
+            var source = document.getElementById('page'); // récupère l'id source
+         //   source.style.height = hauteur+'px'; // applique la hauteur de la page
+            if (largeur < 1350){
+                source.style.width = 700+'px'; // la largeur
+            }else {
+                source.style.width = 1350+'px'; // la largeur
+            }
+
+        }
+
+        // Une fonction de compatibilité pour gérer les évènements
+        function addEvent(element, type, listener){
+            if(element.addEventListener){
+             element.addEventListener(type, listener, false);
+            }else if(element.attachEvent){
+                element.attachEvent("on"+type, listener);
+            }
+        }
+
+        // On exécute la fonction une première fois au chargement de la page
+        addEvent(window, "load", adpaterALaTailleDeLaFenetre);
+        // Puis à chaque fois que la fenêtre est redimensionnée
+        addEvent(window, "resize", adpaterALaTailleDeLaFenetre);
+
+
+
+        <!--$("select#idIntervention").change(function(){-->
+            <!--alert( $(this).children(":selected").html());-->
+            <!--setId();-->
+            <!--process($(this).children(":selected").html());-->
+        <!--});-->
+
+        $('#idIntervention').change(function(){
+            var value = $(this).val();
+            alert(value);
+        });
+
+
+        function showMessage(text) {
+        alert(text);
+        }
+        var id=0;
+
+        var ws = new WebSocket('ws://'+ document.location.host +'/getGlobalInformations');
+        showMessage('Connecting...');
+        ws.onopen = function() {
+        showMessage('Connected !');
+        load();
+        //ws.send("");
+        };
+        ws.onclose = function() {
+        showMessage('Lost connection');
+        };
+        ws.onmessage = function(msg) {
+
+            var jsonObj = JSON.parse(msg.data);
+
             if( jsonObj.idIntervention != null){
 
                 var select = document.getElementById("idIntervention");
                 document.getElementById('idIntervention').options.length=0;
-                for ( var i in jsonObj.idIntervention) {
-                    select.options[select.length] = new Option(jsonObj.idIntervention[i], jsonObj.idIntervention[i]);
-                }
+                    for ( var i in jsonObj.idIntervention) {
+                        select.options[select.length] = new Option(jsonObj.idIntervention[i], jsonObj.idIntervention[i]);
+                    }
 
-            }else{
-                for (var i in jsonObj) {
-
+            }
+            if (jsonObj.donnees != null){
+                 var jsonObjDonnees = jsonObj.donnees;
+                for (var i in jsonObjDonnees) {
+                    alert('passer 0');
                     var jsonObj2 = jsonObj[i];
-
-                    if(jsonObj2.id == id){
-                        if(jsonObj2.informations[0] == "graph"){
-                        graph(jsonObj2.informations);
+                    var jIntervention = jsonObj2.intervention;
+                    if(jIntervention.id == id){
+                        alert('passer 2');
+                        if(jsonObj2.type == "donnees"){
+                            graph(jsonObj2);
                         }else{
-                        showMessage(msg.data);
+                            showMessage(msg.data);
                         }
                     }
                 }
             }
-		};
-		
-function setId(){
-    var idIntervention = document.getElementById("idIntervention");
-    id = idIntervention.options[idIntervention.selectedIndex].value;
-	ws.send("");
-}
-
-function getId(){
-    ws.send("getid");
-    id = $("#idIntervention").val();
-
-}
-
-</script>
-</head>
-<div data-role="page">
-
-    <div data-role="content">
-			<div data-role="collapsible" data-collapsed="true" data-theme="b">
-                <h2>ID Intervention</h2>
-
-                <label for="idIntervention">Id Intervention</label>
-                <select name="idIntervention" id="idIntervention">
-                    <option value="0000" >Id Intervention</option>
-                </select>
-
-                <input type="button" name="submit" value="Récupérer les interventions" onclick="getId();" />
-                <input type="button" name="submit2" value="Récupérer l'intervention sélectionné" onclick="setId();" />
-			</div>
-
-
-			<div data-role="collapsible" data-collapsed="true" data-theme="b">
-                <h2>Intervention</h2>
-                <div id="intervention"></div>
-			</div>
-
-			<div data-role="collapsible" data-collapsed="true" data-theme="b">
-                <h2>Agents</h2>
-                <div id="agents"></div>
-			</div>
-
-			<div data-role="collapsible" data-collapsed="true" data-theme="b">
-                <h2>Nombre de victimes totales</h2>
-                <div id="nbVictime"></div>
-			</div>
-
-
-			<div id="graph1" data-role="collapsible" data-collapsed="true" data-theme="b">
-                <h2>Nombre de victimes par catégorie</h2>
-                <canvas id="canvas" height="450" width="800"></canvas>
-		    </div>
-
-        </div>
-    </div>
-
-<script>
-
-	
-    function graph(jsonObj){
-        var max = Math.max(jsonObj[2], Math.max(jsonObj[3], Math.max(jsonObj[4], Math.max(jsonObj[5], jsonObj[6]))));
-
-        document.getElementById('nbVictime').innerHTML = "Nombre de victimes recensées à l'heure actuelle : "+parseInt(jsonObj[1]);
-        document.getElementById('intervention').innerHTML = "Description de l'intervention : "+jsonObj[7];
-        document.getElementById('agents').innerHTML = "Nombre d'agents sur place : "+jsonObj[8];
-
-        var barChartData = {
-                labels : ["U3","U2","U1","EU","Personne décédée"],
-                datasets : [
-                    {
-                        fillColor : "rgba(22,220,220,0.5)",
-                        strokeColor : "rgba(22,220,220,1)",
-
-                        data : [ parseInt(jsonObj[2]), parseInt(jsonObj[3]), parseInt(jsonObj[4]), parseInt(jsonObj[5]), parseInt(jsonObj[6])]
-                    }
-
-                ]
-
         };
 
-        var option = {	//Boolean - If we want to override with a hard coded scale
-            scaleOverride : true,
-
-            //** Required if scaleOverride is true **
-            //Number - The number of steps in a hard coded scale
-            scaleSteps : parseInt(max),
-            //Number - The value jump in the hard coded scale
-            scaleStepWidth : 1,
-            //Number - The scale starting value
-            scaleStartValue : 0,
-
-            animation : false,
+        function setId(){
+        var idIntervention = document.getElementById("idIntervention");
+        id = idIntervention.options[idIntervention.selectedIndex].value;
+        ws.send("");
         }
 
-        var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData,option);
+        function getId(){
+        ws.send("getid");
+        id = $("#idIntervention").val();
+
+        }
+
+        function load(){
+        ws.send("getid");
+        id = $("#idIntervention").val();
+        }
+
+    </script>
+</head>
+<body onload="load();" class="themeF">
+<div data-role="page" id="page" class="themeF">
+
+    <div data-role="content">
+        <div style="float:left">
+            <div style="float:left">
+                <div class="rect1-2 themeA">
+                    <h2>ID Intervention</h2>
+
+                    <select style="vertical-align:center" name="idIntervention" id="idIntervention" data-theme="b">
+                        <option value="0000">Id Intervention</option>
+                    </select>
+
+                </div>
+
+
+                <div class="square1 themeB saut_ligne">
+                    <h2>Intervention</h2>
+
+                    <div class="nombre" id="nIntervention"></div>
+                </div>
+                <div class="square1 themeC">
+                    <h2>Nb Agents</h2>
+
+                    <div class="nombre" id="nbAgents"></div>
+                </div>
+            </div>
+
+
+            <div class="rect2-3 themeD">
+                <h2>Description de l'intervention</h2>
+
+                <div id="description"></div>
+            </div>
+
+            <div class="rect3-4 themeI saut_ligne">
+                <h2>Nombre de victimes par catégories</h2>
+                <canvas id="canvas" height="300" width="450"></canvas>
+
+            </div>
+
+            <div style="float:left">
+                <div class="square1 themeG">
+                    <h2>Nb Femmes</h2>
+
+                    <div class="nombre" id="nbFemmes"></div>
+                </div>
+
+                <div class="square1 themeE saut_ligne">
+                    <h2>Nb Victimes</h2>
+
+                    <div class="nombre" id="nbVictime"></div>
+
+                </div>
+
+                <div class="square1 themeH saut_ligne">
+                    <h2>Nb Hommes</h2>
+
+                    <div class="nombre" id="nbHommes"></div>
+                </div>
+            </div>
+
+            <div class="rect3-5 themeK saut_ligne">
+                <h2>Nombre de victime par Age</h2>
+                <canvas id="canvasAge" height="300" width="550"></canvas>
+            </div>
+
+        </div>
+        <div class="rect8-5-portrait themeA">
+            <h2>Liste Victimes</h2>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+<script>
+
+
+    function graph(jsonObj){
+    var jNbVictimeCat = jsonObj.nbVictimeCat;
+    var jNbVictimeAge = jsonObj.nbVictimeAge;
+    var jNbVictimeSexe = jsonObj.nbVictimeSexe;
+    var jIntervention = jsonObj.intervention;
+    var nbAgents = jsonObj.agents;
+    var nbVictime = jsonObj.nbVictime;
+
+    // NUMERO Intervention
+    document.getElementById('nIntervention').innerHTML = jIntervention.id;
+
+
+    // NB VICTIMS
+    document.getElementById('nbVictime').innerHTML = nbVictime;
+
+    //NB VICTIMS SEX
+    document.getElementById('nbHommes').innerHTML = jNbVictimeSexe[0];
+    document.getElementById('nbFemmes').innerHTML = jNbVictimeSexe[1];
+
+
+    // NB AGENTS
+    document.getElementById('nbAgents').innerHTML = nbAgents;
+
+    // INTERVENTION
+    document.getElementById('description').innerHTML = "Description de l'intervention : "+jIntervention.description;
+
+
+    // BAR CHART
+
+    var max = Math.max(jNbVictimeCat[0], Math.max(jNbVictimeCat[1], Math.max(jNbVictimeCat[2],
+    Math.max(jNbVictimeCat[3], jNbVictimeCat[4]))));
+
+    var barChartData = {
+    labels : ["U3","U2","U1","EU","DCD"],
+    datasets : [
+    {
+    fillColor : "rgba(22,220,220,1)",
+    strokeColor : "rgba(22,220,220,1)",
+
+    data : [ parseInt(jNbVictimeCat[0]), parseInt(jNbVictimeCat[1]), parseInt(jNbVictimeCat[2]),
+    parseInt(jNbVictimeCat[3]), parseInt(jNbVictimeCat[4])]
+    }
+
+    ]
+
+    };
+
+    var option = { //Boolean - If we want to override with a hard coded scale
+    scaleOverride : true,
+
+    //** Required if scaleOverride is true **
+    //Number - The number of steps in a hard coded scale
+    scaleSteps : parseInt(max),
+    //Number - The value jump in the hard coded scale
+    scaleStepWidth : 1,
+    //Number - The scale starting value
+    scaleStartValue : 0,
+    scaleLineColor : "rgba(0,0,0,1)",
+    animation : false,
+    }
+
+    var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData,option);
+
+
+    // BAR CHART AGE
+
+    var maxAge = Math.max(jNbVictimeAge[0], Math.max(jNbVictimeAge[1], Math.max(jNbVictimeAge[2],
+    Math.max(jNbVictimeAge[3], Math.max(jNbVictimeAge[4], Math.max(jNbVictimeAge[5], Math.max(jNbVictimeAge[6],
+    jNbVictimeAge[7])))))));
+    var barChartDataAge = {
+    labels : ["0-5","6-10","11-20","21-30","31-40","41-60","61-80","80+"],
+    datasets : [
+    {
+    fillColor : "rgba(22,220,220,1)",
+    strokeColor : "rgba(22,220,220,1)",
+
+    data : [ parseInt(jNbVictimeAge[0]), parseInt(jNbVictimeAge[1]), parseInt(jNbVictimeAge[2]),
+    parseInt(jNbVictimeAge[3]),
+    parseInt(jNbVictimeAge[4]),parseInt(jNbVictimeAge[5]),parseInt(jNbVictimeAge[6]),parseInt(jNbVictimeAge[7])]
+    }
+
+    ]
+
+    };
+
+    var optionAge = { //Boolean - If we want to override with a hard coded scale
+    scaleOverride : true,
+
+    //** Required if scaleOverride is true **
+    //Number - The number of steps in a hard coded scale
+    scaleSteps : parseInt(maxAge),
+    //Number - The value jump in the hard coded scale
+    scaleStepWidth : 1,
+    //Number - The scale starting value
+    scaleStartValue : 0,
+    scaleLineColor : "rgba(0,0,0,1)",
+    animation : false,
+    }
+    var myLineAge = new Chart(document.getElementById("canvasAge").getContext("2d")).Bar(barChartDataAge,optionAge);
     }
 </script>

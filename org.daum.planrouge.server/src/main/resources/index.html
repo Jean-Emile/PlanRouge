@@ -30,59 +30,102 @@
 
     function showMessage(text)
     {
-        document.getElementById('text').innerHTML = text;
+    document.getElementById('text').innerHTML = text;
     }
-
 
 
     $(function () {
 
-        /* Model manipulation objects */
-        PlanRougeJSModule = Kotlin.modules['org.daum.planrouge.model'];
-        loader = new PlanRougeJSModule.org.planrouge.loader.JSONModelLoader();
-        saver = new PlanRougeJSModule.org.planrouge.serializer.JSONModelSerializer();
-        factory = new PlanRougeJSModule.org.planrouge.impl.DefaultPlanrougeFactory();
+    /* Model manipulation objects */
+    PlanRougeJSModule = Kotlin.modules['org.daum.planrouge.model'];
+    loader = new PlanRougeJSModule.org.planrouge.loader.JSONModelLoader();
+    saver = new PlanRougeJSModule.org.planrouge.serializer.JSONModelSerializer();
+    factory = new PlanRougeJSModule.org.planrouge.impl.DefaultPlanrougeFactory();
 
 
-        ws = new ReconnectingWebSocket('ws://' + document.location.host + '/add');
-        showMessage('Connecting...');
-        ws.onopen = function (msg) {
-            showMessage('Connected!');
-        };
-        ws.onclose /*= ws.onerror*/ = function (msg) {
-            showMessage('Lost connection');
-        };
-        ws.onmessage = function (evt) {
-            var data = evt.data;
+    ws = new ReconnectingWebSocket('ws://' + document.location.host + '/add');
+    showMessage('Connecting...');
+    ws.onopen = function (msg) {
+    showMessage('Connected!');
+    };
+    ws.onclose /*= ws.onerror*/ = function (msg) {
+    showMessage('Lost connection');
+    };
+    ws.onmessage = function (evt) {
+    var data = evt.data;
 
-        };
-
-
-        $("#submitCreateIntervention").click(function () {
-
-            var description = jQuery("#descriptionInput").get(0).value;
-            var intervention =  factory.createIntervention();
-            intervention.setDescription(description);
+    };
 
 
-            var oo3 = new PlanRougeJSModule.java.io.OutputStream();
-            saver.serialize(intervention, oo3);
-            ws.send(oo3.$result);
+    $("#submitCreateIntervention").click(function () {
+
+    var description = jQuery("#descriptionInput").get(0).value;
+    var intervention = factory.createIntervention();
+    intervention.setDescription(description);
 
 
-        }) ;
+    var oo3 = new PlanRougeJSModule.java.io.OutputStream();
+    saver.serialize(intervention, oo3);
+    ws.send(oo3.$result);
 
+
+    }) ;
+
+    $("#submitCreateAgent").click(function () {
+
+    var matricule = jQuery("#MatriculeInput").get(0).value;
+
+    var agent = new Object();
+    agent.matricule = matricule;
+    agent.type = "AdapterAgent";
+    alert(agent);
+    alert(JSON.stringify(agent));
+    ws.send(JSON.stringify(agent));
+
+
+    }) ;
 
     });
+
+    $(function () {
+
+
+    wsGET = new ReconnectingWebSocket('ws://' + document.location.host + '/get');
+    showMessage('Connecting...');
+    wsGET.onopen = function (msg) {
+    showMessage('Connected!');
+    };
+    wsGET.onclose /*= ws.onerror*/ = function (msg) {
+    showMessage('Lost connection');
+    };
+    wsGET.onmessage = function (evt) {
+    var data = evt.data;
+       var jsonObject = JSON.parse(data);
+       if(jsonObject.type == 'AdapterAgent'){
+           var array = JSON.parse(jsonObject.arrayAgents);
+
+       var addAgent = document.getElementById("addAgent");
+
+           for ( var i in array) {
+               var newCheckBox = document.createElement('input');
+               newCheckBox.type = 'checkbox';
+               newCheckBox.id = 'agent' + i; // need unique Ids!
+               newCheckBox.value = array[count] + '<br/>';
+
+               addAgent.appendChild(newCheckBox);
+           }
+       }
+       };
+
 </script>
 
 <div class="container-fluid">
 
 
-    <a class="btn btn-primary" id="btnCreateIntevention" data-toggle="modal" data-target="#add-modal" title="Create Intervention ">Creation d'une Intervention</a>
-
-
-
+    <a class="btn btn-primary" id="btnCreateIntevention" data-toggle="modal" href="#add-modal"
+       title="Create Intervention ">Creation d'une Intervention</a>
+    <a class="btn btn-primary" id="btnCreateAgent" data-toggle="modal" href="#add-modal-agent"
+       title="Create Agent ">Creation d'un Agent</a>
 
     <div class="modal fade" id="add-modal" style="display: none;">
         <!-- display: none; is needed to avoid bug in bootstrap which forbid to click on start/stop and remove buttons -->
@@ -120,10 +163,70 @@
             </div>
 
 
-
             <div style="text-align:center"><a id="submitCreateIntervention" class="btn">Submit</a><br/></div>
         </div>
     </div>
+
+    <!-- CREATION AGENT -->
+    <div class="modal fade" id="add-modal-agent" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- display: none; is needed to avoid bug in bootstrap which forbid to click on start/stop and remove buttons -->
+                <div class="modal-header">
+                    <a id="closeButtonAgent" class="close" data-dismiss="modal">&times;</a>
+
+                    <h3>Creation d'un Agent</h3>
+                </div>
+                <div class="modal-body form-horizontal" style="max-height: 800px;">
+
+                    <div class="control-group" id="Matricule">
+                        <label class="control-label mandatory" id="MatriculeLabel">Matricule Agent</label>
+
+                        <div class="controls" id="MatriculeControls"><input id="MatriculeInput"></div>
+                    </div>
+                    <div style="text-align:center"><a id="submitCreateAgent" class="btn btn-primary">Submit</a><br/></div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- SUPPRESSION AGENT -->
+    <div class="modal fade" id="add-modal-delete-agent" style="display: none;">
+        <!-- display: none; is needed to avoid bug in bootstrap which forbid to click on start/stop and remove buttons -->
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">&times;</a>
+
+            <h3>Suppression d'un Agent</h3>
+        </div>
+        <div class="modal-body form-horizontal" style="max-height: 800px;">
+            <div class="checkbox" id="addAgent">
+
+            </div>
+
+            <div style="text-align:center"><a id="submitDeleteAgent" class="btn">Submit</a><br/></div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Liste des Interventions</h3>
+        </div>
+        <table class="table table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Lieu</th>
+                <th>Description</th>
+                <th>Ajouter un agent</th>
+                <th>Supprimer un agent</th>
+                <th>Modifier l'intervention</th>
+            <tr>
+        </table>
+
+    </div>
+
 </div>
 </body>
 </html>
