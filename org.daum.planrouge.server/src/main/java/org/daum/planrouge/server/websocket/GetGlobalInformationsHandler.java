@@ -80,9 +80,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             connection.send(new JSONObject().put("idIntervention",jsonArray).toString());
 
         } else {
-
             JSONArray jsonArrayIntervention = new JSONArray();
-
 
             List<Intervention> listInterventions = containerRoot.getInterventions();
             JSONArray jsonArray = new JSONArray();
@@ -91,6 +89,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             for (int i = 0; i < listInterventions.size(); i++) {
                 jsonArrayIntervention.put(listInterventions.get(i).getId());
                 Intervention intervention = listInterventions.get(i);
+                JSONArray jArrayVictimes = new JSONArray();
                 int nbAgent = intervention.getAffecte().size();
                 int nbVictime = intervention.getVictimes().size();
                 int nbVictimeC1 = 0;
@@ -109,13 +108,14 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
                 int age61_80 = 0;
                 int age80_ = 0;
 
-                String victime = "";
+
 
                 for (int j = 0; j < nbVictime; j++) {
-                    victime += "\n\n\n" + adapterFactory.build(intervention.getVictimes().get(j)).toString();
+                    Log.error("VICTIME :::\n \n \n "+intervention.getId()+ "         :           "+adapterFactory.build(intervention.getVictimes().get(j)).toString()+"\n \n \n");
+                    jArrayVictimes.put(adapterFactory.build(intervention.getVictimes().get(j)));
 
                     if (intervention.getVictimes().get(j).getPriorite() != null) {
-                        String cat = containerRoot.findInterventionsByID(intervention.getId()).getVictimes().get(j).getPriorite().getId();
+                        String cat = intervention.getVictimes().get(j).getPriorite().getId();
 
                         if (cat.equals("1")) {
                             nbVictimeC1++;
@@ -183,8 +183,6 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
                 jNbVictimeAge.put(6,age61_80);
                 jNbVictimeAge.put(7,age80_);
 
-                // /List victimes;
-                Log.info("INFORAMTION GET INFORMATIONS victimes :::::::::::::::::::::::::  " + victime);
 
                 jObject = new JSONObject();
 
@@ -194,6 +192,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
                 jObject.put("nbVictimeAge",jNbVictimeAge);
                 jObject.put("nbVictimeSexe",new JSONArray().put(0,nbHommes).put(1,nbFemmes));
                 jObject.put("intervention",adapterFactory.build(intervention));
+                jObject.put("victimes",jArrayVictimes);
                 jObject.put("agents",nbAgent);
 
                 jsonArray.put(jObject);
@@ -219,6 +218,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
         for (int i = 0; i < listInterventions.size(); i++) {
             jsonArrayIntervention.put(listInterventions.get(i).getId());
             Intervention intervention = listInterventions.get(i);
+            JSONArray jArrayVictimes = new JSONArray();
             int nbAgent = intervention.getAffecte().size();
             int nbVictime = intervention.getVictimes().size();
             int nbVictimeC1 = 0;
@@ -237,13 +237,14 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             int age61_80 = 0;
             int age80_ = 0;
 
-            String victime = "";
+
 
             for (int j = 0; j < nbVictime; j++) {
-                victime += "\n\n\n" + adapterFactory.build(intervention.getVictimes().get(j)).toString();
+                    Log.error("VICTIME :::\n \n \n "+intervention.getId()+ "         :           "+adapterFactory.build(intervention.getVictimes().get(j)).toString()+"\n \n \n");
+                   jArrayVictimes.put(adapterFactory.build(intervention.getVictimes().get(j)));
 
                 if (intervention.getVictimes().get(j).getPriorite() != null) {
-                    String cat = containerRoot.findInterventionsByID(intervention.getId()).getVictimes().get(j).getPriorite().getId();
+                    String cat = intervention.getVictimes().get(j).getPriorite().getId();
 
                     if (cat.equals("1")) {
                         nbVictimeC1++;
@@ -311,8 +312,6 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             jNbVictimeAge.put(6,age61_80);
             jNbVictimeAge.put(7,age80_);
 
-            // /List victimes;
-            Log.info("INFORAMTION GET INFORMATIONS victimes :::::::::::::::::::::::::  " + victime);
 
             jObject = new JSONObject();
 
@@ -322,6 +321,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             jObject.put("nbVictimeAge",jNbVictimeAge);
             jObject.put("nbVictimeSexe",new JSONArray().put(0,nbHommes).put(1,nbFemmes));
             jObject.put("intervention",adapterFactory.build(intervention));
+            jObject.put("victimes",jArrayVictimes);
             jObject.put("agents",nbAgent);
 
             jsonArray.put(jObject);

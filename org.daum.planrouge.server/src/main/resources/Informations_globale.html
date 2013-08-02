@@ -7,13 +7,26 @@
 
     <link rel="stylesheet" href="css/jquery.mobile.flatui.min.css"/>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="lib/css.js"></script>
+    <script type="text/javascript" src="lib/common.js"></script>
+    <script type="text/javascript" src="lib/standardista-table-sorting.js"></script>
+    <script src="lib/jquery.toast.min.js"></script>
+
+    <link href="css/jquery.toast.min.css" rel="stylesheet">
+    <script src="lib/reconnecting-websocket.min.js"></script>
+
     <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
     <script src="lib/Chart.js"></script>
-    <!--<script rel="stylesheet"  src="css/style.css"></script>-->
     <link rel="stylesheet" type="text/css" href="themeMetro.css">
-    </script>
-    <script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 
+    <script>
+        $(function () {
+        $.toast.config.width = 600;
+        $.toast.config.align = 'right';
+        $.toast.config.closeForStickyOnly = false;
+        });
+              // WINDOW SIZE
         function adpaterALaTailleDeLaFenetre(){
 
             var largeur = document.documentElement.clientWidth;
@@ -45,58 +58,52 @@
 
 
 
-        <!--$("select#idIntervention").change(function(){-->
-            <!--alert( $(this).children(":selected").html());-->
-            <!--setId();-->
-            <!--process($(this).children(":selected").html());-->
-        <!--});-->
-
-        $('#idIntervention').change(function(){
-            var value = $(this).val();
-            alert(value);
-        });
-
 
         function showMessage(text) {
         alert(text);
         }
         var id=0;
 
-        var ws = new WebSocket('ws://'+ document.location.host +'/getGlobalInformations');
-        showMessage('Connecting...');
+        var ws = new ReconnectingWebSocket('ws://'+ document.location.host +'/getGlobalInformations');
+        //showMessage('Connecting...');
         ws.onopen = function() {
-        showMessage('Connected !');
+        //showMessage('Connected !');
+        $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/getGlobalInformations', {type: 'success'});
         load();
         //ws.send("");
         };
         ws.onclose = function() {
-        showMessage('Lost connection');
+       // showMessage('Lost connection');
+        $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/getGlobalInformations', {type: 'danger'});
         };
         ws.onmessage = function(msg) {
 
             var jsonObj = JSON.parse(msg.data);
 
-            if( jsonObj.idIntervention != null){
+            if( jsonObj.idIntervention != null && jsonObj.idIntervention!=''){
 
-                var select = document.getElementById("idIntervention");
+                var selectIntervention = document.getElementById("idIntervention");
                 document.getElementById('idIntervention').options.length=0;
+        selectIntervention.options[selectIntervention.length] = new Option("ID Intervention", "000");
                     for ( var i in jsonObj.idIntervention) {
-                        select.options[select.length] = new Option(jsonObj.idIntervention[i], jsonObj.idIntervention[i]);
+
+        selectIntervention.options[selectIntervention.length] = new Option(jsonObj.idIntervention[i], jsonObj.idIntervention[i]);
                     }
 
             }
             if (jsonObj.donnees != null){
                  var jsonObjDonnees = jsonObj.donnees;
                 for (var i in jsonObjDonnees) {
-                    alert('passer 0');
-                    var jsonObj2 = jsonObj[i];
+
+                    var jsonObj2 = jsonObjDonnees[i];
                     var jIntervention = jsonObj2.intervention;
                     if(jIntervention.id == id){
-                        alert('passer 2');
+
                         if(jsonObj2.type == "donnees"){
                             graph(jsonObj2);
                         }else{
-                            showMessage(msg.data);
+                            //showMessage(msg.data);
+                            $.toast('<b>Message! </b>'+msg.data, {type: 'info'});
                         }
                     }
                 }
@@ -117,7 +124,13 @@
 
         function load(){
         ws.send("getid");
-        id = $("#idIntervention").val();
+
+        }
+
+        function selectIntervention (idInter){
+
+        id = idInter;
+        ws.send("");
         }
 
     </script>
@@ -131,7 +144,7 @@
                 <div class="rect1-2 themeA">
                     <h2>ID Intervention</h2>
 
-                    <select style="vertical-align:center" name="idIntervention" id="idIntervention" data-theme="b">
+                    <select style="vertical-align:center" name="idIntervention" id="idIntervention" data-theme="b" onchange="selectIntervention(this.options[this.selectedIndex].value);">
                         <option value="0000">Id Intervention</option>
                     </select>
 
@@ -154,12 +167,12 @@
             <div class="rect2-3 themeD">
                 <h2>Description de l'intervention</h2>
 
-                <div id="description"></div>
+                <div id="description" class="elevator" style="height:200px; overflow:auto;"></div>
             </div>
 
             <div class="rect3-4 themeI saut_ligne">
                 <h2>Nombre de victimes par catégories</h2>
-                <canvas id="canvas" height="300" width="450"></canvas>
+                <canvas id="canvas" height="310" width="480"></canvas>
 
             </div>
 
@@ -186,13 +199,31 @@
 
             <div class="rect3-5 themeK saut_ligne">
                 <h2>Nombre de victime par Age</h2>
-                <canvas id="canvasAge" height="300" width="550"></canvas>
+                <canvas id="canvasAge" height="310" width="600"></canvas>
             </div>
 
         </div>
         <div class="rect8-5-portrait themeA">
             <h2>Liste Victimes</h2>
+             <div class="elevator" style="height:950px; overflow:auto;">
+            <table  data-mode="reflow" id ="bodyTable" data-mode="reflow" class="ui-responsive ui-table">
+                <thead>
+                <tr>
+                    <th>Urgence</th>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Age</th>
+                    <th>Date de Naissance</th>
+                    <th>Sexe</th>
+                </tr>
+                </thead>
+                <tbody >
 
+                </tbody>
+
+            </table>
+             </div>
         </div>
 
 
@@ -205,14 +236,80 @@
 </body>
 <script>
 
+    // DELETE Rows of Table
+    function delRows(tableID) {
+    myTBody = document.getElementById(tableID).getElementsByTagName('TBODY')[0];
+    myTBody.innerHTML ='';
+    }
 
     function graph(jsonObj){
     var jNbVictimeCat = jsonObj.nbVictimeCat;
     var jNbVictimeAge = jsonObj.nbVictimeAge;
     var jNbVictimeSexe = jsonObj.nbVictimeSexe;
+    var arrayVictimes = jsonObj.victimes;
     var jIntervention = jsonObj.intervention;
     var nbAgents = jsonObj.agents;
     var nbVictime = jsonObj.nbVictime;
+
+
+
+    // TABLE VICTIMS
+    delRows("bodyTable");
+
+    for ( var i in arrayVictimes) {
+
+    var victime = arrayVictimes[i];
+    var tableau = document.getElementById("bodyTable").getElementsByTagName('TBODY')[0];
+
+    var ligne = tableau.insertRow(-1);
+
+    var colonne1 = ligne.insertCell(0);
+    colonne1.innerHTML =' ';
+    if (victime.categorie != null){
+    if (victime.categorie.code != null){
+    colonne1.innerHTML += '<div class="cat'+victime.categorie.code+'">'+victime.categorie.code+'</div>';
+    }
+    }
+
+
+    var colonne2 = ligne.insertCell(1);
+    colonne2.innerHTML = ' ';
+    if (victime.id != null){
+    colonne2.innerHTML = victime.id;
+    }
+
+    var colonne3 = ligne.insertCell(2);
+    colonne3.innerHTML = ' ';
+    if (victime.nom != null){
+    colonne3.innerHTML = victime.nom;
+    }
+    var colonne4 = ligne.insertCell(3);
+    colonne4.innerHTML = ' ';
+    if (victime.prenom != null){
+    colonne4.innerHTML = victime.prenom ;
+    }
+    var colonne5 = ligne.insertCell(4);
+    colonne5.innerHTML =  ' ';
+    if (victime.age != null){
+    colonne5.innerHTML = victime.age;
+    }
+    var colonne6 = ligne.insertCell(5);
+    colonne6.innerHTML = ' ';
+    if (victime.dateNaissance != null){
+    colonne6.innerHTML = victime.dateNaissance;
+    }
+    var colonne7 = ligne.insertCell(6);
+    colonne7.innerHTML = ' ';
+    if (victime.sexe != null){
+        if( victime.sexe == 1) {
+            colonne7.innerHTML = 'Homme';
+        }else if (victime.sexe == 2){
+            colonne7.innerHTML = 'Femme';
+        }
+
+    }
+    }
+
 
     // NUMERO Intervention
     document.getElementById('nIntervention').innerHTML = jIntervention.id;
@@ -230,7 +327,19 @@
     document.getElementById('nbAgents').innerHTML = nbAgents;
 
     // INTERVENTION
-    document.getElementById('description').innerHTML = "Description de l'intervention : "+jIntervention.description;
+    var description ;
+    if(jIntervention.description != null){
+        description = '<div><b>Description : </b>'+jIntervention.description+'</div>';
+    }
+    if(jIntervention.position != null){
+        if(jIntervention.position.nomVille != null){
+            description += '<div><b>Ville : </b>'+jIntervention.position.nomVille+'</div>';
+        }
+        if(jIntervention.position.cp != null){
+            description += '<div><b>Code Postal : </b>'+jIntervention.position.cp+'</div>';
+        }
+    }
+    document.getElementById('description').innerHTML = description ;
 
 
     // BAR CHART
@@ -242,8 +351,8 @@
     labels : ["U3","U2","U1","EU","DCD"],
     datasets : [
     {
-    fillColor : "rgba(22,220,220,1)",
-    strokeColor : "rgba(22,220,220,1)",
+    fillColor : "rgba(41,128,185,1)",
+    strokeColor : "rgba(41,128,185,1)",
 
     data : [ parseInt(jNbVictimeCat[0]), parseInt(jNbVictimeCat[1]), parseInt(jNbVictimeCat[2]),
     parseInt(jNbVictimeCat[3]), parseInt(jNbVictimeCat[4])]
@@ -279,8 +388,8 @@
     labels : ["0-5","6-10","11-20","21-30","31-40","41-60","61-80","80+"],
     datasets : [
     {
-    fillColor : "rgba(22,220,220,1)",
-    strokeColor : "rgba(22,220,220,1)",
+    fillColor : "rgba(22,160,133,1)",
+    strokeColor : "rgba(22,160,133,1)",
 
     data : [ parseInt(jNbVictimeAge[0]), parseInt(jNbVictimeAge[1]), parseInt(jNbVictimeAge[2]),
     parseInt(jNbVictimeAge[3]),

@@ -2,6 +2,7 @@ import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.json.JSONException;
 import org.kevoree.planrouge.Agent;
 import org.kevoree.planrouge.Intervention;
+import org.kevoree.planrouge.PositionCivil;
 import org.kevoree.planrouge.Victime;
 import org.webbitserver.WebSocketConnection;
 import org.webbitserver.WebSocketHandler;
@@ -31,6 +32,9 @@ public class BenchServer implements Runnable {
         intervention = adapterFactory.getFactory().createIntervention();
         intervention.setId("2");
         intervention.setDescription("accident 2");
+       PositionCivil positionCivil = adapterFactory.getFactory().createPositionCivil();
+        positionCivil.setNomVille("Rennes");
+        intervention.setPosition(positionCivil);
         for(int i = 0 ; i<10 ; i++)          {
             Agent agent = adapterFactory.getFactory().createAgent();
             agent.setMatricule("t"+i);

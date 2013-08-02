@@ -34,23 +34,17 @@ public class ServerPlanRouge extends AbstractComponentType {
     private HandlerWebSocket handlerWebSocketput;
     private GetGlobalInformationsHandler handlerGlobalInformations;
     private HandlerWebSocket handlerWebSocketgetAll;
+    private HandlerWebSocket handlerWebSocketdelete;
 
     @Start
     public void start() {
         adapterFactory = AdapterFactory.getInstance();
         containerRoot = adapterFactory.getFactory().createContainerRoot();
 
-       /*
-        Intervention intervention = adapterFactory.getFactory().createIntervention();
-        intervention.setId("1");
-        intervention.setDescription("un train est rentré dans un avion en plein vol");
-        containerRoot.addInterventions(intervention);
-              */
-
-
         handlerWebSocketget = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.GET);
         handlerWebSocketput = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.PUT);
         handlerWebSocketgetAll = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.GETALL);
+        handlerWebSocketdelete = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.DELETE);
         handlerGlobalInformations =  new GetGlobalInformationsHandler(adapterFactory,containerRoot);
 
         createWebServer();
@@ -80,6 +74,7 @@ public class ServerPlanRouge extends AbstractComponentType {
                 .add("/add",handlerWebSocketput)
                 .add("/get", handlerWebSocketget)
                 .add("/getAll", handlerWebSocketgetAll)
+                .add("/delete", handlerWebSocketdelete)
                 .add("/getGlobalInformations", handlerGlobalInformations)
                 .add(new StaticFileHandler("/web")).add(new EmbedHandler());
     }

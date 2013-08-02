@@ -1,11 +1,14 @@
 package org.daum.planrouge.server.websocket;
 
 import org.daum.planrouge.server.adapter.model.AdapterFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
 import org.kevoree.planrouge.Victime;
+import org.kevoree.planrouge.events.ModelEvent;
+import org.kevoree.planrouge.events.ModelTreeListener;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
 
@@ -29,16 +32,43 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
         DELETE
     }
 
-    public HandlerWebSocket(AdapterFactory adapterFactory,ContainerRoot root,ACTION action){
+    public HandlerWebSocket(final AdapterFactory adapterFactory,final ContainerRoot root,ACTION action){
         peers = new Peers();
         this.adapterFactory = adapterFactory;
         msg = new MessageHandler(root);
         this.current=action;
 
+        root.addModelTreeListener(new ModelTreeListener() {
+            @Override
+            public void elementChanged(ModelEvent modelEvent) {
+               //TODO : A MODIFIER
+                Log.info("AdapterIntervention ::: GETALL");
+                JSONArray mJSONArray = new JSONArray();
+                for (int i = 0; i<root.getInterventions().size();i++){
+                    try {
+                        mJSONArray.put(adapterFactory.build(root.getInterventions().get(i)));
+                    } catch (JSONException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+                }
+
+                JSONObject jsonObject = new JSONObject();
+
+                try {
+                    jsonObject.put("type","AdapterIntervention");
+                    jsonObject.put("arrayInterventions",mJSONArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
+                peers.broadcast(jsonObject.toString());
+            }
+        });
+
     }
     public void onOpen(WebSocketConnection connection) {
-        connexion++;
         connection.send("Other connection :: "+connexion );
+        connexion++;
         peers.addPeer(connection);
     }
 

@@ -6,37 +6,56 @@
         document.getElementById('text').innerHTML = text;
     }
 
+    //TOAST
+
+
 
     $(function () {
-
+         $.toast.config.width = 600;
+         $.toast.config.align = 'right';
+         $.toast.config.closeForStickyOnly = false;
     /* Model manipulation objects */
 
 
     ws = new ReconnectingWebSocket('ws://' + document.location.host + '/add');
-    showMessage('Connecting...');
+ //   showMessage('Connecting...');
     ws.onopen = function (msg) {
-    showMessage('Connected!');
+  //  showMessage('Connected!');
+     $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/add', {type: 'success'});
     };
     ws.onclose /*= ws.onerror*/ = function (msg) {
-    showMessage('Lost connection');
+    //showMessage('Lost connection');
+    $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/add', {type: 'danger'});
     };
     ws.onmessage = function (evt) {
     var data = evt.data;
-
+   //  $.toast('<b>Message!</b>'+data, {type: 'info'});
     };
 
+        wsDelete = new ReconnectingWebSocket('ws://' + document.location.host + '/delete');
+     //   showMessage('Connecting...');
+        wsDelete.onopen = function (msg) {
+      $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/delete', {type: 'success'});
+        };
+        wsDelete.onclose /*= ws.onerror*/ = function (msg) {
+       $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/delete', {type: 'danger'});
+        };
+        wsDelete.onmessage = function (evt) {
+        var data = evt.data;
+     // $.toast('<b>Message! </b>'+data, {type: 'info'});
+        };
+
     wsGet = new ReconnectingWebSocket('ws://' + document.location.host + '/getAll');
-    showMessage('Connecting wsGet...');
+
     wsGet.onopen = function (msg) {
-    showMessage('Connected wsGet!');
+   $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/getAll', {type: 'success'});
 
     };
     wsGet.onclose /*= ws.onerror*/ = function (msg) {
-    showMessage('Lost connection');
+   $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/getAll', {type: 'danger'});
     };
     wsGet.onmessage = function (evt) {
         var data = evt.data;
-
         var jsonObject = JSON.parse(data);
 
         if(jsonObject.type == 'AdapterAgent'){
@@ -44,12 +63,16 @@
             var addAgent = document.getElementById("addAgent");
              var deleteAgent = document.getElementById("deleteAgent");
             addAgent.innerHTML = '';
+            deleteAgent.innerHTML = '';
             for ( var i in jsonObject.arrayAgents) {
 
-                var node = document.createElement('div');
-                node.innerHTML = '<input type="checkbox" id="check'+ i + '" name="check' + i + '" value="'+jsonObject.arrayAgents[i].matricule+'"><label for="check' + i + '">'+ jsonObject.arrayAgents[i].matricule +'</label>';
-                addAgent.appendChild(node);
-                deleteAgent.appendChild(node);
+                var nodeAdd = document.createElement('div');
+                nodeAdd.innerHTML = '<input type="checkbox" id="checkAdd'+ i + '" name="checkAdd' + i + '" value="'+jsonObject.arrayAgents[i].matricule+'"><label for="checkAdd' + i + '">'+ jsonObject.arrayAgents[i].matricule +'</label>';
+                var nodeDel = document.createElement('div');
+                nodeDel.innerHTML = '<input type="checkbox" id="checkDel'+ i + '" name="checkDel' + i + '" value="'+jsonObject.arrayAgents[i].matricule+'"><label for="checkDel' + i + '">'+ jsonObject.arrayAgents[i].matricule +'</label>';
+
+                addAgent.appendChild(nodeAdd);
+                deleteAgent.appendChild(nodeDel);
             }
         } else if(jsonObject.type == 'AdapterIntervention'){
 
@@ -79,7 +102,7 @@
                 colonne4.innerHTML += '<a class="btn btn-primary" onclick="addAgentIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#add-modal-agent-intervention" title="Create Agent ">Ajouter des Agents</a>';
 
                 var colonne5 = ligne.insertCell(4);
-                colonne5.innerHTML += '<a class="btn btn-primary" onclick="delAgentIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#del-modal-agent-intervention" title="Delete Agent ">Supprimmer des Agents</a>';
+                colonne5.innerHTML += '<a class="btn btn-primary" onclick="delAgentIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#del-modal-agent-intervention" title="Delete Agent ">Supprimer des Agents</a>';
 
                 var colonne6 = ligne.insertCell(5);
                 colonne6.innerHTML += '<a class="btn btn-primary" onclick="editIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#edit-modal-intervention" title="Edit intervention ">Modifier l\'intervention</a>';
@@ -225,12 +248,15 @@
 
          $("#submitDeleteAgent").click(function () {
              $('#deleteAgent input:checked').each(function() {
-                             var newAgent = new  Object();
-                             newAgent.type = 'AdapterAgent';
-                             newAgent.matricule =  $(this).attr('value')
-
-                             arrayAgents.push(newAgent);
-                         });
+                 var newAgent = new  Object();
+                 newAgent.type = 'AdapterAgent';
+                 newAgent.matricule =  $(this).attr('value');
+                  alert(JSON.stringify(newAgent));
+                 wsDelete.send(JSON.stringify(newAgent));
+             });
+             $('#delete-modal-agent').modal('hide');
+             $("#submitGetAllInterventions").get(0).click();
+              $("#submitGetAllAgents").get(0).click();
          });
 
          $("#btnDeleteAgent").click(function () {
@@ -311,6 +337,7 @@
         $("#edit_idIntervention").text(id);
 
     }
+
 
 
 

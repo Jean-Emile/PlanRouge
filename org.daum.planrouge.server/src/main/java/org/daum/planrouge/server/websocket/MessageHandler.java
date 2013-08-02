@@ -67,33 +67,33 @@ public class MessageHandler {
                         Log.info("AdapterAgent ::: DELETE");
                         Agent agentDelete = (Agent) obj;
                         if(root.findAgentsByID(agentDelete.getMatricule()) != null){
-                            root.findInterventionsByID(root.findAgentsByID(agentDelete.getMatricule()).getIntervention().getId()).findAffecteByID(agentDelete.getMatricule()).delete();
-                            root.findAgentsByID(agentDelete.getMatricule()).delete();
+                            Agent agentModel = root.findAgentsByID(agentDelete.getMatricule());
+                            if(agentModel.getIntervention() != null){
+                                root.findInterventionsByID(agentModel.getIntervention().getId()).removeAffecte(agentModel);
+                            }
+                            root.removeAgents(agentModel);
+//
+                            connection.send("Agent "+agentDelete.getMatricule() +" supprimé");
+                        } else {
+                            connection.send("Pas d'Agent trouvé");
                         }
 
                         return;
 
 
                     case GET:
-                        if (message.has("get")) {
-                            if (message.getString("get").equals("all")) {
-                                Log.info("Lecture ARRAY AGENT");
-                                JSONArray mJSONArray2 = new JSONArray();
-                                for (int i = 0; i<root.getAgents().size();i++){
-                                     mJSONArray2.put(adapterFactory.build(root.getAgents().get(i)));
-                                }
-
-                                JSONObject jsonObject2 = new JSONObject();
-                                jsonObject2.put("type","AdapterAgent");
-                                jsonObject2.put("arrayAgents",mJSONArray2);
-
-                                connection.send(jsonObject2.toString());
-                            }
-                        } else if (root.findAgentsByID(agent.getMatricule()) != null) {
-                            connection.send("true");
+                        if (root.findAgentsByID(agent.getMatricule()) != null) {
+                            Agent agentModel = root.findAgentsByID(agent.getMatricule());
+                            JSONObject jObject = new JSONObject();
+                            jObject.put("type","getAgent");
+                            jObject.put("result",adapterFactory.build(agentModel).toString());
+                            connection.send(jObject.toString());
 
                         } else {
-                            connection.send("false");
+                            JSONObject jObject = new JSONObject();
+                            jObject.put("type","getAgent");
+                            jObject.put("result","undefined");
+                            connection.send(jObject.toString());
                         }
                         return;
 
@@ -143,9 +143,10 @@ public class MessageHandler {
                         if (intervention.getId().length()!=0){   // UPDATE
                             if(root.findInterventionsByID(intervention.getId()) !=null ){
                                 Intervention interventionmodel = root.findInterventionsByID(intervention.getId());
-                                interventionmodel.delete();
+                                root.removeInterventions(interventionmodel);
                             }
                             // Add intervention to ContainerRoot
+                            Log.info("\n\n\n\n"+adapterFactory.build(intervention).toString()+"\n\n\n\n");
                             root.addInterventions(intervention);
                         }else{
                             while(root.findInterventionsByID(String.valueOf(valeur))!=null){

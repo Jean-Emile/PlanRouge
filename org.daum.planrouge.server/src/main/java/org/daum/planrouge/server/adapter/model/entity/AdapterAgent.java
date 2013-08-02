@@ -33,9 +33,6 @@ public class AdapterAgent implements IAdapter{
         JSONObject jsonAgent = new JSONObject();
         AgentImpl agent = (AgentImpl) container;
         jsonAgent.put("matricule", agent.getMatricule());
-//        if (agent.get_intervention() !=null){
-//        jsonAgent.put("idIntervention", agent.get_intervention().getId());
-//        }
         jsonAgent.put("type", getType());
 
         return jsonAgent;

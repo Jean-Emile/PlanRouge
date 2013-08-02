@@ -33,10 +33,16 @@ public class AdapterIntervention implements IAdapter {
     public JSONObject build(KMFContainer container) throws JSONException {
         JSONObject jsonIntervention = new JSONObject();
         JSONArray arrayAgents = new JSONArray();
+        JSONArray arrayVictimes = new JSONArray();
         InterventionImpl intervention = (InterventionImpl) container;
         jsonIntervention.put("id", intervention.getId());
         jsonIntervention.put("description", intervention.get_description());
         jsonIntervention.put("position", adapterFactory.build(intervention.get_position()));
+        for (int i = 0; i < intervention.getVictimes().size(); i++) {
+            arrayVictimes.put(adapterFactory.build((Victime) intervention.getVictimes().get(i)));
+
+        }
+        jsonIntervention.put("victimes", arrayVictimes);
         for (int i = 0; i < intervention.getAffecte().size(); i++) {
            arrayAgents.put(adapterFactory.build((Agent) intervention.getAffecte().get(i)));
 
@@ -63,6 +69,13 @@ public class AdapterIntervention implements IAdapter {
             for (int i = 0; i < jsonAgents.length(); i++) {
                  Log.debug(jsonAgents.get(i).toString());
                 intervention.addAffecte((Agent) adapterFactory.build(jsonAgents.getJSONObject(i)));
+            }
+        }
+        if (json.has("victimes")) {
+            JSONArray jsonVictimes = json.getJSONArray("victimes");
+            for (int i = 0; i < jsonVictimes.length(); i++) {
+                Log.debug(jsonVictimes.get(i).toString());
+                intervention.addVictimes((Victime) adapterFactory.build(jsonVictimes.getJSONObject(i)));
             }
         }
         if (json.has("position")) {
