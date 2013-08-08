@@ -42,13 +42,14 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
             @Override
             public void elementChanged(ModelEvent modelEvent) {
                //TODO : A MODIFIER
+                Log.error(modelEvent.toString()+"   "+modelEvent.getElementAttributeName()+"   "+modelEvent.getElementAttributeType());
                 Log.info("AdapterIntervention ::: GETALL");
                 JSONArray mJSONArray = new JSONArray();
                 for (int i = 0; i<root.getInterventions().size();i++){
                     try {
                         mJSONArray.put(adapterFactory.build(root.getInterventions().get(i)));
                     } catch (JSONException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        e.printStackTrace();
                     }
                 }
 
@@ -58,7 +59,7 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
                     jsonObject.put("type","AdapterIntervention");
                     jsonObject.put("arrayInterventions",mJSONArray);
                 } catch (JSONException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace();
                 }
 
                 peers.broadcast(jsonObject.toString());

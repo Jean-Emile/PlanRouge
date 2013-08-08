@@ -1,7 +1,5 @@
 package org.daum.planrouge.server.websocket;
 
-
-import org.kevoree.planrouge.PlanrougeFactory;
 import org.webbitserver.WebSocketConnection;
 
 import java.util.ArrayList;

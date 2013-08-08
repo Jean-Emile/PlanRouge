@@ -2,113 +2,107 @@
     var ws = {};
     var wsGet = {};
     var tabIntervention = new Object();
-    function showMessage(text){
-        document.getElementById('text').innerHTML = text;
-    }
-
-    //TOAST
-
 
 
     $(function () {
          $.toast.config.width = 600;
          $.toast.config.align = 'right';
          $.toast.config.closeForStickyOnly = false;
-    /* Model manipulation objects */
 
 
-    ws = new ReconnectingWebSocket('ws://' + document.location.host + '/add');
- //   showMessage('Connecting...');
-    ws.onopen = function (msg) {
-  //  showMessage('Connected!');
-     $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/add', {type: 'success'});
-    };
-    ws.onclose /*= ws.onerror*/ = function (msg) {
-    //showMessage('Lost connection');
-    $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/add', {type: 'danger'});
-    };
-    ws.onmessage = function (evt) {
-    var data = evt.data;
-   //  $.toast('<b>Message!</b>'+data, {type: 'info'});
-    };
+        // Client WebServer ADD
+        ws = new ReconnectingWebSocket('ws://' + document.location.host + '/add');
 
+        ws.onopen = function (msg) {
+            $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/add', {type: 'success'});
+        };
+        ws.onclose /*= ws.onerror*/ = function (msg) {
+            $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/add', {type: 'danger'});
+        };
+        ws.onmessage = function (evt) {
+            var data = evt.data;
+        };
+
+        // Client WebServer DELETE
         wsDelete = new ReconnectingWebSocket('ws://' + document.location.host + '/delete');
-     //   showMessage('Connecting...');
+
         wsDelete.onopen = function (msg) {
-      $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/delete', {type: 'success'});
+            $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/delete', {type: 'success'});
         };
         wsDelete.onclose /*= ws.onerror*/ = function (msg) {
-       $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/delete', {type: 'danger'});
+            $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/delete', {type: 'danger'});
         };
         wsDelete.onmessage = function (evt) {
-        var data = evt.data;
-     // $.toast('<b>Message! </b>'+data, {type: 'info'});
+            var data = evt.data;
+            // $.toast('<b>Message! </b>'+data, {type: 'info'});
         };
 
-    wsGet = new ReconnectingWebSocket('ws://' + document.location.host + '/getAll');
+        // Client WebServer GETALL
+        wsGet = new ReconnectingWebSocket('ws://' + document.location.host + '/getAll');
 
-    wsGet.onopen = function (msg) {
-   $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/getAll', {type: 'success'});
+        wsGet.onopen = function (msg) {
+            $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/getAll', {type: 'success'});
+            $("#submitGetAllInterventions").get(0).click();
+        };
+        wsGet.onclose /*= ws.onerror*/ = function (msg) {
+            $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/getAll', {type: 'danger'});
+        };
+        wsGet.onmessage = function (evt) {
+            var data = evt.data;
+            var jsonObject = JSON.parse(data);
 
-    };
-    wsGet.onclose /*= ws.onerror*/ = function (msg) {
-   $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/getAll', {type: 'danger'});
-    };
-    wsGet.onmessage = function (evt) {
-        var data = evt.data;
-        var jsonObject = JSON.parse(data);
+            if(jsonObject.type == 'AdapterAgent'){
 
-        if(jsonObject.type == 'AdapterAgent'){
+                var addAgent = document.getElementById("addAgent");
+                var deleteAgent = document.getElementById("deleteAgent");
+                addAgent.innerHTML = '';
+                deleteAgent.innerHTML = '';
+                for ( var i in jsonObject.arrayAgents) {
+                    var nodeAdd = document.createElement('div');
+                    nodeAdd.innerHTML = '<input type="checkbox" id="checkAdd'+ i + '" name="checkAdd' + i + '" value="'+jsonObject.arrayAgents[i].matricule+'"><label for="checkAdd' + i + '">'+ jsonObject.arrayAgents[i].matricule +'</label>';
+                    var nodeDel = document.createElement('div');
+                    nodeDel.innerHTML = '<input type="checkbox" id="checkDel'+ i + '" name="checkDel' + i + '" value="'+jsonObject.arrayAgents[i].matricule+'"><label for="checkDel' + i + '">'+ jsonObject.arrayAgents[i].matricule +'</label>';
 
-            var addAgent = document.getElementById("addAgent");
-             var deleteAgent = document.getElementById("deleteAgent");
-            addAgent.innerHTML = '';
-            deleteAgent.innerHTML = '';
-            for ( var i in jsonObject.arrayAgents) {
-
-                var nodeAdd = document.createElement('div');
-                nodeAdd.innerHTML = '<input type="checkbox" id="checkAdd'+ i + '" name="checkAdd' + i + '" value="'+jsonObject.arrayAgents[i].matricule+'"><label for="checkAdd' + i + '">'+ jsonObject.arrayAgents[i].matricule +'</label>';
-                var nodeDel = document.createElement('div');
-                nodeDel.innerHTML = '<input type="checkbox" id="checkDel'+ i + '" name="checkDel' + i + '" value="'+jsonObject.arrayAgents[i].matricule+'"><label for="checkDel' + i + '">'+ jsonObject.arrayAgents[i].matricule +'</label>';
-
-                addAgent.appendChild(nodeAdd);
-                deleteAgent.appendChild(nodeDel);
-            }
-        } else if(jsonObject.type == 'AdapterIntervention'){
-
-             delRows('tableauInterventions');
-            for ( var i in jsonObject.arrayInterventions) {
-                tabIntervention[jsonObject.arrayInterventions[i].id] = JSON.stringify(jsonObject.arrayInterventions[i]);
-
-                var tableau = document.getElementById("tableauInterventions");
-
-                var ligne = tableau.insertRow(-1);
-
-                var colonne1 = ligne.insertCell(0);
-                colonne1.innerHTML += jsonObject.arrayInterventions[i].id;
-
-                var colonne2 = ligne.insertCell(1);
-                colonne2.innerHTML = 'indéfini';
-                if( jsonObject.arrayInterventions[i].position != null){
-                    if(jsonObject.arrayInterventions[i].position.nomVille != null){
-
-                        colonne2.innerHTML = jsonObject.arrayInterventions[i].position.nomVille;
-                    }
+                    addAgent.appendChild(nodeAdd);
+                    deleteAgent.appendChild(nodeDel);
                 }
-                var colonne3 = ligne.insertCell(2);
-                colonne3.innerHTML += jsonObject.arrayInterventions[i].description;
+            } else if(jsonObject.type == 'AdapterIntervention'){
 
-                var colonne4 = ligne.insertCell(3);
-                colonne4.innerHTML += '<a class="btn btn-primary" onclick="addAgentIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#add-modal-agent-intervention" title="Create Agent ">Ajouter des Agents</a>';
+                delRows('tableauInterventions');
+                for ( var i in jsonObject.arrayInterventions) {
+                    tabIntervention[jsonObject.arrayInterventions[i].id] = JSON.stringify(jsonObject.arrayInterventions[i]);
 
-                var colonne5 = ligne.insertCell(4);
-                colonne5.innerHTML += '<a class="btn btn-primary" onclick="delAgentIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#del-modal-agent-intervention" title="Delete Agent ">Supprimer des Agents</a>';
+                    var tableau = document.getElementById("tableauInterventions");
 
-                var colonne6 = ligne.insertCell(5);
-                colonne6.innerHTML += '<a class="btn btn-primary" onclick="editIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#edit-modal-intervention" title="Edit intervention ">Modifier l\'intervention</a>';
+                    var ligne = tableau.insertRow(-1);
+
+                    var colonne1 = ligne.insertCell(0);
+                    colonne1.innerHTML += jsonObject.arrayInterventions[i].id;
+
+                    var colonne2 = ligne.insertCell(1);
+                    colonne2.innerHTML = 'indéfini';
+                    if( jsonObject.arrayInterventions[i].position != null){
+                        if(jsonObject.arrayInterventions[i].position.nomVille != null){
+
+                            colonne2.innerHTML = jsonObject.arrayInterventions[i].position.nomVille;
+                        }
+                    }
+                    var colonne3 = ligne.insertCell(2);
+                    colonne3.innerHTML += jsonObject.arrayInterventions[i].description;
+
+                    var colonne4 = ligne.insertCell(3);
+                    colonne4.innerHTML += '<a class="btn btn-primary" onclick="addAgentIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#add-modal-agent-intervention" title="Create Agent ">Ajouter des Agents</a>';
+
+                    var colonne5 = ligne.insertCell(4);
+                    colonne5.innerHTML += '<a class="btn btn-primary" onclick="delAgentIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#del-modal-agent-intervention" title="Delete Agent ">Supprimer des Agents</a>';
+
+                    var colonne6 = ligne.insertCell(5);
+                    colonne6.innerHTML += '<a class="btn btn-primary" onclick="editIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#edit-modal-intervention" title="Edit intervention ">Modifier l\'intervention</a>';
+                }
             }
-        }
-    };
+        };
+
+
 
         $(".addAgentIntervention").click(function () {
             var agent = new Object();
@@ -275,20 +269,17 @@
     }
       // ADD AGENT TO INTERVENTION
     function addAgentIntervention (id){
+        $("#idIntervention").text(id);
+        getAllAgents();
 
-    $("#idIntervention").text(id);
-    getAllAgents();
-
-    $("#submitGetAllInterventions").get(0).click();
+        $("#submitGetAllInterventions").get(0).click();
     }
 
     function getAllAgents() {
-
         var agent = new Object();
         agent.type = "AdapterAgent";
         wsGet.send(JSON.stringify(agent));
         $("#submitGetAllInterventions").get(0).click();
-
     }
 
        //DELETE AGENT OF INTERVENTION
@@ -298,7 +289,6 @@
         var delAgent = document.getElementById("delAgent");
         delAgent.innerHTML = '';
         for(var i in jsonObject.agents){
-
             var node = document.createElement('div');
             node.innerHTML = '<input type="checkbox" id="delete_check_'+id+'_' + i + '" name="delete_check_'+id+'_' + i + '"value ="'+jsonObject.agents[i].matricule +'"><label for="delete_check_'+id+'_' + i + '">'+ jsonObject.agents[i].matricule +'</label>';
             delAgent.appendChild(node);
@@ -335,7 +325,6 @@
         $("#edit_villeInput").val(ville);
         $("#edit_NomRueInput").val(rue);
         $("#edit_idIntervention").text(id);
-
     }
 
 

@@ -86,7 +86,7 @@ public class MessageHandler {
                             Agent agentModel = root.findAgentsByID(agent.getMatricule());
                             JSONObject jObject = new JSONObject();
                             jObject.put("type","getAgent");
-                            jObject.put("result",adapterFactory.build(agentModel).toString());
+                            jObject.put("result",adapterFactory.build(agentModel));
                             connection.send(jObject.toString());
 
                         } else {
