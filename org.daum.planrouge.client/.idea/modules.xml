@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/org.daum.planrouge.client.iml" filepath="$PROJECT_DIR$/org.daum.planrouge.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/First_Phone_Gap.iml" filepath="$PROJECT_DIR$/First_Phone_Gap.iml" />
     </modules>
   </component>
 </project>
