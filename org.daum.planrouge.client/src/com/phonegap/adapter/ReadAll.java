@@ -4,42 +4,45 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
+import android.util.Log;
 
 import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 import com.phonegap.plugins.nfc.TagActionException;
 
 public class ReadAll {
 
-	private static byte[] key = new NFC_Mifare_classic().hexStringToByteArray("FFFFFFFFFFFF");
-	private static Intent savedIntent;
-	private static NFC_Mifare_classic puceNFC; 
-	public JSONObject readAll(NFC_Mifare_classic puceNFC) throws JSONException {
+	private byte[] key = new NFC_Mifare_classic().hexStringToByteArray("FFFFFFFFFFFF");
+	private NFC_Mifare_classic puceNFC;
+	private JSONObject victimeObject;
+
+	public JSONObject readAll(NFC_Mifare_classic puceNFC, String matriculeAgent,String idPuce) throws JSONException {
 		this.puceNFC = puceNFC;
-		JSONObject victimeObject = new JSONObject();
-		victimeObject.put("identity", readIdentity());
+		victimeObject = new JSONObject();
+		readIdentity();
+		
+
+		JSONArray arrayGps = readDateHoursGPS();
+		victimeObject.put("id", idPuce);
+		victimeObject.put("posRef", arrayGps.get(0));
+		victimeObject.put("posDestination", arrayGps.get(1));
 		victimeObject.put("categorie", readVictimCategory());
-		victimeObject.put("posRef", readDateHoursGPS().get(0));
-		victimeObject.put("posDestination", readDateHoursGPS().get(1));
 		victimeObject.put("type", "AdapterVictime");
+		victimeObject.put("agent",new JSONObject().put("matricule", matriculeAgent).put("type", "AdapterAgent"));
 		return victimeObject;
 	}
 
 	private JSONObject readVictimCategory() throws JSONException {
 
-//			NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-//			puceNFC.treatAsNewTag(savedIntent);
-	
-			String vital_urgency = "";
-			try {
-				vital_urgency = puceNFC.readABlock(1, 0, key, false);
-			} catch (TagActionException e) {
-				e.printStackTrace();
-			}
-			String category = "";
-			if (vital_urgency.length() > 31) {
-				category = vital_urgency.substring(31, 32);
-			}
+		String vital_urgency = "";
+		try {
+			vital_urgency = puceNFC.readABlock(1, 0, key, false);
+		} catch (TagActionException e) {
+			e.printStackTrace();
+		}
+		String category = "";
+		if (vital_urgency.length() > 31) {
+			category = vital_urgency.substring(31, 32);
+		}
 
 		JSONObject categoryObject = new JSONObject();
 		categoryObject.put("code", category);
@@ -49,17 +52,9 @@ public class ReadAll {
 
 	private JSONObject readIdentity() throws JSONException {
 
-//		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-//
-//		if (puceNFC.treatAsNewTag(savedIntent) == -1) {
-//
-//			return null;
-//		}
-
 		String firstname = "";
 		String surname = "";
-		String age = "";
-
+		int age = 255 ;
 		String birthday = "";
 		String sexe = "";
 
@@ -68,40 +63,34 @@ public class ReadAll {
 			firstname = puceNFC.hexToAscii(puceNFC.readABlock(0, 1, key, false));
 			// surname
 			surname = puceNFC.hexToAscii(puceNFC.readABlock(0, 2, key, false));
-
 			// Autres
-			String identity_infos = puceNFC.hexToAscii(puceNFC.readABlock(1, 0, key, false));
+			String identity_infos = puceNFC.readABlock(1, 0, key, false);
 			// age
-			if (identity_infos.length() > 12) {
 				birthday = identity_infos.substring(0, 8);
-				age = identity_infos.substring(8, 11);
-
-				sexe = identity_infos.substring(12, 13);
-			}
+				age = Integer.parseInt(identity_infos.substring(8, 10),16);
+				sexe = identity_infos.substring(10, 11);
 		} catch (TagActionException e) {
-
 			e.printStackTrace();
 
 		}
 
 		JSONObject victimeIdentity = new JSONObject();
-		victimeIdentity.put("nom", surname);
-		victimeIdentity.put("prenom", firstname);
-		victimeIdentity.put("id", puceNFC.getId());
-		victimeIdentity.put("sexe", sexe);
-		victimeIdentity.put("age", age);
-		victimeIdentity.put("dateNaissance", birthday);
-		victimeIdentity.put("type", "AdapterVictime");
+		victimeObject.put("nom", surname);
+		victimeObject.put("prenom", firstname);
+	
+		victimeObject.put("sexe", sexe);
+		if(age!=255){
+			victimeObject.put("age", age);		
+		}
+	
+		victimeObject.put("dateNaissance", birthday);
+		victimeObject.put("type", "AdapterVictime");
 
 		return victimeIdentity;
 
 	}
 
 	private JSONArray readDateHoursGPS() throws JSONException {
-//		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-//		puceNFC.treatAsNewTag(savedIntent);
-
-		//
 
 		String date1 = "";
 		String latitude1 = "";
@@ -119,13 +108,13 @@ public class ReadAll {
 		String latitude3 = "";
 		String longitude3 = "";
 		String signe3 = "";
-		String accuracy3 = null;
+		String accuracy3 = "";
 
 		String date4 = "";
 		String latitude4 = "";
 		String longitude4 = "";
 		String signe4 = "";
-		String accuracy4 = null;
+		String accuracy4 = "";
 
 		try {
 			String date12 = puceNFC.readABlock(3, 0, key, false);
@@ -183,13 +172,13 @@ public class ReadAll {
 		gpsRefObject.put("type", "AdapterGpsPoint");
 
 		JSONObject position = new JSONObject();
-		
+
 		position.put("heure", date2);
 		position.put("latitude", latlong2[0].toString());
 		position.put("longitude", latlong2[1].toString());
 		position.put("precision", Integer.parseInt(accuracy2));
 		position.put("type", "AdapterGpsPoint");
-		
+
 		gpsDestObject.put(0, new JSONObject().put("gpsPoint", position));
 
 		position = new JSONObject();
@@ -200,8 +189,7 @@ public class ReadAll {
 		position.put("precision", Integer.parseInt(accuracy3));
 		position.put("type", "AdapterGpsPoint");
 		gpsDestObject.put(1, new JSONObject().put("gpsPoint", position));
-		
-		
+
 		position = new JSONObject();
 		position.put("heure", date4);
 		position.put("latitude", latlong4[0].toString());
@@ -209,12 +197,12 @@ public class ReadAll {
 		position.put("precision", Integer.parseInt(accuracy4));
 		position.put("type", "AdapterGpsPoint");
 		gpsDestObject.put(2, new JSONObject().put("gpsPoint", position));
-		
+
 		JSONArray array = new JSONArray();
-		
-		array.put(0, new JSONObject().put("gpsPoint", gpsRefObject) );
+
+		array.put(0, new JSONObject().put("gpsPoint", gpsRefObject));
 		array.put(1, gpsDestObject);
-		
+
 		return array;
 	}
 

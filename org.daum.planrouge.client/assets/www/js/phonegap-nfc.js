@@ -364,12 +364,10 @@ var ndef = {
 
 };
 
-
-
 var nfc = {
 
 	addTagDiscoveredListener : function(callback, win, fail) {
-		document.addEventListener("tag", function(){
+		document.addEventListener("tag", function() {
 			Toast.shortshow("BOUM");
 		}, false);
 		cordova.exec(win, fail, "NfcPlugin", "registerTag", []);
@@ -511,211 +509,34 @@ function fireNfcTagEvent(eventType, tagAsJson) {
 		var e = document.createEvent('Events');
 		e.initEvent(eventType, true, false);
 		e.tag = JSON.parse(tagAsJson);
-		
+
 		console.log(e.tag);
 		document.dispatchEvent(e);
 	}, 10);
 
 }
-
+var r = true;
 var tagid = {
-	id : function(data, perteConnaissace, freqRespi, sat, freqCard, pArt, win, fail) {
-
-		cordova.exec(function(success) {
-			navigator.notification.alert(success, null, 'Success : ', 'Ok');
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-		}, "NfcPlugin", "getID", [ data, perteConnaissace, freqRespi, sat, freqCard, pArt ]);
-	},
-
-	read_vital_emergency : function() {
-		var x;
-		cordova.exec(function(success) {
-			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
-			x = success;
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-			x = false;
-		}, "NfcPlugin", "read_vital_emergency", []);
-		return x;
-	},
-
-	read_bilan_complementaire : function() {
-		var x;
-		cordova.exec(function(success) {
-			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
-			x = success;
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-			x = false;
-		}, "NfcPlugin", "read_bilan_complementaire", []);
-		return x;
-	},
-
-	write_bilan_complementaire : function(data, oxygene, chocs, immobilisation, extension, maladies, hospitalisations, traitements, allergies, win,
-			fail) {
-		cordova.exec(function(success) {
-			navigator.notification.alert(success, null, 'Success : ', 'Ok');
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-		}, "NfcPlugin", "write_bilan_complementaire", [ data, oxygene, chocs, immobilisation, extension, maladies, hospitalisations, traitements,
-				allergies ]);
-	},
-
-	write_date_hours_gps : function(date, latitude, longitude, signe, accuracy) {
-		
-		cordova.exec(function(success) {
+		getAgent : function(matricule) {
+			var x;
 			
-			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
-
-		}, function(error) {
-
-			Toast.shortshow(error);
-		
-		}, "NfcPlugin", "write_date_hours_gps", [ date, latitude, longitude, signe, accuracy ]);
-
-	},
-
-	read_date_hours_gps : function() {
-		var x;
-		cordova.exec(function(success) {
-
-			x = success;
-		}, function(error) {
-
-			Toast.shortshow(error);
-			x = false;
-		}, "NfcPlugin", "read_date_hours_gps", []);
-		return x;
-	},
-
-	read_identity : function() {
-		var x;
-		cordova.exec(function(success) {
-			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
-			x = success;
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-			x = false;
-		}, "NfcPlugin", "read_identity", []);
-		return x;
-	},
-
-	write_identity : function(prenom, nom, sexe, age, age_unite, date_naissance, win, fail) {
-		//var x;
-		cordova.exec(function(success) {
-			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
-			//x = success;
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-			//x = false;
-		}, "NfcPlugin", "write_identity", [ prenom, nom, sexe, age, age_unite, date_naissance ]);
-		//return x;
-	},
-
-	write_victim_category : function(category, win, fail) {
-
-		cordova.exec(function(id) {
-				
-			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
-			GPSUpdate();
 			
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-		}, "NfcPlugin", "write_victim_category", [ category ]);
+			cordova.exec(function(success) {
+				Toast.shortshow(success);
+				x = true;
+				$.mobile.hidePageLoadingMsg();
+			}, function(error) {
+				x = false;
+				Toast.shortshow(error);
+				$.mobile.hidePageLoadingMsg();
 
-	},
+			}, "NfcPlugin", "getAgent", [ matricule ]);
+			return x;
+		},
 
-	read_destination : function() {
-		var x;
-		cordova.exec(function(success) {
-			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
-			x = success;
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			x = false;
-			Toast.shortshow(error);
-		}, "NfcPlugin", "read_destination", []);
-
-		return x;
-	},
-
-	write_destination : function(evacuation, destination, ville, code_postal, win, fail) {
-		cordova.exec(function(success) {
-			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-		}, "NfcPlugin", "write_destination", [ evacuation, destination, ville, code_postal ]);
-	},
-
-	read_champlibre : function() {
-		var x;
-		cordova.exec(function(success) {
-			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
-			x = success;
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-			x = false;
-		}, "NfcPlugin", "read_champlibre", []);
-		return x;
-	},
-
-	write_champlibre : function(textfield, win, fail) {
-		cordova.exec(function(success) {
-			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-		}, "NfcPlugin", "write_champlibre", [ textfield ]);
-	},
-
-	read_lesion : function() {
-		var x;
-		cordova.exec(function(success) {
-			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
-			x = success;
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-			x = false;
-		}, "NfcPlugin", "read_lesion", []);
-		return x;
-	},
-
-	write_lesion : function(lesion, win, fail) {
-		cordova.exec(function(success) {
-			navigator.notification.alert("Transmis à la puce", null, 'Success : ', 'Ok');
-		}, function(error) {
-//			navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-		}, "NfcPlugin", "write_lesion", [ lesion ]);
-	},
-
-	read_victim_category : function() {
-		var x;
-		cordova.exec(function(success) {
-			// navigator.notification.alert(success, null, 'Success : ', 'Ok');
-			x = success;
-		}, function(error) {
-			//navigator.notification.alert(error, null, 'Error : ', 'Ok');
-			Toast.shortshow(error);
-			x = false;
-		}, "NfcPlugin", "read_victim_category", []);
-		return x;
-	},
-	
 	read : function(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
 		var x;
-	
+
 		cordova.exec(function(success) {
 			Toast.shortshow(success);
 			x = success;
@@ -723,33 +544,59 @@ var tagid = {
 			x = false;
 			Toast.shortshow(error);
 
-		}, "NfcPlugin", "read", [type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10]);
+		}, "NfcPlugin", "read", [ type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10 ]);
 		return x;
 	},
-	
+
 	write : function(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
 		var x;
-	
+
 		cordova.exec(function(success) {
 			Toast.shortshow(success);
 			x = success;
+			$.mobile.hidePageLoadingMsg();
+			if(success[1] != 'GPS'){
+				GPSUpdate();
+			}
+			
 		}, function(error) {
 			x = false;
-			Toast.shortshow(error);
+		
+
+			$.mobile.loading( 'show', {
+				text: 'Approcher le TAG !! ',
+				textVisible: true,
+				theme: 'e',
+				html: "<div style=' text-align: center;'><img  src='file:///android_asset/www/images/ajax-loader.gif' /><h3>Approcher le TAG !</h3><input type='button' value='Annuler' onClick='WriteCancel();' /></div>"
+			});
+
+
+				setTimeout(function() { 
+					if (r){
+					window.tagid.write(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, window.localStorage.getItem("matriculeAgent")) 
+					}
+					else {
+						r = false;
+					}
+				}, 1000);
+
 			
-			
-			
-		}, "NfcPlugin", "write", [type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10]);
+		}, "NfcPlugin", "write", [ type, param1, param2, param3, param4, param5, param6, param7, param8, param9, window.localStorage.getItem("matriculeAgent") ]);
 		return x;
 	},
-	
+
 };
 
+function WriteCancel(){
+	$.mobile.hidePageLoadingMsg();
+	r = false;
+	cordova.exec(function(success) {}, function(error) {}, "NfcPlugin", "raz", []);
+}
 
-function alertCallback(buttonIndex,type,param1, param2, param3, param4, param5, param6, param7, param8, param9, param10){
-	alert('Envoi Annulé' +buttonIndex);
-	
-	window.tagid.write(type,param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+function alertCallback(buttonIndex, type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
+	alert('Envoi Annulé' + buttonIndex);
+
+	window.tagid.write(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
 }
 
 // kludge some global variables for plugman js-module support

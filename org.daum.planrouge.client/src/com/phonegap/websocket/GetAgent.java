@@ -4,26 +4,44 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.http.HttpException;
+import org.apache.cordova.api.CallbackContext;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.chariotsolutions.nfc.plugin.NfcPlugin;
 import com.phonegap.plugins.nfc.Common;
 
-public class WebSocket {
+public class GetAgent extends Thread{
 
-	WebSocketClient client;
 	List<BasicNameValuePair> extraHeaders = Arrays.asList(new BasicNameValuePair("Cookie", "session=abcd"));
-	private NfcPlugin nfcPlugin;
+	JSONArray data;
+	CallbackContext callbackContext;
+	ConsumerWebSocket consumerWebSocketGet;
+	public void getAgent(JSONArray data, CallbackContext callbackContext, ConsumerWebSocket consumerWebSocketGet) throws JSONException{
+		this.data = data;
+		this.callbackContext= callbackContext;
+		this.consumerWebSocketGet = consumerWebSocketGet;
+		
+		this.start();
 
-	public WebSocket(String address, int port, String handler, final NfcPlugin nfcPlugin) {
-		this.nfcPlugin=nfcPlugin;
-		client = new WebSocketClient(URI.create("http://" + address + ":" + port + "/" + handler), new WebSocketClient.Listener() {
+		
+	}
+	
+	public void run(){
+		JSONObject jObject = new JSONObject();
+		try {
+			jObject.put("type", "AdapterAgent");
+			jObject.put("matricule", data.get(0));
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		WebSocketClient client =new WebSocketClient(URI.create("http://" + "192.168.1.101" + ":" + "8080" + "/" + "get"), new WebSocketClient.Listener() {
 			String TAG = "WebSocketClient";
 
 			@Override
@@ -34,25 +52,22 @@ public class WebSocket {
 			@Override
 			public void onMessage(String message) {
 				Log.d(TAG, String.format("Got string message! %s", message));
-				
 				JSONObject jObject = null;
 				try {
 					jObject = new JSONObject(message);
 
 					if (jObject.has("type")) {
-						if (jObject.get("type").equals("getAgent")) {
-							if(jObject.get("result").equals("undefined")){
-								nfcPlugin.sendGetAgent("false");
-							}else {
-								nfcPlugin.sendGetAgent(jObject.toString());
-							}
+						if (jObject.get("type").equals("undefined")) {
+							callbackContext.error("Agent Inconnu");
+						} else {
+							callbackContext.success();
 						}
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			
+
 			}
 
 			@Override
@@ -64,7 +79,7 @@ public class WebSocket {
 			@Override
 			public void onDisconnect(int code, String reason) {
 				Log.d(TAG, String.format("Disconnected! Code: %d Reason: %s", code, reason));
-				
+				callbackContext.error("Agent Inconnu");
 			}
 
 			@Override
@@ -73,24 +88,8 @@ public class WebSocket {
 			}
 
 		}, extraHeaders);
+	
+				
+	client.send(jObject.toString());
 	}
-
-	public void connect() {
-		client.connect();
-		
-	}
-
-	public void disconnect() {
-		client.disconnect();
-		
-	}
-
-	public void send(String data) {
-		client.send(data);
-	}
-
-	public boolean isConnected() {
-		return client.isConnected();
-	}
-
 }

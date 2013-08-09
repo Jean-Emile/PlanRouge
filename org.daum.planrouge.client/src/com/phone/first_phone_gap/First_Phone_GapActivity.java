@@ -13,15 +13,16 @@ public class First_Phone_GapActivity extends DroidGap {
 		super.onCreate(savedInstanceState);
 		super.init();
 
-		super.loadUrl("file:///android_asset/www/index.html");
-	//	appView.addJavascriptInterface(new (appView), "WebSocketFactory");
+		super.loadUrl("file:///android_asset/www/login/index.html");
+	
 	}
 	
 //	public void onClose(Bundle savedInstanceState){
 //		super.finish();
 //	}
-//	public void onResume(Bundle savedInstanceState){
-//		super.onCreate(savedInstanceState);
-//		super.init();
-//	}
+	
+	//	public void onResume(Bundle savedInstanceState){
+	//		super.onCreate(savedInstanceState);
+	//		super.init();
+	//	}
 }

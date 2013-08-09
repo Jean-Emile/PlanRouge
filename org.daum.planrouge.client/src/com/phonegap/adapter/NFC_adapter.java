@@ -7,8 +7,6 @@ import org.json.JSONException;
 import com.chariotsolutions.nfc.plugin.NfcPlugin;
 import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 
-import android.content.Intent;
-
 public interface NFC_adapter {
 
 	public String write(JSONArray data, CallbackContext callbackContext, byte[]key, NFC_Mifare_classic puceNFC,NfcPlugin nfcPlugin) throws JSONException;

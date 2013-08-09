@@ -577,7 +577,7 @@ public class NFC_Mifare_classic implements INfc {
 			mcReader.close();
 			return Common.byte2HexString(Common.getUID());
 		}
-		return "No ID discovered !";
+		return "";
 	}
 
 	/**

@@ -1,20 +1,20 @@
 package com.chariotsolutions.nfc.plugin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.util.Log;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.phonegap.plugins.nfc.Common;
-import com.phonegap.plugins.nfc.NFC_Mifare_classic;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Util {
 

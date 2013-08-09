@@ -3,11 +3,11 @@ package com.chariotsolutions.nfc.plugin;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.cordova.api.CallbackContext;
 import org.apache.cordova.api.CordovaPlugin;
-import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,10 +30,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.phonegap.adapter.AdapterFactory;
-import com.phonegap.plugins.nfc.Common;
 import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 import com.phonegap.plugins.nfc.TagActionException;
 import com.phonegap.websocket.ConsumerWebSocket;
+import com.phonegap.websocket.GetAgent;
 
 public class NfcPlugin extends CordovaPlugin {
 	private static final String REGISTER_MIME_TYPE = "registerMimeType";
@@ -57,6 +57,7 @@ public class NfcPlugin extends CordovaPlugin {
 	private static final String STATUS_NDEF_PUSH_DISABLED = "NDEF_PUSH_DISABLED";
 
 	private static final String TAG = "NfcPlugin";
+	private static String AGENT;
 	private final List<IntentFilter> intentFilters = new ArrayList<IntentFilter>();
 	private final ArrayList<String[]> techLists = new ArrayList<String[]>();
 
@@ -65,35 +66,27 @@ public class NfcPlugin extends CordovaPlugin {
 
 	private Intent savedIntent = null;
 
-	private static final String GET_ID = "getID";
-	private static final String READ_VITAL_EMERGENCY = "read_vital_emergency";
-	private String READ_BILAN_COMPLEMENTAIRE = "read_bilan_complementaire";
-	private String WRITE_BILAN_COMPLEMENTAIRE = "write_bilan_complementaire";
-	private String WRITE_DESTINATION = "write_destination";
-	private String READ_DESTINATION = "read_destination";
-	private String WRITE_TEXTFIELD = "write_champlibre";
-	private String READ_TEXTFIELD = "read_champlibre";
-	private String WRITE_LESION = "write_lesion";
-	private String READ_LESION = "read_lesion";
-
 	private byte[] key = new NFC_Mifare_classic().hexStringToByteArray("FFFFFFFFFFFF");
-	private String ID;
 	private NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-	private ConsumerWebSocket consumerWebSocket = new ConsumerWebSocket();
-
+	private ConsumerWebSocket consumerWebSocket = new ConsumerWebSocket("192.168.1.101",8080,"add",null);
+	private ConsumerWebSocket consumerWebSocketGet = new ConsumerWebSocket("192.168.1.101",8080,"get",this);
+	AdapterFactory adapterFactory = new AdapterFactory(consumerWebSocket);
+	
 	private boolean isWriteExecution = false;
+
 	
 	public boolean isWriteExecution() {
 		return isWriteExecution;
 	}
 
 	public void setWriteExecution(boolean isWriteExecution) {
+		Log.e("NFC PLUGIN", "IS NOT WRITE EXECUTION !!!!!!");
 		this.isWriteExecution = isWriteExecution;
 	}
 
 	@Override
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-		AdapterFactory adapterFactory = new AdapterFactory(consumerWebSocket);
+		
 		Log.d(TAG, "execute " + action);
 
 		if (!getNfcStatus().equals(STATUS_NFC_OK)) {
@@ -130,36 +123,6 @@ public class NfcPlugin extends CordovaPlugin {
 		} else if (action.equalsIgnoreCase(INIT)) {
 			init(callbackContext);
 
-		} else if (action.equalsIgnoreCase(GET_ID)) {
-			writeVitalEmergency(data, callbackContext);
-
-		} else if (action.equalsIgnoreCase(READ_VITAL_EMERGENCY)) {
-			readVitalEmergency(callbackContext);
-
-		} else if (action.equalsIgnoreCase(READ_BILAN_COMPLEMENTAIRE)) {
-			readBilanComplementaire(callbackContext);
-
-		} else if (action.equalsIgnoreCase(WRITE_BILAN_COMPLEMENTAIRE)) {
-			writeBilanComplementaire(data, callbackContext);
-
-		} else if (action.equalsIgnoreCase(READ_DESTINATION)) {
-			readDestination(callbackContext);
-
-		} else if (action.equalsIgnoreCase(WRITE_DESTINATION)) {
-			writeDestination(data, callbackContext);
-
-		} else if (action.equalsIgnoreCase(READ_TEXTFIELD)) {
-			readTextField(callbackContext);
-
-		} else if (action.equalsIgnoreCase(WRITE_TEXTFIELD)) {
-			writeTextField(data, callbackContext);
-
-		} else if (action.equalsIgnoreCase(READ_LESION)) {
-			readLesion(callbackContext);
-
-		} else if (action.equalsIgnoreCase(WRITE_LESION)) {
-			writeLesion(data, callbackContext);
-
 		} else if (action.equalsIgnoreCase("read")) {
 			Log.i("NfcPlugin", "read");
 			adapterFactory.read(data, callbackContext, key, puceNFC);
@@ -169,7 +132,36 @@ public class NfcPlugin extends CordovaPlugin {
 			Log.i("NfcPlugin", "write");
 			adapterFactory.write(data, callbackContext, key, puceNFC,this);
 
-		} else {
+		}  else if (action.equalsIgnoreCase("raz")) {
+			isWriteExecution = false;
+			Log.e("NFC PLUGIN", "IS NOT WRITE EXECUTION");
+		
+		} else if (action.equalsIgnoreCase("getAgent")) {
+			AGENT = null;
+			JSONObject jObject = new JSONObject();
+
+				jObject.put("type", "AdapterAgent");
+				jObject.put("matricule", data.get(0));
+			
+			consumerWebSocketGet.addMessage(jObject.toString());
+			long instant = new Date().getTime();
+			while (AGENT == null && new Date().getTime()-instant<5000){
+				
+			}
+			
+			if(AGENT.equals("true")){
+				System.out.println("SUCCESS AGENT");
+				AGENT = null;
+				callbackContext.success();
+			}else {
+				System.out.println("ERROR AGENT");
+				AGENT = null;
+				callbackContext.error("error");
+			}
+
+				//new GetAgent().getAgent(data, callbackContext, consumerWebSocketGet);
+		
+		}else {
 			// invalid action
 			return false;
 		}
@@ -177,441 +169,8 @@ public class NfcPlugin extends CordovaPlugin {
 		return true;
 	}
 
-	// LESION
-
-	private void writeLesion(JSONArray data, CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-
-		String lesion = data.getString(0);
-		String lesion1 = lesion.substring(0, 40);
-		String lesion2 = lesion.substring(40, 80);
-		lesion1 = Long.toString(Long.parseLong(lesion1, 2), 16);
-		lesion2 = Long.toString(Long.parseLong(lesion2, 2), 16);
-
-		while (lesion1.length() < 10) {
-			lesion1 = "0" + lesion1;
-
-		}
-		while (lesion2.length() < 10) {
-			lesion2 = "0" + lesion2;
-
-		}
-
-		lesion = lesion1 + lesion2;
-
-		String bilan_comp = null;
-		try {
-			bilan_comp = puceNFC.readABlock(5, 1, key, false);
-		} catch (TagActionException e1) {
-			callbackContext.error(e1.getMessage());
-			e1.printStackTrace();
-		}
-
-		String valeurBloc = lesion + bilan_comp.substring(20, 32);
-
-		while (valeurBloc.length() < 32) {
-			valeurBloc += "0";
-		}
-
-		// Traitement perte connaissance
-
-		boolean result = false;
-		try {
-			result = puceNFC.writeInABlock(5, 1, valeurBloc, key, false);
-		} catch (TagActionException e) {
-
-			callbackContext.error(e.getMessage());
-			e.printStackTrace();
-		}
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
-
-	}
-
-	private void readLesion(CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-		boolean error = false;
-		// Traitement perte connaissance
-
-		String result = "";
-
-		try {
-			result = puceNFC.readABlock(5, 1, key, false);
-
-		} catch (TagActionException e) {
-			callbackContext.error(e.getMessage());
-			e.printStackTrace();
-			error = true;
-		}
-
-		JSONArray array = new JSONArray();
-		if (!error) {
-			String result1 = Long.toBinaryString(Long.parseLong(result.substring(0, 10), 16));
-			String result2 = Long.toBinaryString(Long.parseLong(result.substring(10, 20), 16));
-
-			while (result1.length() < 40) {
-				result1 = "0" + result1;
-			}
-			while (result2.length() < 40) {
-				result2 = "0" + result2;
-			}
-
-			result = result1 + result2;
-
-			array.put(0, result);
-		}
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, array));
-	}
-
-	// CHAMP LIBRE
-
-	private void writeTextField(JSONArray data, CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-
-		String textfield = puceNFC.toHex(data.getString(0));
-		System.out.println(textfield + "HEXA HEXA");
-		while (textfield.length() < 576) {
-			textfield = textfield + "0";
-		}
-		System.out.println(textfield + "HEXA HEXA");
-		try {
-
-			puceNFC.writeInASector(10, textfield.substring(0, 96), key, false);
-			puceNFC.writeInASector(11, textfield.substring(96, 192), key, false);
-			puceNFC.writeInASector(12, textfield.substring(192, 288), key, false);
-			puceNFC.writeInASector(13, textfield.substring(288, 384), key, false);
-			puceNFC.writeInASector(14, textfield.substring(384, 480), key, false);
-			puceNFC.writeInASector(15, textfield.substring(480, 576), key, false);
-
-		} catch (TagActionException e) {
-			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION, e.getMessage()));
-			e.printStackTrace();
-		}
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, true));
-
-	}
-
-	private void readTextField(CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-
-		String textfield = "";
-		try {
-			// ville
-			textfield = (puceNFC.readASector(10, key, false)).substring(0, 96);
-			textfield = textfield + (puceNFC.readASector(11, key, false)).substring(0, 96);
-			textfield = textfield + (puceNFC.readASector(12, key, false)).substring(0, 96);
-			textfield = textfield + (puceNFC.readASector(13, key, false)).substring(0, 96);
-			textfield = textfield + (puceNFC.readASector(14, key, false)).substring(0, 96);
-			textfield = textfield + (puceNFC.readASector(15, key, false)).substring(0, 96);
-
-			textfield = puceNFC.hexToAscii(textfield);
-		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
-			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
-			e.printStackTrace();
-
-		}
-
-		JSONArray array = new JSONArray();
-		array.put(0, textfield);
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, array));
-	}
-
-	// DESTINATION
-
-	private void readDestination(CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-
-		//
-
-		String evacuation = "";
-		String destination = "";
-		String ville = "";
-		String code_postal = "";
-
-		try {
-			// ville
-			ville = puceNFC.hexToAscii(puceNFC.readABlock(8, 2, key, false));
-
-			// destination
-			destination = puceNFC.hexToAscii(puceNFC.readABlock(8, 1, key, false));
-
-			// Autres
-			String destination_infos = puceNFC.hexToAscii(puceNFC.readABlock(8, 0, key, false));
-
-			evacuation = destination_infos.substring(0, 1);
-			code_postal = destination_infos.substring(1, 6);
-
-		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
-			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION, e.getMessage()));
-			e.printStackTrace();
-
-		}
-
-		JSONArray array = new JSONArray();
-		array.put(0, evacuation);
-		array.put(1, destination);
-		array.put(2, ville);
-		array.put(3, code_postal);
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, array));
-
-	}
-
-	private void writeDestination(JSONArray data, CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-
-		String evacuation = puceNFC.toHex(data.getString(0));
-		String destination = completeTheBlank(puceNFC.toHex(data.getString(1)));
-		String ville = completeTheBlank(puceNFC.toHex(data.getString(2)));
-		String code_postal = puceNFC.toHex(data.getString(3));
-
-		String code_postal_evacutation = completeTheBlank(evacuation + code_postal);
-
-		String data_destination = code_postal_evacutation + destination + ville;
-		try {
-
-			puceNFC.writeInASector(8, data_destination, key, false);
-		} catch (TagActionException e) {
-			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION, e.getMessage()));
-			e.printStackTrace();
-		}
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, true));
-
-	}
-
-	// BILAN COMPLEMENTAIRE
-	private void writeBilanComplementaire(JSONArray data, CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-
-		String info = data.getString(0); // données du questionnaire
-		String oxygene = Integer.toHexString(data.getInt(1));
-		String chocs = Integer.toHexString(data.getInt(2));
-		String immobilisation = data.getString(3);
-		String extension = data.getString(4);
-		String maladies = data.getString(5);
-		String hospitalisations = data.getString(6);
-		String traitements = data.getString(7);
-		String allergies = data.getString(8);
-
-		immobilisation = completeTheBlank(puceNFC.toHex(immobilisation));
-		extension = completeTheBlank(puceNFC.toHex(extension));
-		maladies = completeTheBlank(puceNFC.toHex(maladies));
-		hospitalisations = completeTheBlank(puceNFC.toHex(hospitalisations));
-		traitements = completeTheBlank(puceNFC.toHex(traitements));
-		allergies = completeTheBlank(puceNFC.toHex(allergies));
-
-		try {
-			puceNFC.writeInASector(6, maladies + hospitalisations + traitements, key, false);
-			puceNFC.writeInASector(7, extension + immobilisation + allergies, key, false);
-		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
-			callbackContext.error(e.getMessage());
-			e.printStackTrace();
-
-		}
-
-		String lesion = null;
-		try {
-			lesion = puceNFC.readABlock(5, 1, key, false);
-		} catch (TagActionException e1) {
-			// TODO Auto-generated catch block
-			callbackContext.error(e1.getMessage());
-			e1.printStackTrace();
-		}
-
-		// Traitement données questionnaire
-		if (info.length() % 2 != 0) {
-			info = info + "0";
-		}
-		String valeurBloc = Integer.toString(Integer.parseInt(info, 2), 16);
-		while (valeurBloc.length() < 7) {
-			valeurBloc = "0" + valeurBloc;
-		}
-		while (oxygene.length() < 2) {
-			oxygene = "0" + oxygene;
-		}
-		while (chocs.length() < 2) {
-			chocs = "0" + chocs;
-		}
-
-		valeurBloc = lesion.substring(0, 20) + valeurBloc + oxygene + chocs;
-
-		while (valeurBloc.length() != 32) {
-			valeurBloc += "0";
-		}
-
-		// Traitement perte connaissance
-
-		boolean result = false;
-		try {
-			result = puceNFC.writeInABlock(5, 1, valeurBloc, key, false);
-		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
-			callbackContext.error(e.getMessage());
-			e.printStackTrace();
-
-		}
-		// TODO: PluginResult pResult = new PluginResult(Status.OK, data);
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
-		// callbackContext.success("Transmission r�ussi");
-		System.out.println("ID TAG NFC :::: :: " + valeurBloc + " resutl  :: " + result);
-
-	}
-
-	private void readBilanComplementaire(CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-		boolean error = false;
-		// Traitement perte connaissance
-
-		String result = "";
-		String maladies = "";
-		String hospitalisations = "";
-		String traitements = "";
-		String extension = "";
-		String immobilisation = "";
-		String allergies = "";
-
-		try {
-			result = puceNFC.readABlock(5, 1, key, false);
-			maladies = puceNFC.hexToAscii(puceNFC.readABlock(6, 0, key, false));
-			hospitalisations = puceNFC.hexToAscii(puceNFC.readABlock(6, 1, key, false));
-			traitements = puceNFC.hexToAscii(puceNFC.readABlock(6, 2, key, false));
-			extension = puceNFC.hexToAscii(puceNFC.readABlock(7, 0, key, false));
-			immobilisation = puceNFC.hexToAscii(puceNFC.readABlock(7, 1, key, false));
-			allergies = puceNFC.hexToAscii(puceNFC.readABlock(7, 2, key, false));
-
-		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
-			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
-			e.printStackTrace();
-			error = true;
-		}
-
-		JSONArray array = new JSONArray();
-
-		if (!error) {
-			array.put(0, (result.subSequence(20, 32)));
-			array.put(1, 0);
-			array.put(2, maladies);
-			array.put(3, hospitalisations);
-			array.put(4, traitements);
-			array.put(5, extension);
-			array.put(6, immobilisation);
-			array.put(7, allergies);
-		}
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, array));
-		System.out.println(" resutl  :: " + result);
-
-	}
-
-	// URGENCE VITALE
-	private void writeVitalEmergency(JSONArray data, CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-
-		String info = data.getString(0); // données du questionnaire
-		String perte_Connaissance = Integer.toHexString(data.getInt(1));
-		String freq_Respiratoire = Integer.toHexString(data.getInt(2));
-		String saturation = Integer.toHexString(data.getInt(3));
-		String freq_Cardiaque = Integer.toHexString(data.getInt(4));
-		String pression_Arterielle = Integer.toHexString(data.getInt(5));
-
-		// Traitement données questionnaire
-		if (info.length() % 2 != 0) {
-			info = info + "0";
-		}
-		String valeurBloc = Integer.toString(Integer.parseInt(info, 2), 16);
-		while (valeurBloc.length() < 7) {
-			valeurBloc = "0" + valeurBloc;
-		}
-		while (perte_Connaissance.length() < 2) {
-			perte_Connaissance = "0" + perte_Connaissance;
-		}
-		while (freq_Respiratoire.length() < 2) {
-			freq_Respiratoire = "0" + freq_Respiratoire;
-		}
-		while (saturation.length() < 2) {
-			saturation = "0" + saturation;
-		}
-		while (freq_Cardiaque.length() < 2) {
-			freq_Cardiaque = "0" + freq_Cardiaque;
-		}
-		while (pression_Arterielle.length() < 2) {
-			pression_Arterielle = "0" + pression_Arterielle;
-		}
-
-		valeurBloc = valeurBloc + perte_Connaissance + freq_Respiratoire + saturation + freq_Cardiaque + pression_Arterielle;
-
-		while (valeurBloc.length() != 30) {
-			valeurBloc += "0";
-		}
-
-		valeurBloc = completeTheBlank(valeurBloc);
-		// Traitement perte connaissance
-
-		boolean result = false;
-		try {
-			result = puceNFC.writeInABlock(5, 0, valeurBloc, key, false);
-		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
-			callbackContext.error(e.getMessage());
-			e.printStackTrace();
-
-		}
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
-		// callbackContext.success("Transmission r�ussi");
-		System.out.println("ID TAG NFC :::: :: " + valeurBloc + " resutl  :: " + result);
-
-	}
-
-	private void readVitalEmergency(CallbackContext callbackContext) throws JSONException {
-		NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		puceNFC.treatAsNewTag(savedIntent);
-
-		// Traitement perte connaissance
-
-		String result = "";
-		try {
-			result = puceNFC.readABlock(5, 0, key, false);
-		} catch (TagActionException e) {
-			callbackContext.error(e.getMessage());
-			e.printStackTrace();
-
-		}
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
-		// callbackContext.success("Transmission r�ussi");
-		System.out.println(" resutl  :: " + result);
-
-	}
-
-	// COMPLETER AVEC DES "0" LES BLOCS NON COMPLET
-	private String completeTheBlank(String hexString) {
-		while (hexString.length() < 32) {
-			hexString += "0";
-		}
-		return hexString;
-	}
-
 	// /////////////////////////////////////////////////////////////////////////////////////////////
-	// ///////// ////////////////////
-	// ///////// ////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////////////////
+	
 	private String getNfcStatus() {
 		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 		if (nfcAdapter == null) {
@@ -673,7 +232,7 @@ public class NfcPlugin extends CordovaPlugin {
 	}
 
 	private void writeTag(JSONArray data, CallbackContext callbackContext) throws JSONException {
-		if (getIntent() == null) { // TODO remove this and handle LostTag
+		if (getIntent() == null) { // remove this and handle LostTag
 			callbackContext.error("Failed to write tag, received null intent");
 		}
 
@@ -939,7 +498,7 @@ public class NfcPlugin extends CordovaPlugin {
 		return json;
 	}
 
-	private boolean recycledIntent() { // TODO this is a kludge, find real solution
+	private boolean recycledIntent() { // this is a kludge, find real solution
 
 		int flags = getIntent().getFlags();
 		if ((flags & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) {
@@ -975,27 +534,33 @@ public class NfcPlugin extends CordovaPlugin {
 		super.onNewIntent(intent);
 
 		setIntent(intent);
-
+		Log.i("NFCPLUGIN","GET URL ::: "+super.webView.getUrl());
 		savedIntent = intent;
 		puceNFC.treatAsNewTag(intent);
-		if (!(isWriteExecution)){
-			String url = nextActionToProcess(intent);
-			super.webView.loadUrl(url);
+		if (!(isWriteExecution) && !(super.webView.getUrl().equals("file:///android_asset/www/login/index.html"))){
+			Log.i("NFC PLUGIN", "IS WRITABLE");
+			String url = nextActionToProcess();
+			Log.i("NFCPLUGIN","NEW URL ::: "+url);
+			//if(!(url.equals(super.webView.getUrl()))){
+				super.webView.sendJavascript("javascript:window.location='"+url+"'");
+				//super.webView.loadUrl(url);
+			//}
+			
 		}
-
 		parseMessage();
 
 	}
 
-	private String nextActionToProcess(Intent intent) {
-		// NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-		// puceNFC.treatAsNewTag(intent);
+	 
+
+	
+	
+	private String nextActionToProcess() {
 
 		String vital_urgency = "";
 		try {
 			vital_urgency = puceNFC.readABlock(1, 0, key, false);
 		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String category = "";
@@ -1029,8 +594,6 @@ public class NfcPlugin extends CordovaPlugin {
 				sexe = identity_infos.substring(12, 13);
 			}
 		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
-
 			e.printStackTrace();
 
 		}
@@ -1040,7 +603,7 @@ public class NfcPlugin extends CordovaPlugin {
 			return "file:///android_asset/www/identite/index.html";
 		}
 
-		return "file:///android_asset/www/index.html";
+		return "file:///android_asset/www/completed/index.html";
 	}
 
 	private Activity getActivity() {
@@ -1057,5 +620,20 @@ public class NfcPlugin extends CordovaPlugin {
 
 	String javaScriptEventTemplate = "var e = document.createEvent(''Events'');\n" + "e.initEvent(''{0}'');\n" + "e.tag = {1};\n"
 			+ "document.dispatchEvent(e);";
+
+
+	public void sendGetAgent(String string) {
+		System.out.println("SEND GET AGENT ::: " +string);
+		if(string.equals("false")){
+			AGENT = "false";
+		}else{
+			AGENT = "true";
+		}
+	}
+	
+	public String getAgent(){
+		
+		return AGENT;
+	}
 
 }

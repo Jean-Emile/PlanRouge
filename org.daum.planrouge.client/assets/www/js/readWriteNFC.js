@@ -1,30 +1,16 @@
 // Categories victimes
 
-//function read_victim_category() {
-//	var y = window.tagid.read_victim_category();
-//	if (y != false) {
-//		var category = parseInt(y[0]);
-//		for (i = 1; i <= 5; i++) {
-//			if (i != category) {
-//				$('input[type=radio][name=categorie_victime][value=' + i + ']').attr('checked', false).checkboxradio("refresh");
-//			} else {
-//				$('input[type=radio][name=categorie_victime][value=' + category + ']').attr('checked', true).checkboxradio("refresh");
-//			}
-//		}
-//	}
-//}
-
 function read_victim_category() {
-	
-
 	var y = window.tagid.read("category");
 	if (y != false) {
 		var category = parseInt(y[0]);
+
 		for (i = 1; i <= 5; i++) {
 			if (i != category) {
-				$('input[type=radio][name=categorie_victime][value=' + i + ']').attr('checked', false).checkboxradio("refresh");
+				$('input[type=radio][name=categorie_victime][value=' + i + ']').prop('checked', false).checkboxradio("refresh");
 			} else {
-				$('input[type=radio][name=categorie_victime][value=' + category + ']').attr('checked', true).checkboxradio("refresh");
+				
+				$('input[type=radio][name=categorie_victime][value=' + category + ']').prop('checked', true).checkboxradio("refresh");
 			}
 		}
 	}
@@ -32,25 +18,8 @@ function read_victim_category() {
 
 function write_victim_category() {
 	var category = $('input[type=radio][name=categorie_victime]:checked').attr('value');
-
 	if (category < 6) {
-		
-	//	window.tagid.write_victim_category(category);
-		var x = window.tagid.write("category",category);
-		alert(x);
-		while (x ==false){
-			navigator.notification.confirm('Rapprochez le TAG', function(button){
-				if(button == 2){
-					x = true;
-				}
-				
-			}, 'Connexion au TAG', ['Re-essayer','Annuler'])
-			x = window.tagid.write("category",category);
-			Toast.shortshow("boucle");
-		}
-//		sendCategorieJsonToServer(category) ;
-		
-
+		window.tagid.write("category",category);
 	} else {
 		alert('Cocher une categorie');
 	}
@@ -61,87 +30,84 @@ function write_victim_category() {
 
 function writeIdentity() {
 	var sexe = $('input[type=radio][name=identity_sexe]:checked').attr('value');
-	var age_unit = $('input[type=radio][name=identity_age]:checked').attr('value');
+	var age = document.getElementById("age");
+	age = age.options[age.selectedIndex].value
+	
 	var day = document.getElementById("selectDay");
 	var year = document.getElementById("selectYear");
 	var month = document.getElementById("selectMonth");
-	var birthday = day.options[day.selectedIndex].value + month.options[month.selectedIndex].value + year.options[year.selectedIndex].value;
-	var surname = $("#surname").val();
-	var name = $("#firstname").val();
-	var age = document.getElementById("age");
-	age = age.options[age.selectedIndex].value
+	year = year.options[year.selectedIndex].value;
+	month = month.options[month.selectedIndex].value
+	day = day.options[day.selectedIndex].value
+	var birthday = day+ month+year;
+	if (year != '0000'){
+			
+		var myDate = new Date();
 
-	//window.tagid.write_identity(surname, name, sexe, age, age_unit, birthday);
-	window.tagid.write("identity",surname, name, sexe, age, age_unit, birthday);
+		var dateday = myDate.getDate();
+		var datemonth = myDate.getMonth() + 1;
+		var dateyear = myDate.getFullYear();
+		
+		var age = dateyear-year;
+		
+		if(month>datemonth){
+			age= age-1;
+		}else if(month == datemonth){
+			if (day>dateday){
+				age=age-1;
+			}
+		}
+	}
+	var name = $("#surname").val();
+	var firstname = $("#firstname").val();
+	
 
+	window.tagid.write("identity",firstname, name, sexe, age, birthday);
 }
 
 function readIdentity() {
 
-//	var y = window.tagid.read_identity();
 	var y = window.tagid.read("identity");
-	Toast.shortshow(y);
 	if (y != false) {
 		var firstname = y[0];
 		var surname = y[1];
 		var sexe = y[2];
 		var age = y[3];
-		var age_unit = y[4];
-		var birthday = y[5];
+		var birthday = y[4];
 		var day = birthday.substring(0, 2);
 		var month = birthday.substring(2, 4);
 		var year = birthday.substring(4, 8);
 
 		if (sexe == '1') {
-			$('#identity_sexe_1').attr("checked", true).checkboxradio("refresh");
-			$('#identity_sexe_2').attr("checked", false).checkboxradio("refresh");
-			$('#identity_sexe_3').attr("checked", false).checkboxradio("refresh");
-		} else if (sexe == '2') {
-			$('#identity_sexe_1').attr("checked", false).checkboxradio("refresh");
-			$('#identity_sexe_2').attr("checked", true).checkboxradio("refresh");
-			$('#identity_sexe_3').attr("checked", false).checkboxradio("refresh");
-		} else {
-			$('#identity_sexe_1').attr("checked", false).checkboxradio("refresh");
-			$('#identity_sexe_2').attr("checked", false).checkboxradio("refresh");
-			$('#identity_sexe_3').attr("checked", true).checkboxradio("refresh");
-		}
-
-		if (age_unit == '1') {
-			$('#identity_age_1').attr("checked", true).checkboxradio("refresh");
-			$('#identity_age_2').attr("checked", false).checkboxradio("refresh");
-			$('#identity_age_3').attr("checked", false).checkboxradio("refresh");
-		} else if (age_unit == '2') {
-			$('#identity_age_1').attr("checked", false).checkboxradio("refresh");
-			$('#identity_age_2').attr("checked", true).checkboxradio("refresh");
-			$('#identity_age_3').attr("checked", false).checkboxradio("refresh");
-		} else {
-			$('#identity_age_1').attr("checked", false).checkboxradio("refresh");
-			$('#identity_age_2').attr("checked", false).checkboxradio("refresh");
-			$('#identity_age_3').attr("checked", true).checkboxradio("refresh");
-		}
-
+			$('input[type=radio][name=identity_sexe][value=' + sexe + ']').prop('checked', true).checkboxradio("refresh");
+			$('input[type=radio][name=identity_sexe][value=' + 2 + ']').prop('checked', false).checkboxradio("refresh");
+		} else{
+			$('input[type=radio][name=identity_sexe][value=' + sexe + ']').prop('checked', true).checkboxradio("refresh");
+			$('input[type=radio][name=identity_sexe][value=' + 1 + ']').prop('checked', false).checkboxradio("refresh");
+		} 	
+		
 		$("#firstname").val(firstname);
 		$("#surname").val(surname);
 
-		$("#age").val(age);
-		$("#selectDay").val(day);
-		$("#selectMonth").val(month);
-		$("#selectYear").val(year);
+		$("#selectDay option[value='"+day+"']").prop("selected", true);
+		$('#selectDay').selectmenu('refresh', true);
 
-		/* Récupération du select */
-		var elmt = document.getElementById('age');
-		$("#age option:selected").attr("selected", '');
-		/* On parcourt les options du select */
-		for ( var i = 0; i < elmt.options.length; i++) {
-			/* Si l'élément à la bonne valeur on le sélectionne */
-			if (elmt.options[i].value == age) {
+		$("#selectDay option[value='"+day+"']").prop("selected", true);
+		$('#selectDay').selectmenu('refresh', true);
+		
+		$("#selectMonth option[value='"+month+"']").prop("selected", true);
+		$('#selectMonth').selectmenu('refresh', true);
 
-				elmt.selectedIndex = i;
-				$("#age option[value='+i+']").attr("selected", "selected");
+		$("#selectYear option[value='"+year+"']").prop("selected", true);
+		$('#selectYear').selectmenu('refresh', true);
+		
 
-			}
+		while(age.toString().length<3){
+			age='0'+age;	
 		}
-		$('age').selectmenu('refresh', true);
+		$("#age option[value='"+age+"']").prop("selected", true);
+		$('#age').selectmenu('refresh', true);
+
 	}
 }
 
@@ -233,7 +199,6 @@ function readDateHoursGps() {
 		$("#latitude4").text(latitude4);
 		$("#longitude4").text(longitude4);
 		$("#accuracy4").text(accuracy4 + ' m');
-
 	}
 }
 
@@ -255,15 +220,13 @@ function GoogleMap4() {
 }
 
 
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //LESION
 
 function read_lesion() {
-	var y = window.tagid.read_lesion();
+	var y = window.tagid.read('lesion');
 	if (y != false) {
 		var lesion_infos = y[0];
 
@@ -290,7 +253,7 @@ function write_lesion() {
 	data += "000";
 	var l = data.length / 4;
 
-	window.tagid.write_lesion(data);
+	window.tagid.write('lesion',data);
 
 }
 
@@ -299,19 +262,16 @@ function write_lesion() {
 //CHAMP LIBRE
 
 function write_champlibre() {
-	window.tagid.write_champlibre($("#textfield").val());
+	window.tagid.write('textField',$("#textfield").val());
 
 }
 
 function read_champlibre() {
-	var y = window.tagid.read_champlibre();
+	var y = window.tagid.read('textField');
 	if (y != false) {
 		$("#textfield").val(y[0]);
 	}
 }
-
-
-
 
 
 //DESTINATION
@@ -319,13 +279,12 @@ function read_champlibre() {
 function write_destination() {
 	var evacuation = $('input[type=radio][name=evacuation]:checked').attr('value');
 
-	window.tagid.write_destination(evacuation, $("#destination").val(), $("#ville_destination").val(), $("#code_postal").val());
-
+	window.tagid.write('destination',evacuation, $("#destination").val(), $("#ville_destination").val(), $("#code_postal").val());
 }
 
 function read_destination() {
 
-	var y = window.tagid.read_destination();
+	var y = window.tagid.read('destination');
 	if (y != false) {
 		var evacuation = y[0];
 		var destination = y[1];
@@ -348,13 +307,10 @@ function read_destination() {
 }
 
 
-
-
-
 //BILAN COMPLEMENTAIRE
 function getInfoBilanComplementaire() {
 
-	var y = window.tagid.read_bilan_complementaire();
+	var y = window.tagid.read('bilanComplementaire');
 	if (y != false) {
 		var x = parseInt(y[0].substring(0, 7), 16).toString(2);
 		var oxy = parseInt(y[0].substring(7, 9), 16);
@@ -405,7 +361,7 @@ function writeBilanComplementaire() {
 
 	}
 
-	window.tagid.write_bilan_complementaire(data, $("#oxygene").val(), $("#chocs").val(), $("#immobilisation").val(), $("#extension").val(), $(
+	window.tagid.write('bilanComplementaire', data, $("#oxygene").val(), $("#chocs").val(), $("#immobilisation").val(), $("#extension").val(), $(
 			"#maladies").val(), $("#hospitalisations").val(), $("#traitements").val(), $("#allergies").val());
 }
 
@@ -423,14 +379,14 @@ function tableUrgence() {
 
 	}
 
-	window.tagid.id(data, $("#perte_connaissance").val(), $("#freq_respiratoire").val(), $("#saturation").val(), $("#freq_cardiaque").val(), $(
+	window.tagid.write('bilanUrgence',data, $("#perte_connaissance").val(), $("#freq_respiratoire").val(), $("#saturation").val(), $("#freq_cardiaque").val(), $(
 			"#pression_arterielle").val());
 
 }
 
 function getInfoVitalEmergency() {
 
-	var y = window.tagid.read_vital_emergency();
+	var y = window.tagid.read('bilanUrgence');
 	if (y != false) {
 		var x = parseInt(y.substring(0, 7), 16).toString(2);
 		var pc = parseInt(y.substring(7, 9), 16);
@@ -457,5 +413,4 @@ function getInfoVitalEmergency() {
 		$("#freq_cardiaque").val(fc);
 		$("#pression_arterielle").val(pa);
 	}
-
 }

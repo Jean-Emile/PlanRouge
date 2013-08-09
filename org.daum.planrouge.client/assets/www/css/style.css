@@ -1,0 +1,8 @@
+@CHARSET "ISO-8859-1";
+
+.ui-page {   -webkit-backface-visibility: hidden;
+  -moz-backface-visibility:    hidden;
+  -ms-backface-visibility:     hidden;}
+
+
+  .ui-page {  background-color:#bdc3c7; }

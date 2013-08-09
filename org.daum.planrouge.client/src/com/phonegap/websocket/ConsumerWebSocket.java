@@ -2,6 +2,10 @@ package com.phonegap.websocket;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.cordova.CordovaWebView;
+
+import com.chariotsolutions.nfc.plugin.NfcPlugin;
+
 import android.util.Log;
 
 public class ConsumerWebSocket extends Thread {
@@ -10,16 +14,22 @@ public class ConsumerWebSocket extends Thread {
 	private LinkedBlockingQueue<String> queue;
 	private Thread t;
 
-	public ConsumerWebSocket() {
-		client = new WebSocket(null, 0, null);
+
+	public ConsumerWebSocket(String address, int port, String handler, NfcPlugin nfcPlugin) {
+		client = new WebSocket(address, port, handler, nfcPlugin);
 		queue = new LinkedBlockingQueue<String>();
 		t = this;
 		this.t.start();
+
 	}
 
-	public void connect() throws InterruptedException {
-		Thread.sleep(1000);
+	public void connect(){
+		
 		client.connect();
+	}
+	
+	public void disconnect(){
+		client.disconnect();
 	}
 
 	public void addMessage(String message) {
@@ -49,9 +59,12 @@ public class ConsumerWebSocket extends Thread {
 			Log.i("THREAD WS", " Boucle Thread");
 			String message = takeMessage();
 			if (message != null) {
+				if(!client.isConnected()){
+					client.connect();
+				}
 				while (!client.isConnected()) {
 					try {
-						Thread.sleep(10000);
+						Thread.sleep(5000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
