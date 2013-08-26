@@ -1,6 +1,14 @@
 var id=0;
 var ws={};
+
 $(function () {
+
+$(document).ready(function()
+    {
+        $("#bodyTable").tablesorter();
+    }
+);
+
     $.toast.config.width = 600;
     $.toast.config.align = 'right';
     $.toast.config.closeForStickyOnly = false;
@@ -154,7 +162,9 @@ function graph(jsonObj){
             if(victime.dateNaissance =='00000000'){
                 colonne6.innerHTML = '--';
             }else{
-               colonne6.innerHTML = victime.dateNaissance;
+                var birhtday = victime.dateNaissance;
+
+               colonne6.innerHTML = birhtday.substring(0,2)+'/'+birhtday.substring(2,4)+'/'+birhtday.substring(4,8);
             }
 
         }
@@ -170,7 +180,7 @@ function graph(jsonObj){
         }
     }
 
-
+    $("#bodyTable").trigger("update");
     // NUMERO Intervention
     document.getElementById('nIntervention').innerHTML = jIntervention.id;
 
@@ -270,4 +280,8 @@ function graph(jsonObj){
         animation : false,
     }
     var myLineAge = new Chart(document.getElementById("canvasAge").getContext("2d")).Bar(barChartDataAge,optionAge);
+
+//    $(function () {
+//    $("#bodyTable").tablesorter();
+//    });
 }

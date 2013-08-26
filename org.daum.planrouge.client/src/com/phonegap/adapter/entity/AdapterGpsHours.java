@@ -56,9 +56,9 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 			donneesGPS2 = puceNFC.readABlock(3, 2, key, false);
 			donneesGPS3 = puceNFC.readABlock(4, 1, key, false);
 			String date12 = puceNFC.readABlock(3, 0, key, false);
-			date1 = date12.substring(0, 14);
-			date2 = date12.substring(14, 28);
-			date3 = (puceNFC.readABlock(4, 0, key, false)).substring(0, 14);
+			date1 = date12.substring(0, 13);
+			date2 = date12.substring(13, 26);
+			date3 = (puceNFC.readABlock(4, 0, key, false)).substring(0, 13);
 		} catch (TagActionException e1) {
 			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e1.getMessage()));
 			e1.printStackTrace();
@@ -136,7 +136,7 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 		try {
 			String date12 = puceNFC.readABlock(3, 0, key, false);
 			// 1er lieu
-			date1 = (date12).substring(0, 14);
+			date1 = (date12).substring(0, 13);
 			String donneesGPS1 = puceNFC.readABlock(3, 1, key, false);
 			latitude1 = donneesGPS1.substring(0, 9);
 			longitude1 = donneesGPS1.substring(9, 19);
@@ -144,7 +144,7 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 			accuracy1 = donneesGPS1.substring(20, 24);
 
 			// 2eme lieu
-			date2 = (date12).substring(14, 28);
+			date2 = (date12).substring(13, 26);
 			String donneesGPS2 = puceNFC.readABlock(3, 2, key, false);
 			latitude2 = donneesGPS2.substring(0, 9);
 			longitude2 = donneesGPS2.substring(9, 19);
@@ -154,7 +154,7 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 			String date34 = puceNFC.readABlock(4, 0, key, false);
 
 			// 3eme lieu
-			date3 = date34.substring(0, 14);
+			date3 = date34.substring(0, 13);
 			String donneesGPS3 = puceNFC.readABlock(4, 1, key, false);
 			latitude3 = donneesGPS3.substring(0, 9);
 			longitude3 = donneesGPS3.substring(9, 19);
@@ -162,7 +162,7 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 			accuracy3 = donneesGPS3.substring(20, 24);
 
 			// 4eme lieu
-			date4 = date34.substring(14, 28);
+			date4 = date34.substring(13, 26);
 			String donneesGPS4 = puceNFC.readABlock(4, 2, key, false);
 			latitude4 = donneesGPS4.substring(0, 9);
 			longitude4 = donneesGPS4.substring(9, 19);

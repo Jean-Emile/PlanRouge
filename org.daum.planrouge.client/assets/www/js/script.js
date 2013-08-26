@@ -156,32 +156,33 @@ function onConfirmCategory(button) {
 // RÉCUPÉRATION HEURE
 function showTime() {
 	var myDate = new Date();
-	// var date = myDate.getTime(); TODO : Changer date avec long millisecond
-	// depuis 1970
-	var day = myDate.getDate();
-	var month = myDate.getMonth() + 1;
-	var years = myDate.getFullYear();
-	var time = myDate.getTime();
-	var hour = myDate.getHours();
-	var minute = myDate.getMinutes();
-	var second = myDate.getSeconds();
-
-	if (hour < 10) {
-		hour = "0" + hour;
-	}
-	if (minute < 10) {
-		minute = "0" + minute;
-	}
-	if (second < 10) {
-		second = "0" + second;
-	}
-	if (month < 10) {
-		month = "0" + month;
-	}
-	if (day < 10) {
-		day = "0" + day;
-	}
-	return day + month + years + hour + minute + second;
+	var date = myDate.getTime(); //TODO : Changer date avec long millisecond depuis 1970
+	
+	return date;
+//	var day = myDate.getDate();
+//	var month = myDate.getMonth() + 1;
+//	var years = myDate.getFullYear();
+//	var time = myDate.getTime();
+//	var hour = myDate.getHours();
+//	var minute = myDate.getMinutes();
+//	var second = myDate.getSeconds();
+//
+//	if (hour < 10) {
+//		hour = "0" + hour;
+//	}
+//	if (minute < 10) {
+//		minute = "0" + minute;
+//	}
+//	if (second < 10) {
+//		second = "0" + second;
+//	}
+//	if (month < 10) {
+//		month = "0" + month;
+//	}
+//	if (day < 10) {
+//		day = "0" + day;
+//	}
+//	return day + month + years + hour + minute + second;
 }
 
 // RAIFFRAICHISSEMENT GPS ET HEURE

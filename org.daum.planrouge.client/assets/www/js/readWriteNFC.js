@@ -115,7 +115,7 @@ function readIdentity() {
 //GPS ET HEURE
 
 function writeDateHoursGps() {
-	alert('write write GPS and Hours');
+	
 	navigator.geolocation.getCurrentPosition(function(position) {
 		var time = showTime();
 		var lat = Math.round((position.coords.latitude) * 10000000);
@@ -151,35 +151,40 @@ function readDateHoursGps() {
 //	var y = window.tagid.read_date_hours_gps();
 	var y = window.tagid.read("gpsHours");
 	if (y != false) {
-		var date1 = y[0];
-		date1 = date1.substring(0, 2) + "/" + date1.substring(2, 4) + "/" + date1.substring(4, 8) + "   " + date1.substring(8, 10) + ":"
-				+ date1.substring(10, 12) + ":" + date1.substring(12, 14);
 
+		var date1 = new Date(parseInt(y[0]));
 		var latitude1 = y[1];
 		var longitude1 = y[2];
 		var accuracy1 = y[3];
-
-		var date2 = y[4];
-		date2 = date2.substring(0, 2) + "/" + date2.substring(2, 4) + "/" + date2.substring(4, 8) + "   " + date2.substring(8, 10) + ":"
-				+ date2.substring(10, 12) + ":" + date2.substring(12, 14);
+		if(parseInt(y[0])==0){
+			date1='-----'
+		}
+		
+		var date2 = new Date(parseInt(y[4]));
+		if(parseInt(y[4])==0){
+			date2='-----'
+		}
+		
 		var latitude2 = y[5];
 		var longitude2 = y[6];
 		var accuracy2 = y[7];
-
-		var date3 = y[8];
-		date3 = date3.substring(0, 2) + "/" + date3.substring(2, 4) + "/" + date3.substring(4, 8) + "   " + date3.substring(8, 10) + ":"
-				+ date3.substring(10, 12) + ":" + date3.substring(12, 14);
+		
+		var date3 = new Date(parseInt(y[8]));
 		var latitude3 = y[9];
 		var longitude3 = y[10];
 		var accuracy3 = y[11];
-
-		var date4 = y[12];
-		date4 = date4.substring(0, 2) + "/" + date4.substring(2, 4) + "/" + date4.substring(4, 8) + "   " + date4.substring(8, 10) + ":"
-				+ date4.substring(10, 12) + ":" + date4.substring(12, 14);
+		if(parseInt(y[8])==0){
+			date3='-----'
+		}
+		
+		var date4 = new Date(parseInt(y[12]));	
 		var latitude4 = y[13];
 		var longitude4 = y[14];
 		var accuracy4 = y[15];
-
+		if(parseInt(y[12])==0){
+			date4='-----'
+		}
+		
 		$("#date1").text(date1);
 		$("#latitude1").text(latitude1);
 		$("#longitude1").text(longitude1);

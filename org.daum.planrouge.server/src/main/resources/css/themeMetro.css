@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-/*modifier l'apparence des scrollbars de tout le forum*/
+
 .elevator::-webkit-scrollbar {
   width: 4px; /*largeur de la scrollbar verticale*/
   height: 4px; /*hauteur de la scrollbar horizontale*/
@@ -9,7 +9,7 @@
 .elevator::-webkit-scrollbar-track {
   background-color: rgba(0, 0, 0, 0.2); /*couleur du fond de la scrollbar*/}
 
-.elevator::-webkit-scrollbar-thumb { /*la petite bande qui monte/descend*/
+.elevator::-webkit-scrollbar-thumb {
   background-color: #ecf0f1 /*couleur de l'ascenseur*/;
  }
 

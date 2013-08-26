@@ -21,6 +21,11 @@
 
     <script src="lib/script_informationsGlobale.js"></script>
 
+    <!--Table -->
+    <script type="text/javascript" src="lib/jquery.tablesorter.js"></script>
+
+    <link href="lib/blue/style.css" rel="stylesheet">
+
 </head>
 <body onload="load();" class="themeF">
 <div data-role="page" id="page" class="themeF">
@@ -93,7 +98,7 @@
         <div class="rect8-5-portrait themeA">
             <h2>Liste Victimes</h2>
              <div class="elevator" style="height:950px; overflow:auto;">
-            <table  data-mode="reflow" id ="bodyTable" data-mode="reflow" class="ui-responsive ui-table">
+            <table  data-mode="reflow" id ="bodyTable"  class="tablesorter" style="color:#000000">
                 <thead>
                 <tr>
                     <th>Urgence</th>

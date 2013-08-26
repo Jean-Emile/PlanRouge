@@ -119,7 +119,7 @@ public class ReadAll {
 		try {
 			String date12 = puceNFC.readABlock(3, 0, key, false);
 			// 1er lieu
-			date1 = (date12).substring(0, 14);
+			date1 = (date12).substring(0, 13);
 			String donneesGPS1 = puceNFC.readABlock(3, 1, key, false);
 			latitude1 = donneesGPS1.substring(0, 9);
 			longitude1 = donneesGPS1.substring(9, 19);
@@ -127,7 +127,7 @@ public class ReadAll {
 			accuracy1 = donneesGPS1.substring(20, 24);
 
 			// 2eme lieu
-			date2 = (date12).substring(14, 28);
+			date2 = (date12).substring(13, 26);
 			String donneesGPS2 = puceNFC.readABlock(3, 2, key, false);
 			latitude2 = donneesGPS2.substring(0, 9);
 			longitude2 = donneesGPS2.substring(9, 19);
@@ -137,7 +137,7 @@ public class ReadAll {
 			String date34 = puceNFC.readABlock(4, 0, key, false);
 
 			// 3eme lieu
-			date3 = date34.substring(0, 14);
+			date3 = date34.substring(0, 13);
 			String donneesGPS3 = puceNFC.readABlock(4, 1, key, false);
 			latitude3 = donneesGPS3.substring(0, 9);
 			longitude3 = donneesGPS3.substring(9, 19);
@@ -145,7 +145,7 @@ public class ReadAll {
 			accuracy3 = donneesGPS3.substring(20, 24);
 
 			// 4eme lieu
-			date4 = date34.substring(14, 28);
+			date4 = date34.substring(13, 26);
 			String donneesGPS4 = puceNFC.readABlock(4, 2, key, false);
 			latitude4 = donneesGPS4.substring(0, 9);
 			longitude4 = donneesGPS4.substring(9, 19);
