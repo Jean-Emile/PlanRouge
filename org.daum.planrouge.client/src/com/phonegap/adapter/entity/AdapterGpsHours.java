@@ -170,8 +170,9 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 			accuracy4 = donneesGPS4.substring(20, 24);
 
 		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
+			if (callbackContext != null){
 			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+			}
 			e.printStackTrace();
 			error = true;
 		}
@@ -179,10 +180,10 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 		JSONArray array = new JSONArray();
 
 		if (!error) {
-			Double[] latlong1 = getLatitudeLongitude(latitude1, longitude1, signe1);
-			Double[] latlong2 = getLatitudeLongitude(latitude2, longitude2, signe2);
-			Double[] latlong3 = getLatitudeLongitude(latitude3, longitude3, signe3);
-			Double[] latlong4 = getLatitudeLongitude(latitude4, longitude4, signe4);
+			Integer[] latlong1 = getLatitudeLongitude(latitude1, longitude1, signe1);
+			Integer[] latlong2 = getLatitudeLongitude(latitude2, longitude2, signe2);
+			Integer[] latlong3 = getLatitudeLongitude(latitude3, longitude3, signe3);
+			Integer[] latlong4 = getLatitudeLongitude(latitude4, longitude4, signe4);
 
 			array.put(0, date1);
 			array.put(1, latlong1[0].toString());
@@ -205,18 +206,19 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 			array.put(15, Integer.parseInt(accuracy4));
 
 		}
-
+		if (callbackContext != null){
 		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, array));
+		}
 		return array.toString();
 	}
 
-	private Double[] getLatitudeLongitude(String latitude, String longitude, String signe) {
+	private Integer[] getLatitudeLongitude(String latitude, String longitude, String signe) {
 
 		int signe1 = Integer.parseInt(signe);
-		double latitude1 = Double.parseDouble(latitude) / 10000000;
-		double longitude1 = Double.parseDouble(longitude) / 10000000;
-		System.out.println(longitude1 + "   " + latitude1 + "   " + latitude + "   " + longitude);
-		Double[] tab = new Double[2];
+		int latitude1 = Integer.parseInt(latitude);
+		int longitude1 = Integer.parseInt(longitude);
+	
+		Integer[] tab = new Integer[2];
 		if (signe1 == 0) {
 			tab[0] = latitude1;
 			tab[1] = longitude1;

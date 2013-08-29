@@ -72,7 +72,7 @@ public class MessageHandler {
                                 root.findInterventionsByID(agentModel.getIntervention().getId()).removeAffecte(agentModel);
                             }
                             root.removeAgents(agentModel);
-//
+
                             connection.send("Agent "+agentDelete.getMatricule() +" supprimé");
                         } else {
                             connection.send("Pas d'Agent trouvé");
@@ -203,7 +203,7 @@ public class MessageHandler {
                     case PUT:
 
                         Agent agentmodel = root.findAgentsByID(victime.getIntervenants().get(0).getMatricule());
-                        victime.addIntervenants(agentmodel);
+
                         Victime vicmodel = root.findInterventionsByID(agentmodel.getIntervention().getId()).findVictimesByID(victime.getId());
 
                         if (vicmodel != null) {
@@ -211,13 +211,17 @@ public class MessageHandler {
                             for (int i = 0; i < root.getInterventions().size(); i++) {
                                 root.getInterventions().get(i).removeVictimes(vicmodel);
                             }
+                            victime.addAllIntervenants(vicmodel.getIntervenants());
+                            victime.addIntervenants(agentmodel);
                             root.findInterventionsByID(agentmodel.getIntervention().getId()).removeVictimes(vicmodel);
                             root.findInterventionsByID(agentmodel.getIntervention().getId()).addVictimes(victime);
+
 
                         } else {
                             for (int i = 0; i < root.getInterventions().size(); i++) {
                                 root.getInterventions().get(i).removeVictimes(victime);
                             }
+                            victime.addIntervenants(agentmodel);
                             root.findInterventionsByID(agentmodel.getIntervention().getId()).addVictimes(victime);
                         }
 

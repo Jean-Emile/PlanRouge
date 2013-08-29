@@ -5,6 +5,8 @@ import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.util.Log;
+
 import com.chariotsolutions.nfc.plugin.NfcPlugin;
 import com.phonegap.adapter.AdapterFactory;
 import com.phonegap.adapter.NFC_adapter;
@@ -53,7 +55,7 @@ public class AdapterCategory implements Runnable, NFC_adapter {
 		
 		String matriculeAgent = data.getString(10);
 		dataToSend = new ReadAll().readAll(puceNFC, matriculeAgent, id).toString();
-
+		
 		this.run();
 		
 		//End of Write Execution
@@ -71,23 +73,26 @@ public class AdapterCategory implements Runnable, NFC_adapter {
 		try {
 			vital_urgency = puceNFC.readABlock(1, 0, key, false);
 		} catch (TagActionException e) {
-			// TODO Auto-generated catch block
+			if (callbackContext != null){
 			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+			}
 			e.printStackTrace();
 		}
 		String category = "";
 		if (vital_urgency.length() > 31) {
 			category = vital_urgency.substring(31, 32);
 		} else {
+			if (callbackContext != null){
 			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "erreur"));
+			}
 		}
 
 		JSONArray array = new JSONArray();
 
 		array.put(0, category);
-
+		if (callbackContext != null){
 		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, array));
-		
+		}
 		return array.toString();
 	}
 	

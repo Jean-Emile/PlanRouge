@@ -51,22 +51,22 @@
 			</p>
 			<form >
 				<fieldset>
-					<legend>Sélectionner la catégorie de la victime</legend>
+					<legend id='legend'>Sélectionner la catégorie de la victime</legend>
 					<p>
 						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_1" value="1" /> 
-						<label for="categorie_victime_1" style="background: #11A600; text-shadow: none; border: 0px; height: 100px;">U3 - Impliqué sans lésion corporelles apparentes</label> 
+						<label for="categorie_victime_1" id='cat1' style="background: #11A600; text-shadow: none; border: 0px; height: 100px;">U3 - Impliqué sans lésion corporelles apparentes</label> 
 						
 						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_2" value="2" /> 
-						<label for="categorie_victime_2" style="background: #D8E801; text-shadow: none; border: 0px; height: 100px;">U2 - Lesion corporelles ET/OU psychologique (blessé léger)</label> 
+						<label for="categorie_victime_2" id='cat2' style="background: #D8E801; text-shadow: none; border: 0px; height: 100px;">U2 - Lesion corporelles ET/OU psychologique (blessé léger)</label> 
 						
 						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_3" value="3" /> 
-						<label for="categorie_victime_3" style="background: #E88B01; text-shadow: none; border: 0px; height: 100px;">U1 - Urgence absolue</label> 
+						<label for="categorie_victime_3" id='cat3' style="background: #E88B01; text-shadow: none; border: 0px; height: 100px;">U1 - Urgence absolue</label> 
 						
 						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_4" value="4" />
-						<label for="categorie_victime_4" style="background: #f00; text-shadow: none; border: 0px; height: 100px;">EU - Extreme Urgence</label> 
+						<label for="categorie_victime_4"  id='cat4' style="background: #f00; text-shadow: none; border: 0px; height: 100px;">EU - Extreme Urgence</label> 
 						
 						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_5" value="5" /> 
-						<label for="categorie_victime_5" style="background: #000; color: white; text-shadow: none; border: 0px; height: 100px; vertical-align: center;">DCD - Personne décédée</label>
+						<label for="categorie_victime_5"  id='cat5' style="background: #000; color: white; text-shadow: none; border: 0px; height: 100px; vertical-align: center;">DCD - Personne décédée</label>
 					</p>
 
 					<p>
@@ -78,7 +78,7 @@
 		</div>
 		<!-- le pied de page -->
 		<div data-role="footer" data-position="fixed" style='height: 35px;'>
-			<div style='text-align: center;'  class="idAgent" id="personneConnecte2"></div>
+			<div style='text-align: center;'  class="idAgent"></div>
 		</div>
 	</div>
 	</div>

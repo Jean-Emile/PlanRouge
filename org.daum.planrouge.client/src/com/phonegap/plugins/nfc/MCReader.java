@@ -97,23 +97,23 @@ public class MCReader {
 		SparseArray<String[]> ret = null;
 		if (keyMap != null && keyMap.size() > 0) {
 			ret = new SparseArray<String[]>(keyMap.size());
-			System.out.println("For all entries in map do:");
+			//System.out.println("For all entries in map do:");
 			// For all entries in map do:
 			for (int i = 0; i < keyMap.size(); i++) {
 				String[][] results = new String[2][];
 				try {
 					if (keyMap.valueAt(i)[0] != null) {
-						System.out.println("// Read with key A");
+						//System.out.println("// Read with key A");
 						// Read with key A.
 						results[0] = readSector(keyMap.keyAt(i), keyMap.valueAt(i)[0], false);
 					}
 					if (keyMap.valueAt(i)[1] != null) {
-						System.out.println("// Read with key B.");
+						//System.out.println("// Read with key B.");
 						// Read with key B.
 						results[1] = readSector(keyMap.keyAt(i), keyMap.valueAt(i)[1], true);
 					}
 				} catch (TagLostException e) {
-					System.out.println("Catch Execption :: TagLostException");
+					//System.out.println("Catch Execption :: TagLostException");
 					return null;
 				}
 				// Merge results.

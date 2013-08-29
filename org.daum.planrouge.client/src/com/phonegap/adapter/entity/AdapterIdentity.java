@@ -111,7 +111,10 @@ public class AdapterIdentity implements Runnable, NFC_adapter {
 			Log.i("AdapterVictim", " 4 :::" + age);
 
 		} catch (TagActionException e) {
-			callbackContext.error(e.getMessage());
+			if (callbackContext != null) {
+				callbackContext.error(e.getMessage());
+			}
+
 			e.printStackTrace();
 
 		}
@@ -122,8 +125,9 @@ public class AdapterIdentity implements Runnable, NFC_adapter {
 		array.put(2, sexe);
 		array.put(3, age);
 		array.put(4, birthday);
-
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, array));
+		if (callbackContext != null) {
+			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, array));
+		}
 		return array.toString();
 	}
 

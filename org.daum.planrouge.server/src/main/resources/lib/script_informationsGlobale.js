@@ -281,7 +281,4 @@ function graph(jsonObj){
     }
     var myLineAge = new Chart(document.getElementById("canvasAge").getContext("2d")).Bar(barChartDataAge,optionAge);
 
-//    $(function () {
-//    $("#bodyTable").tablesorter();
-//    });
 }

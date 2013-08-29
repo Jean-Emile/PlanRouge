@@ -41,8 +41,8 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
         root.addModelTreeListener(new ModelTreeListener() {
             @Override
             public void elementChanged(ModelEvent modelEvent) {
-               //TODO : A MODIFIER
-                Log.error(modelEvent.toString()+"   "+modelEvent.getElementAttributeName()+"   "+modelEvent.getElementAttributeType());
+
+                Log.info(modelEvent.toString()+"   "+modelEvent.getElementAttributeName()+"   "+modelEvent.getElementAttributeType());
                 Log.info("AdapterIntervention ::: GETALL");
                 JSONArray mJSONArray = new JSONArray();
                 for (int i = 0; i<root.getInterventions().size();i++){

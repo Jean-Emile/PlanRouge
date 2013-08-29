@@ -1,20 +1,22 @@
-// Categories victimes
+// Victim Category
 
 function read_victim_category() {
 	var y = window.tagid.read("category");
 	if (y != false) {
 		var category = parseInt(y[0]);
-
+		
 		for (i = 1; i <= 5; i++) {
 			if (i != category) {
 				$('input[type=radio][name=categorie_victime][value=' + i + ']').prop('checked', false).checkboxradio("refresh");
+				$('#cat'+i).css({"opacity":"0.3"});
 			} else {
-				
+				$('#cat'+i).css({"opacity":"1.0"});
 				$('input[type=radio][name=categorie_victime][value=' + category + ']').prop('checked', true).checkboxradio("refresh");
 			}
 		}
 	}
 }
+
 
 function write_victim_category() {
 	var category = $('input[type=radio][name=categorie_victime]:checked').attr('value');
@@ -26,7 +28,7 @@ function write_victim_category() {
 }
 
 
-//IDENTITÉ
+//Identity
 
 function writeIdentity() {
 	var sexe = $('input[type=radio][name=identity_sexe]:checked').attr('value');
@@ -112,7 +114,7 @@ function readIdentity() {
 }
 
 
-//GPS ET HEURE
+//GPS & Hours
 
 function writeDateHoursGps() {
 	
@@ -148,13 +150,12 @@ function writeDateHoursGps() {
 
 function readDateHoursGps() {
 
-//	var y = window.tagid.read_date_hours_gps();
 	var y = window.tagid.read("gpsHours");
 	if (y != false) {
 
 		var date1 = new Date(parseInt(y[0]));
-		var latitude1 = y[1];
-		var longitude1 = y[2];
+		var latitude1 = y[1]/10000000;
+		var longitude1 = y[2]/10000000;
 		var accuracy1 = y[3];
 		if(parseInt(y[0])==0){
 			date1='-----'
@@ -165,21 +166,21 @@ function readDateHoursGps() {
 			date2='-----'
 		}
 		
-		var latitude2 = y[5];
-		var longitude2 = y[6];
+		var latitude2 = y[5]/10000000;
+		var longitude2 = y[6]/10000000;
 		var accuracy2 = y[7];
 		
 		var date3 = new Date(parseInt(y[8]));
-		var latitude3 = y[9];
-		var longitude3 = y[10];
+		var latitude3 = y[9]/10000000;
+		var longitude3 = y[10]/10000000;
 		var accuracy3 = y[11];
 		if(parseInt(y[8])==0){
 			date3='-----'
 		}
 		
 		var date4 = new Date(parseInt(y[12]));	
-		var latitude4 = y[13];
-		var longitude4 = y[14];
+		var latitude4 = y[13]/10000000;
+		var longitude4 = y[14]/10000000;
 		var accuracy4 = y[15];
 		if(parseInt(y[12])==0){
 			date4='-----'
@@ -226,7 +227,7 @@ function GoogleMap4() {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 //LESION
 
@@ -264,7 +265,7 @@ function write_lesion() {
 
 
 
-//CHAMP LIBRE
+//TextField
 
 function write_champlibre() {
 	window.tagid.write('textField',$("#textfield").val());
@@ -279,7 +280,7 @@ function read_champlibre() {
 }
 
 
-//DESTINATION
+//Destination
 
 function write_destination() {
 	var evacuation = $('input[type=radio][name=evacuation]:checked').attr('value');
@@ -312,7 +313,7 @@ function read_destination() {
 }
 
 
-//BILAN COMPLEMENTAIRE
+//Bilan complementaire
 function getInfoBilanComplementaire() {
 
 	var y = window.tagid.read('bilanComplementaire');
@@ -371,7 +372,7 @@ function writeBilanComplementaire() {
 }
 
 
-//URGENCE VITALE
+//vital urgency
 function tableUrgence() {
 	var data = "";
 	for (i = 1; i < 29; i++) {

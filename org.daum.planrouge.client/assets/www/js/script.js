@@ -2,8 +2,6 @@ $(document).one("mobileinit", function () {
  
             // Setting #container div as a jqm pageContainer
             $.mobile.pageContainer = $('#container');
- 
-            // Setting default page transition to slide
            
         });
 
@@ -59,7 +57,11 @@ function onDeviceResume(){
 	
 }	
 
+$(document).ready(function() {
+	refreshIdAgent();
+	});
 function refreshIdAgent(){
+
 	 var elements = document.getElementsByClassName('idAgent');
 	    for(var x=0; x < elements.length; x++)
 	    {
@@ -68,35 +70,34 @@ function refreshIdAgent(){
 }
 
 function onDeviceReady() {
-	// Now safe to use the PhoneGap API
-	Toast.shortshow("OnDeviceready");
 	
+	Toast.shortshow("Deviceready");	
 	refreshIdAgent();
-	
-
-
+	$("#username").val(window.localStorage.getItem("matriculeAgent"));	
 	
 	$(document).on("pageshow", "#loginPage", function() {
-		$("#username").val(window.localStorage.getItem("matriculeAgent"));	 
-	});
-	
-	$(document).on("pageshow", "#victimCategory", function() {
-		Toast.shortshow("victimCategory");
-		read_victim_category();
-	});
-	
-	$(document).on("pageshow", "#accueil", function() {
-
-	});
-	
-	$(document).on("pageshow", "#champLibre", function() {
-		read_champlibre();
+		refreshIdAgent();
+		$("#username").val(window.localStorage.getItem("matriculeAgent"));	
 		
 	});
 	
+	$(document).on("pageshow", "#victimCategory", function() {
+		read_victim_category();
+		refreshIdAgent();
+	});
+	
+	$(document).on("pageshow", "#accueil", function() {
+		refreshIdAgent();
+	});
+	
+	$(document).on("pageshow", "#champLibre", function() {
+		read_champlibre();	
+		refreshIdAgent();
+	});
+	
 	$(document).on("pageshow", "#identitePage", function() {
-		Toast.shortshow("victimIdentity");
 		readIdentity();
+		refreshIdAgent();
 	});
 
 	$(document).on("pageshow", "#bilanComplementaire", function() {
@@ -105,18 +106,15 @@ function onDeviceReady() {
 
 	$(document).on("pageshow", "#evacuation", function() {
 		read_destination();
-
 	});
 
 	$(document).on("pageshow", "#gpsHours", function() {
-		Toast.shortshow("gpsHours");
 		readDateHoursGps();
-
+		refreshIdAgent();
 	});
 
 	$(document).on("pageinit", "#lesion", function() {
-		read_lesion();
-		
+		read_lesion();	
 	});
 
 	$(document).on("pageinit", "#urgenceVitale", function() {
@@ -124,19 +122,25 @@ function onDeviceReady() {
 	});
 	
 	$(document).on("pageinit", "#waitTag", function() {
-
 	});
+	
 	$(document).on("pageinit", "#completed", function() {
-
 	});
-
-
-
 }
 
 // Appuie bouton Catégorie victime
 function changementradio() {
+	var category = $('input[type=radio][name=categorie_victime]:checked').attr('value');
+	for (i = 1; i <= 5; i++) {
+		if (i != category) {
 
+			$('#cat'+i).css({"opacity":"0.3"});
+		} else {
+			$('#cat'+i).css({"opacity":"1.0"});
+			
+		}
+	}
+	
 	// write_victim_category();
 	navigator.notification.confirm("Voulez vous envoyer la catégorie de victime sur la puce", // message
 	onConfirmCategory, // callback to invoke with index of button pressed
@@ -159,30 +163,6 @@ function showTime() {
 	var date = myDate.getTime(); //TODO : Changer date avec long millisecond depuis 1970
 	
 	return date;
-//	var day = myDate.getDate();
-//	var month = myDate.getMonth() + 1;
-//	var years = myDate.getFullYear();
-//	var time = myDate.getTime();
-//	var hour = myDate.getHours();
-//	var minute = myDate.getMinutes();
-//	var second = myDate.getSeconds();
-//
-//	if (hour < 10) {
-//		hour = "0" + hour;
-//	}
-//	if (minute < 10) {
-//		minute = "0" + minute;
-//	}
-//	if (second < 10) {
-//		second = "0" + second;
-//	}
-//	if (month < 10) {
-//		month = "0" + month;
-//	}
-//	if (day < 10) {
-//		day = "0" + day;
-//	}
-//	return day + month + years + hour + minute + second;
 }
 
 // RAIFFRAICHISSEMENT GPS ET HEURE
@@ -254,9 +234,4 @@ function registerAgent() {
 	
 }
 
-
-function testtest(){
-	alert(window.localStorage.getItem("test"));
-	
-}
 

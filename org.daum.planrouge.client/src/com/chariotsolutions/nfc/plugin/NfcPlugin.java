@@ -150,11 +150,11 @@ public class NfcPlugin extends CordovaPlugin {
 			}
 			
 			if(AGENT.equals("true")){
-				System.out.println("SUCCESS AGENT");
+				Log.i("NFCPlugin","SUCCESS login AGENT");
 				AGENT = null;
 				callbackContext.success();
 			}else {
-				System.out.println("ERROR AGENT");
+				Log.i("NFCPlugin", "ERROR login AGENT");
 				AGENT = null;
 				callbackContext.error("error");
 			}
@@ -623,7 +623,7 @@ public class NfcPlugin extends CordovaPlugin {
 
 
 	public void sendGetAgent(String string) {
-		System.out.println("SEND GET AGENT ::: " +string);
+		
 		if(string.equals("false")){
 			AGENT = "false";
 		}else{
