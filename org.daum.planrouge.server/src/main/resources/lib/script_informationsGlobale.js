@@ -1,19 +1,20 @@
 var id=0;
 var ws={};
 
+
 $(function () {
 
-$(document).ready(function()
-    {
-        $("#bodyTable").tablesorter();
-    }
-);
+    $(document).ready(function()
+        {
+            $("#bodyTable").tablesorter();
+        }
+    );
 
     $.toast.config.width = 600;
     $.toast.config.align = 'right';
     $.toast.config.closeForStickyOnly = false;
 
-     ws = new ReconnectingWebSocket('ws://'+ document.location.host +'/getGlobalInformations');
+    ws = new ReconnectingWebSocket('ws://'+ document.location.host +'/getGlobalInformations');
 
     ws.onopen = function() {
         $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/getGlobalInformations', {type: 'success'});
@@ -150,9 +151,9 @@ function data(jsonObj){
         colonne5.innerHTML =  ' ';
         if (victime.age != null){
             if (victime.age == '0'){
-               colonne5.innerHTML='--';
+                colonne5.innerHTML='--';
             }else{
-            colonne5.innerHTML = victime.age;
+                colonne5.innerHTML = victime.age;
             }
         }
 
@@ -164,7 +165,7 @@ function data(jsonObj){
             }else{
                 var birhtday = victime.dateNaissance;
 
-               colonne6.innerHTML = birhtday.substring(0,2)+'/'+birhtday.substring(2,4)+'/'+birhtday.substring(4,8);
+                colonne6.innerHTML = birhtday.substring(0,2)+'/'+birhtday.substring(2,4)+'/'+birhtday.substring(4,8);
             }
 
         }
@@ -192,16 +193,16 @@ function data(jsonObj){
 //    document.getElementById('nbHommes').innerHTML = jNbVictimeSexe[0];
 //    document.getElementById('nbFemmes').innerHTML = jNbVictimeSexe[1];
 
-     //Heure
-     var dt = new Date(jHeure);
-     var heure = dt.getHours();
-     var minutes = dt.getMinutes();
-     if (heure.length == 1 ){
-         heure='0' + heure;
-     }
-     if (minutes.length == 1 ){
+    //Heure
+    var dt = new Date(jHeure);
+    var heure = dt.getHours();
+    var minutes = dt.getMinutes();
+    if (heure.length == 1 ){
+        heure='0' + heure;
+    }
+    if (minutes.length == 1 ){
         minutes='0'+ minutes;
-      }
+    }
     document.getElementById('heureDebut').innerHTML = heure+':'+minutes;
 
 
@@ -210,25 +211,46 @@ function data(jsonObj){
 
     // INTERVENTION
     var description ;
-     if(jIntervention.position != null){
-            if(jIntervention.position.nomVille != null){
-                description = '<div><b>Ville : </b>'+jIntervention.position.nomVille+'</div>';
-            }
-            if(jIntervention.position.cp != null){
-                description += '<div><b>Code Postal : </b>'+jIntervention.position.cp+'</div>';
-            }
+    if(jIntervention.position != null){
+        if(jIntervention.position.nomVille != null){
+            description = '<b>'+jIntervention.position.nomRue+'   </b>';
         }
+        if(jIntervention.position.cp != null){
+            description += '<b>'+jIntervention.position.nomVille+'   </b>';
+        }
+    }
     if(jIntervention.description != null){
         description += '<div><b>Description : </b>'+jIntervention.description+'</div>';
     }
 
     document.getElementById('description').innerHTML = description ;
 
+    var latlng = new google.maps.LatLng(48.12107,-1.610556);  <!--default -->
+    var options = {
+        center: latlng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    carte = new google.maps.Map(document.getElementById("carte"), options);
+
+    var adresse = jIntervention.position.nomRue+" "+jIntervention.position.nomVille+" "+jIntervention.position.cp;
+
+    var geocoder  = new GClientGeocoder();
+    geocoder.getLatLng(adresse, function (coord) {
+        if(coord){
+            carte.setCenter(coord, 10);
+            var marker = new GMarker(coord, {draggable: false});
+            carte.addOverlay(marker);
+        }
+
+    });
+
+
 
     // BAR CHART
 
     var max = Math.max(jNbVictimeCat[0], Math.max(jNbVictimeCat[1], Math.max(jNbVictimeCat[2],
-    Math.max(jNbVictimeCat[3], jNbVictimeCat[4]))));
+        Math.max(jNbVictimeCat[3], jNbVictimeCat[4]))));
 
     var barChartData = {
         labels : ["U3","U2","U1","EU","DCD"],
@@ -238,7 +260,7 @@ function data(jsonObj){
                 strokeColor : "rgba(41,128,185,1)",
 
                 data : [ parseInt(jNbVictimeCat[0]), parseInt(jNbVictimeCat[1]), parseInt(jNbVictimeCat[2]),
-                parseInt(jNbVictimeCat[3]), parseInt(jNbVictimeCat[4])]
+                    parseInt(jNbVictimeCat[3]), parseInt(jNbVictimeCat[4])]
             }
         ]
     };
@@ -262,8 +284,8 @@ function data(jsonObj){
     // BAR CHART AGE
 
     var maxAge = Math.max(jNbVictimeAge[0], Math.max(jNbVictimeAge[1], Math.max(jNbVictimeAge[2],
-    Math.max(jNbVictimeAge[3], Math.max(jNbVictimeAge[4], Math.max(jNbVictimeAge[5], Math.max(jNbVictimeAge[6],
-    jNbVictimeAge[7])))))));
+        Math.max(jNbVictimeAge[3], Math.max(jNbVictimeAge[4], Math.max(jNbVictimeAge[5], Math.max(jNbVictimeAge[6],
+            jNbVictimeAge[7])))))));
     var barChartDataAge = {
         labels : ["0-5","6-10","11-20","21-30","31-40","41-60","61-80","80+"],
         datasets : [
@@ -272,8 +294,8 @@ function data(jsonObj){
                 strokeColor : "rgba(22,160,133,1)",
 
                 data : [ parseInt(jNbVictimeAge[0]), parseInt(jNbVictimeAge[1]), parseInt(jNbVictimeAge[2]),
-                parseInt(jNbVictimeAge[3]),
-                parseInt(jNbVictimeAge[4]),parseInt(jNbVictimeAge[5]),parseInt(jNbVictimeAge[6]),parseInt(jNbVictimeAge[7])]
+                    parseInt(jNbVictimeAge[3]),
+                    parseInt(jNbVictimeAge[4]),parseInt(jNbVictimeAge[5]),parseInt(jNbVictimeAge[6]),parseInt(jNbVictimeAge[7])]
             }
 
         ]
