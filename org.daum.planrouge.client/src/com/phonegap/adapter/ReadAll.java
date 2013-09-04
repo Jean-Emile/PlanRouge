@@ -30,7 +30,7 @@ public class ReadAll {
 		victimeObject.put("type", "AdapterVictime");
 		victimeObject.put("agent",new JSONObject().put("matricule", matriculeAgent).put("type", "AdapterAgent"));
 		
-		Log.e("TAG ERREUR CATEGORY",victimeObject.toString());
+		Log.d("TAG ERREUR CATEGORY",victimeObject.toString());
 		return victimeObject;
 	}
 
@@ -54,9 +54,9 @@ public class ReadAll {
 		String array = adapterIdentity.read(null, null, key, puceNFC);
 		JSONArray jArray = new JSONArray(array);
 		
-		victimeObject.put("nom", jArray.get(0));
-		victimeObject.put("prenom", jArray.get(1));
-	
+		
+		victimeObject.put("prenom", jArray.get(0));
+		victimeObject.put("nom", jArray.get(1));
 		victimeObject.put("sexe", jArray.get(2));
 		if(jArray.getInt(3)!=255){
 			victimeObject.put("age", jArray.getInt(3));		

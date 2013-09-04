@@ -60,7 +60,7 @@ public class NfcPlugin extends CordovaPlugin {
 	private static String AGENT;
 	private final List<IntentFilter> intentFilters = new ArrayList<IntentFilter>();
 	private final ArrayList<String[]> techLists = new ArrayList<String[]>();
-
+	
 	private NdefMessage p2pMessage = null;
 	private PendingIntent pendingIntent = null;
 
@@ -68,8 +68,9 @@ public class NfcPlugin extends CordovaPlugin {
 
 	private byte[] key = new NFC_Mifare_classic().hexStringToByteArray("FFFFFFFFFFFF");
 	private NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-	private ConsumerWebSocket consumerWebSocket = new ConsumerWebSocket("192.168.1.101",8080,"add",null);
-	private ConsumerWebSocket consumerWebSocketGet = new ConsumerWebSocket("192.168.1.101",8080,"get",this);
+	private String ipAddress = "192.168.1.101";
+	private ConsumerWebSocket consumerWebSocket = new ConsumerWebSocket(ipAddress,8080,"add",null);
+	private ConsumerWebSocket consumerWebSocketGet = new ConsumerWebSocket(ipAddress,8080,"get",this);
 	AdapterFactory adapterFactory = new AdapterFactory(consumerWebSocket);
 	
 	private boolean isWriteExecution = false;
@@ -123,19 +124,25 @@ public class NfcPlugin extends CordovaPlugin {
 		} else if (action.equalsIgnoreCase(INIT)) {
 			init(callbackContext);
 
-		} else if (action.equalsIgnoreCase("read")) {
+		} else if (action.equalsIgnoreCase("read")) { // read chip
 			Log.i("NfcPlugin", "read");
 			adapterFactory.read(data, callbackContext, key, puceNFC);
 
-		} else if (action.equalsIgnoreCase("write")) {
+		} else if (action.equalsIgnoreCase("write")) { // write on chip
 			isWriteExecution = true;
 			Log.i("NfcPlugin", "write");
 			adapterFactory.write(data, callbackContext, key, puceNFC,this);
 
-		}  else if (action.equalsIgnoreCase("raz")) {
+		}  else if (action.equalsIgnoreCase("raz")) { //reset isWriteExecution
 			isWriteExecution = false;
-			Log.e("NFC PLUGIN", "IS NOT WRITE EXECUTION");
+			Log.i("NFC PLUGIN", "IS NOT WRITE EXECUTION");
 		
+		} else if (action.equalsIgnoreCase("ipAddress")) {
+			ipAddress = data.getString(0);
+			consumerWebSocket = new ConsumerWebSocket(ipAddress, 8080, "add", null);
+			consumerWebSocketGet = new ConsumerWebSocket(ipAddress,8080,"get",this);
+			adapterFactory = new AdapterFactory(consumerWebSocket);
+			callbackContext.success();
 		} else if (action.equalsIgnoreCase("getAgent")) {
 			AGENT = null;
 			JSONObject jObject = new JSONObject();

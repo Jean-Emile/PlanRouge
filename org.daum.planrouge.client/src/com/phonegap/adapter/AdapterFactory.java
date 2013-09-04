@@ -27,6 +27,7 @@ public class AdapterFactory implements NFC_adapter {
 	}
 
 	@Override
+	//Write on chip
 	public String write(JSONArray data, CallbackContext callbackContext, byte[] key, NFC_Mifare_classic puceNFC, NfcPlugin nfcPlugin)
 			throws JSONException {
 		if (data.get(0).equals("category")) {
@@ -67,6 +68,7 @@ public class AdapterFactory implements NFC_adapter {
 	}
 
 	@Override
+	// Read chip
 	public String read(JSONArray data, CallbackContext callbackContext, byte[] key, NFC_Mifare_classic puceNFC) throws JSONException {
 
 		if (data.get(0).equals("category")) {

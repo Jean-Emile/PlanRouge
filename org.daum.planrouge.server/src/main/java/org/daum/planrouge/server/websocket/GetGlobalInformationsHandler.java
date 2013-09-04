@@ -117,6 +117,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             int age61_80 = 0;
             int age80_ = 0;
 
+           // Log.info("HEURE : "+intervention.getPosition().getHorodatage());
 
             for (int j = 0; j < nbVictime; j++) {
 
@@ -202,7 +203,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             jObject.put("intervention", adapterFactory.build(intervention));
             jObject.put("victimes", jArrayVictimes);
             jObject.put("agents", nbAgent);
-
+            jObject.put("heure", intervention.getPosition().getHorodatage());
             jsonArray.put(jObject);
 
         }

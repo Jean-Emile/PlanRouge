@@ -74,11 +74,15 @@ function onDeviceReady() {
 	Toast.shortshow("Deviceready");	
 	refreshIdAgent();
 	$("#username").val(window.localStorage.getItem("matriculeAgent"));	
+	$("#adresseIP").val(window.localStorage.getItem("ipAddress"));	
+	$("#distance").val(window.localStorage.getItem("distance"));	
+	window.tagid.ipAddress(window.localStorage.getItem("ipAddress"));
 	
 	$(document).on("pageshow", "#loginPage", function() {
 		refreshIdAgent();
 		$("#username").val(window.localStorage.getItem("matriculeAgent"));	
-		
+		$("#adresseIP").val(window.localStorage.getItem("ipAddress"));	
+		$("#distance").val(window.localStorage.getItem("distance"));	
 	});
 	
 	$(document).on("pageshow", "#victimCategory", function() {
@@ -140,11 +144,22 @@ function changementradio() {
 			
 		}
 	}
-	
+	var message;
+	if(category == 1){
+		message = 'U1 : SANS LESION APPARENTES';
+	}else if (category == 2){
+		message = 'U2 : LESION CORPORELLES ET/OU PSYCHOLOGIQUES';
+	}else if (category == 3){
+		message = 'U3 : URGENCE ABSOLUE';
+	}else if (category == 4){
+		message = 'EU : EXTREME URGENCE';
+	}else {
+		message = 'DCD : URGENCE DÉPASSÉE';
+	}
 	// write_victim_category();
-	navigator.notification.confirm("Voulez vous envoyer la catégorie de victime sur la puce", // message
+	navigator.notification.confirm("Confirmer : "+message, // message
 	onConfirmCategory, // callback to invoke with index of button pressed
-	'Enregistrer Catégorie Victime', // title
+	'CATEGORIE VICTIME', // title
 	'OUI,NON ' // buttonLabels
 
 	);
@@ -232,6 +247,48 @@ function registerAgent() {
 //	}
 //	result = null;
 	
+}
+
+function modifierDistance(){
+	var distance = $("#distance").val();
+	window.localStorage.setItem("distance", distance);
+}
+function modifierAdresse(){
+	var adresseIP = $("#adresseIP").val();
+	window.localStorage.setItem("ipAddress", adresseIP);
+	
+	window.tagid.ipAddress(adresseIP);
+}
+
+function distance(lat_a, lon_a, lat_b, lon_b) 
+{
+  a = Math.PI / 180;
+  lat1 = lat_a * a;
+  lat2 = lat_b * a;
+  lon1 = lon_a * a;
+  lon2 = lon_b * a;
+
+  t1 = Math.sin(lat1) * Math.sin(lat2);
+  t2 = Math.cos(lat1) * Math.cos(lat2);
+  t3 = Math.cos(lon1 - lon2);
+  t4 = t2 * t3;
+  t5 = t1 + t4;
+  rad_dist = Math.atan(-t5/Math.sqrt(-t5 * t5 +1)) + 2 * Math.atan(1);
+
+  return ((rad_dist * 3437.74677 * 1.1508) * 1.6093470878864446)*1000;
+}
+
+function startLoading(){
+	$.mobile.loading( 'show', {
+		text: 'Chargement ',
+		textVisible: true,
+		theme: 'e',
+		html: "<div style=' text-align: center;'><img  src='file:///android_asset/www/images/ajax-loader.gif' /><h3>Chargement</h3><input type='button' value='Annuler' onClick='WriteCancel();' /></div>"
+	});
+}
+
+function stopLoading(){
+	$.mobile.hidePageLoadingMsg();	
 }
 
 

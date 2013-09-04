@@ -39,7 +39,7 @@ $(document).ready(function()
                 var jIntervention = jsonObj2.intervention;
                 if(jIntervention.id == id){
                     if(jsonObj2.type == "donnees"){
-                        graph(jsonObj2);
+                        data(jsonObj2);
                     }else{
                         $.toast('<b>Message! </b>'+msg.data, {type: 'info'});
                     }
@@ -101,7 +101,7 @@ function delRows(tableID) {
     myTBody.innerHTML ='';
 }
 
-function graph(jsonObj){
+function data(jsonObj){
     var jNbVictimeCat = jsonObj.nbVictimeCat;
     var jNbVictimeAge = jsonObj.nbVictimeAge;
     var jNbVictimeSexe = jsonObj.nbVictimeSexe;
@@ -109,7 +109,7 @@ function graph(jsonObj){
     var jIntervention = jsonObj.intervention;
     var nbAgents = jsonObj.agents;
     var nbVictime = jsonObj.nbVictime;
-
+    var jHeure =  parseInt(jsonObj.heure);
 
 
     // TABLE VICTIMS
@@ -182,15 +182,27 @@ function graph(jsonObj){
 
     $("#bodyTable").trigger("update");
     // NUMERO Intervention
-    document.getElementById('nIntervention').innerHTML = jIntervention.id;
+//    document.getElementById('nIntervention').innerHTML = jIntervention.id;
 
 
     // NB VICTIMS
     document.getElementById('nbVictime').innerHTML = nbVictime;
 
     //NB VICTIMS SEX
-    document.getElementById('nbHommes').innerHTML = jNbVictimeSexe[0];
-    document.getElementById('nbFemmes').innerHTML = jNbVictimeSexe[1];
+//    document.getElementById('nbHommes').innerHTML = jNbVictimeSexe[0];
+//    document.getElementById('nbFemmes').innerHTML = jNbVictimeSexe[1];
+
+     //Heure
+     var dt = new Date(jHeure);
+     var heure = dt.getHours();
+     var minutes = dt.getMinutes();
+     if (heure.length == 1 ){
+         heure='0' + heure;
+     }
+     if (minutes.length == 1 ){
+        minutes='0'+ minutes;
+      }
+    document.getElementById('heureDebut').innerHTML = heure+':'+minutes;
 
 
     // NB AGENTS
@@ -198,17 +210,18 @@ function graph(jsonObj){
 
     // INTERVENTION
     var description ;
+     if(jIntervention.position != null){
+            if(jIntervention.position.nomVille != null){
+                description = '<div><b>Ville : </b>'+jIntervention.position.nomVille+'</div>';
+            }
+            if(jIntervention.position.cp != null){
+                description += '<div><b>Code Postal : </b>'+jIntervention.position.cp+'</div>';
+            }
+        }
     if(jIntervention.description != null){
-        description = '<div><b>Description : </b>'+jIntervention.description+'</div>';
+        description += '<div><b>Description : </b>'+jIntervention.description+'</div>';
     }
-    if(jIntervention.position != null){
-        if(jIntervention.position.nomVille != null){
-            description += '<div><b>Ville : </b>'+jIntervention.position.nomVille+'</div>';
-        }
-        if(jIntervention.position.cp != null){
-            description += '<div><b>Code Postal : </b>'+jIntervention.position.cp+'</div>';
-        }
-    }
+
     document.getElementById('description').innerHTML = description ;
 
 

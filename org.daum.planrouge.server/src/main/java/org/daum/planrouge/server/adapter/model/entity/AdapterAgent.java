@@ -34,6 +34,10 @@ public class AdapterAgent implements IAdapter{
         AgentImpl agent = (AgentImpl) container;
         jsonAgent.put("matricule", agent.getMatricule());
         jsonAgent.put("type", getType());
+        jsonAgent.put("prenom", agent.getPrenom());
+        jsonAgent.put("nom", agent.getNom());
+        jsonAgent.put("dateNaissance", agent.getDateNaissance());
+        jsonAgent.put("sexe", agent.getSexe());
 
         return jsonAgent;
     }
@@ -44,6 +48,22 @@ public class AdapterAgent implements IAdapter{
 
         if(json.has("matricule")){
             agent.setMatricule(json.getString("matricule"));
+
+        }
+        if(json.has("prenom")){
+            agent.setPrenom(json.getString("prenom"));
+
+        }
+        if(json.has("nom")){
+            agent.setNom(json.getString("nom"));
+
+        }
+        if(json.has("dateNaissance")){
+            agent.setDateNaissance(json.getString("dateNaissance"));
+
+        }
+        if(json.has("sexe")){
+            agent.setSexe(json.getString("sexe"));
         }
 
         return (T) agent;

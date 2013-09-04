@@ -5,8 +5,6 @@ import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.util.Log;
-
 import com.chariotsolutions.nfc.plugin.NfcPlugin;
 import com.phonegap.adapter.AdapterFactory;
 import com.phonegap.adapter.NFC_adapter;
@@ -60,6 +58,13 @@ public class AdapterCategory implements Runnable, NFC_adapter {
 		
 		//End of Write Execution
 		nfcPlugin.setWriteExecution(false);
+		
+		String gpsHoursArray = adapterFactory.read(new JSONArray().put(0, "gpsHours"), null, key, puceNFC);
+		
+		JSONArray result = new JSONArray();
+		result.put(0,"Transmission réussie");
+		result.put(1,new JSONArray(gpsHoursArray));
+		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
 		
 		// SEND SUCCESS
 		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK,"Transmission Réussie"));

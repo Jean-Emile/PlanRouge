@@ -517,23 +517,33 @@ function fireNfcTagEvent(eventType, tagAsJson) {
 }
 var r = true;
 var tagid = {
-		getAgent : function(matricule) {
-			var x;
-			
-			
-			cordova.exec(function(success) {
-				Toast.shortshow(success);
-				x = true;
-				$.mobile.hidePageLoadingMsg();
-			}, function(error) {
-				x = false;
-				Toast.shortshow(error);
-				$.mobile.hidePageLoadingMsg();
+	getAgent : function(matricule) {
+		var x;
+		
+		
+		cordova.exec(function(success) {
+			Toast.shortshow(success);
+			x = true;
+			$.mobile.hidePageLoadingMsg();
+		}, function(error) {
+			x = false;
+			Toast.shortshow(error);
+			$.mobile.hidePageLoadingMsg();
 
-			}, "NfcPlugin", "getAgent", [ matricule ]);
-			return x;
-		},
+		}, "NfcPlugin", "getAgent", [ matricule ]);
+		return x;
+	},
 
+	ipAddress: function(adresse) {
+
+		cordova.exec(function(success) {
+			Toast.shortshow(success);
+
+		}, function(error) {
+			Toast.shortshow(error);
+			
+		}, "NfcPlugin", "ipAddress", [ adresse ]);
+	},
 	read : function(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
 		var x;
 
@@ -554,9 +564,12 @@ var tagid = {
 		cordova.exec(function(success) {
 			Toast.shortshow(success);
 			x = success;
-			$.mobile.hidePageLoadingMsg();
+
+			$.mobile.hidePageLoadingMsg();	
+
+
 			if(success[1] != 'GPS'){
-				GPSUpdate();
+				writeDateHoursGps(success[1]);
 			}
 			
 		}, function(error) {

@@ -198,6 +198,7 @@
             position.nomRue = rue;
             position.cp = cp;
             position.type = "AdapterPositionCivile";
+            position.heure = new Date().getTime();
 
             var intervention = new Object();
             intervention.type = "AdapterIntervention";

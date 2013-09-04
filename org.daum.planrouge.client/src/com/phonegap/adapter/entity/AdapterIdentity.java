@@ -59,7 +59,7 @@ public class AdapterIdentity implements Runnable, NFC_adapter {
 		try {
 			victim_category = puceNFC.readABlock(1, 0, key, false).substring(31, 32);
 		} catch (TagActionException e1) {
-			Log.e("ERREUR WRITE", "ERREUR WRITE IDENTIRY");
+			Log.e("ERREUR WRITE", "ERREUR WRITE IDENTITY");
 			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION, e1.getMessage()));
 			e1.printStackTrace();
 
@@ -79,9 +79,14 @@ public class AdapterIdentity implements Runnable, NFC_adapter {
 		dataToSend = new ReadAll().readAll(puceNFC, matriculeAgent, id).toString();
 
 		this.run();
-
+		
+		String gpsHoursArray = adapterFactory.read(new JSONArray().put(0, "gpsHours"), null, key, puceNFC);
+		
 		nfcPlugin.setWriteExecution(false);
-		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, "Transmission réussie"));
+		JSONArray result = new JSONArray();
+		result.put(0,"Transmission réussie");
+		result.put(1,new JSONArray(gpsHoursArray));
+		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
 		return null;
 	}
 
@@ -99,14 +104,15 @@ public class AdapterIdentity implements Runnable, NFC_adapter {
 			// surname
 			surname = puceNFC.hexToAscii(puceNFC.readABlock(0, 2, key, false));
 
-			// Autres
+			// other
 			String identity_infos = puceNFC.readABlock(1, 0, key, false);
 			Log.i("AdapterVictim", " 3 :::" + identity_infos);
+			
 			// age
-
 			birthday = identity_infos.substring(0, 8);
 			age = Integer.parseInt(identity_infos.substring(8, 10), 16);
 
+			//sexe
 			sexe = identity_infos.substring(10, 11);
 			Log.i("AdapterVictim", " 4 :::" + age);
 

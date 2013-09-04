@@ -116,10 +116,11 @@ function readIdentity() {
 
 //GPS & Hours
 
-function writeDateHoursGps() {
-	
+function writeDateHoursGps(gpsHours) {
+
 	navigator.geolocation.getCurrentPosition(function(position) {
 		var time = showTime();
+		var coordonneesGPS 
 		var lat = Math.round((position.coords.latitude) * 10000000);
 		var long = Math.round((position.coords.longitude) * 10000000);
 		var latitude = lat;
@@ -148,11 +149,117 @@ function writeDateHoursGps() {
 
 }
 
+function traitementGPS(latitude1, longitude1,accuracy1) {
+
+		var time = showTime();
+		var latitude = Math.round(latitude1 * 10000000);
+		var longitude = Math.round(longitude1 * 10000000);
+
+		var signe;
+		if (latitude < 0 && longitude < 0) {
+			signe = 3;
+			latitude = latitude * (-1);
+			longitude = longitude * (-1);
+		} else if (latitude < 0) {
+			signe = 1;
+			latitude = latitude * (-1);
+		} else if (longitude < 0) {
+			signe = 2;
+			longitude = longitude * (-1);
+		} else {
+			signe = 0;
+		}
+		
+	
+
+		
+		window.tagid.write("gpsHours",time, latitude,longitude,signe , accuracy1);
+
+		
+}
+
+
+
+function writeDateHoursGps(gpsHours){
+	startLoading();
+	
+	
+	
+	var distanceRef = window.localStorage.getItem("distance");
+	var date1 = gpsHours[0];
+	var date2 = gpsHours[4];
+	var date3 = gpsHours[8];
+	var date4 = gpsHours[12];
+	var gps;
+
+
+	navigator.geolocation.getCurrentPosition(function(position) {
+		var lat = position.coords.latitude;
+		var long= position.coords.longitude;
+		var accuracy = Math.round(position.coords.accuracy);
+	if(parseInt(date4)!=0){
+
+		var lat4 = gpsHours[13]/10000000;
+		var long4 = gpsHours[14]/10000000;
+		var accuracy4 = gpsHours[15];
+		//alert("DISTANCE 4: "+lat+"  "+long+"  "+lat4+"  "+long4+"     "+distance(lat, long, lat4, long4));
+		if(distance(lat, long, lat4, long4)> distanceRef){
+			traitementGPS(lat, long,accuracy);
+		}else{
+			stopLoading();
+		}
+	}else if(parseInt(date3)!=0){
+
+		var lat3 = gpsHours[9]/10000000;
+		var long3 = gpsHours[10]/10000000;
+		var accuracy3 = gpsHours[11];
+		//alert("DISTANCE 3: "+lat+"  "+long+"  "+lat3+"  "+long3+"     "+distance(lat, long, lat3, long3));
+		
+		if(distance(lat, long, lat3, long3)>distanceRef){
+			traitementGPS(lat, long,accuracy);
+		}else{
+			stopLoading();
+		}
+	}else if (parseInt(date2)!=0){
+		
+		var lat2 = gpsHours[5]/10000000;
+		var long2 = gpsHours[6]/10000000;
+		var accuracy2 = gpsHours[7];
+		//alert("DISTANCE 2: "+lat+"  "+long+"  "+lat2+"  "+long2+"     "+distance(lat, long, lat2, lon2));
+		if(distance(lat, long, lat2, long2)>distanceRef){
+			traitementGPS(lat, long,accuracy);
+		}else{
+			stopLoading();
+		}
+	}else if (parseInt(date1)!=0){
+
+		var lat1 = gpsHours[1]/10000000;
+		var long1 = gpsHours[2]/10000000;		
+		var accuracy1 = gpsHours[3];
+	//	alert("DISTANCE 1: "+lat+"  "+long+"  "+lat1+"  "+long1+"     "+(distance(lat, long, lat1, long1));
+
+		
+		if( distance(lat, long, lat1, long1) > distanceRef){ 
+			traitementGPS(lat, long,accuracy);
+		}else{
+			stopLoading();
+		}
+	}else {
+		//alert("DATE 0");
+		traitementGPS(lat, long,accuracy);
+	}
+	
+	}, function() {
+		alert('ERROR GPS');
+	});
+	
+}
+
 function readDateHoursGps() {
 
 	var y = window.tagid.read("gpsHours");
 	if (y != false) {
-
+		
 		var date1 = new Date(parseInt(y[0]));
 		var latitude1 = y[1]/10000000;
 		var longitude1 = y[2]/10000000;

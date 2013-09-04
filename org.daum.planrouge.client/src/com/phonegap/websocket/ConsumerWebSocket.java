@@ -20,7 +20,7 @@ public class ConsumerWebSocket extends Thread {
 		queue = new LinkedBlockingQueue<String>();
 		t = this;
 		this.t.start();
-
+		Log.i("WEBSOCKET" , " Client Started : address : "+address);
 	}
 
 	public void connect(){
@@ -59,6 +59,7 @@ public class ConsumerWebSocket extends Thread {
 			Log.i("THREAD WS", " Boucle Thread");
 			String message = takeMessage();
 			if (message != null) {
+				
 				if(!client.isConnected()){
 					client.connect();
 				}

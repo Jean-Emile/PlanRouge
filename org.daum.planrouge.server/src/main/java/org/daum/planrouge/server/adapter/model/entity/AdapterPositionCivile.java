@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.GpsPoint;
+import org.kevoree.planrouge.Horodatage;
 import org.kevoree.planrouge.PositionCivil;
 import org.kevoree.planrouge.container.KMFContainer;
 import org.kevoree.planrouge.impl.PositionCivilImpl;
@@ -38,7 +39,7 @@ public class AdapterPositionCivile implements IAdapter {
         jsonGps.put("pays", positionCivile.getPays());
         jsonGps.put("nomRue", positionCivile.getNomRue());
         jsonGps.put("nomVille", positionCivile.getNomVille());
-        jsonGps.put("heure", positionCivile.getNomRue());
+        jsonGps.put("heure", positionCivile.getHorodatage());
         jsonGps.put("type", getType());
         return jsonGps;
     }
@@ -57,7 +58,7 @@ public class AdapterPositionCivile implements IAdapter {
         }
         if (json.has("pays")) {
             positionCivile.setPays(json.getString("pays").toString());
-        }
+                  }
         if (json.has("heure")) {
             positionCivile.setHorodatage(json.getString("heure").toString());
         }
