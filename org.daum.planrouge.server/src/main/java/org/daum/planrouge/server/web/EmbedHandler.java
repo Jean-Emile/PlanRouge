@@ -50,7 +50,7 @@ public class EmbedHandler extends AbstractResourceHandler {
         protected boolean exists() throws IOException {
             String path2 = path;
             if(path2.equals("/")){
-                path2 = "/index2.html";
+                path2 = "/index.html";
             }
             return this.getClass().getResource(path2) != null;
         }
@@ -72,14 +72,14 @@ public class EmbedHandler extends AbstractResourceHandler {
         protected byte[] fileBytes() throws IOException {
             String path2 = path;
             if(path2.equals("/")){
-                path2 = "/index2.html";
+                path2 = "/index.html";
             }
             return read(this.getClass().getResourceAsStream(path2));
         }
 
         @Override
         protected byte[] welcomeBytes() throws IOException {
-            read(this.getClass().getResourceAsStream("/index2.html"));
+            read(this.getClass().getResourceAsStream("/index.html"));
             return null;
         }
 

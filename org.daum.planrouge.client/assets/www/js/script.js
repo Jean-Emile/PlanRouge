@@ -94,6 +94,13 @@ function onDeviceReady() {
 		refreshIdAgent();
 	});
 	
+	$(document).on("pageshow", "#parametersPage", function() {
+		refreshIdAgent();
+		$("#username").val(window.localStorage.getItem("matriculeAgent"));	
+		$("#adresseIP").val(window.localStorage.getItem("ipAddress"));	
+		$("#distance").val(window.localStorage.getItem("distance"));	
+	});
+	
 	$(document).on("pageshow", "#champLibre", function() {
 		read_champlibre();	
 		refreshIdAgent();

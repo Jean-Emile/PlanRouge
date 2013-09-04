@@ -193,6 +193,9 @@
             var cp = jQuery("#cpInput").get(0).value;
             var rue = jQuery("#NomRueInput").get(0).value;
 
+            if (description !='' && ville !='' && cp!=''){
+
+
             var position = new Object();
             position.nomVille = ville;
             position.nomRue = rue;
@@ -207,8 +210,23 @@
 
 
             ws.send(JSON.stringify(intervention));
-            $('#add-modal').modal('hide');
+
            $("#submitGetAllInterventions").get(0).click();
+            $('#add-modal').modal('hide');
+            $.toast('Agent '+matricule+' créé', {type: 'danger'});
+           }else{
+            if(description ==''){
+              $.toast('Veuillez remplir la DESCRIPTION', {type: 'danger'});
+            }
+            if(ville ==''){
+               $.toast('Veuillez remplir la VILLE', {type: 'danger'});
+            }
+            if(cp ==''){
+              $.toast('Veuillez remplir le CODE POSTAL', {type: 'danger'});
+            }
+
+           }
+
         }) ;
 
         $("#submitGetAllAgents").click(function () {
@@ -231,16 +249,21 @@
 
         $("#submitCreateAgent").click(function () {
             var matricule = jQuery("#MatriculeInput").get(0).value;
+            if (matricule !=''){
+                 var agent = new Object();
+                 agent.matricule = matricule;
+                 agent.type = "AdapterAgent";
 
-            var agent = new Object();
-            agent.matricule = matricule;
-            agent.type = "AdapterAgent";
+                 ws.send(JSON.stringify(agent));
+                 $('#add-modal-agent').modal('hide');
+                 $("#submitGetAllInterventions").get(0).click();
+            }else {
+                 $.toast('Veuillez remplir le MATRICULE', {type: 'danger'});
+            }
 
-            ws.send(JSON.stringify(agent));
-            $('#add-modal-agent').modal('hide');
-            $("#submitGetAllInterventions").get(0).click();
         }) ;
 
+        // DELETE AGENT
          $("#submitDeleteAgent").click(function () {
              $('#deleteAgent input:checked').each(function() {
                  var newAgent = new  Object();
@@ -258,6 +281,19 @@
             getAllAgents();
             $("#submitGetAllInterventions").get(0).click();
          });
+
+
+          $("#submitDeleteIntervention").click(function () {
+              $('#deleteAgent input:checked').each(function() {
+                  var newAgent = new  Object();
+                  newAgent.type = 'AdapterAgent';
+                  newAgent.matricule =  $(this).attr('value');
+                   alert(JSON.stringify(newAgent));
+                  wsDelete.send(JSON.stringify(newAgent));
+              });
+              $("#submitGetAllInterventions").get(0).click();
+              $("#submitGetAllAgents").get(0).click();
+          });
 
     });
 

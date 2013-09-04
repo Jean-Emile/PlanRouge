@@ -128,7 +128,7 @@ public class MessageHandler {
                         Log.info("AdapterIntervention ::: DELETE");
                         Intervention interventionDelete = (Intervention) obj;
                         if(root.findInterventionsByID(interventionDelete.getId()) != null){
-                            root.findInterventionsByID(interventionDelete.getId()).delete();
+                            root.removeInterventions(interventionDelete);
                         }
 
                         return;
