@@ -85,7 +85,6 @@ public class ConsumerWebSocket extends Thread {
 		  addMessage(json);
 		  // TODO
 		  // synchronize --> wait result  
-		  
 		  return true;
 		  
 		  
