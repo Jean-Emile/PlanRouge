@@ -150,21 +150,20 @@ public class NfcPlugin extends CordovaPlugin {
 			jObject.put("type", "AdapterAgent");
 			jObject.put("matricule", data.get(0));
 			
-			boolean agentexist = consumerWebSocketGet.checkAgent(jObject.toString());
-			
-		
-			
-			
-			if(agentexist){
-				Log.i("NFCPlugin","SUCCESS login AGENT");
-				callbackContext.success("true");
-			}else {
-				Log.i("NFCPlugin", "ERROR login AGENT");
-				
+			if(data.get(0).toString().length() == 0){
 				callbackContext.success("false");
+			}else {
+				boolean agentexist = consumerWebSocketGet.checkAgent(jObject.toString());
+				
+				if(agentexist){
+					Log.i("NFCPlugin","SUCCESS login AGENT");
+					callbackContext.success("true");
+				}else {
+					Log.i("NFCPlugin", "ERROR login AGENT");
+					
+					callbackContext.success("false");
+				}	
 			}
-
-
 		}else {
 			// invalid action
 			return false;
@@ -554,8 +553,6 @@ public class NfcPlugin extends CordovaPlugin {
 		parseMessage();
 
 	}
-
-
 
 
 
