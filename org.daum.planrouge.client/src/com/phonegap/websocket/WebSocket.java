@@ -56,7 +56,6 @@ public class WebSocket {
 			@Override
 			public void onMessage(byte[] data) {
 				Log.d(TAG, String.format("Got binary message! %s", Common.byte2HexString(data)));
-
 			}
 
 			@Override

@@ -23,10 +23,20 @@
 <body>
 
 	<div id="waitTag" data-role="page">
+		<div id="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" data-display="push" data-theme="a" data-position="right" data-role="panel">
+				<ul data-role="listview" >
+				<li><a href="file:///android_asset/www/categorieVictime/index.html" data-transition="slidefade">Catégorie vicitime</a></li>
+				<li><a href="file:///android_asset/www/identite/index.html" data-transition="slidefade">Identité</a></li>
+				<li><a href="file:///android_asset/www/gps_hours/index.html" data-transition="slidefade">Heures et GPS</a></li>				
+				<li><a style="background: #e74c3c; margin-top : 30px;" href="file:///android_asset/www/login/index.html" onclick="deconnexion();" data-transition="slidefade">Déconnexion</a></li>
+			</ul>
+		
+		</div>
 
 		<div data-role="header" data-position="fixed">
-
+			<a href="file:///android_asset/www/parametres/index.html" data-rel="dialog"  data-icon="gear" data-transition="pop">Paramètres</a>			
 			<h1>Attente d'un Tag NFC</h1>
+			<a href="#panel" data-rel="dialog"  data-icon="grid"  class="ui-btn-right" >Menu</a>
 		</div>
 
 		<div data-role="content">

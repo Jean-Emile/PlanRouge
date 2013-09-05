@@ -136,13 +136,11 @@ public class WebSocketClient {
                     Log.d(TAG, "WebSocket EOF!", ex);
                     mListener.onDisconnect(0, "EOF");
                     mConnected = false;
-
                 } catch (SSLException ex) {
                     // Connection reset by peer
                     Log.d(TAG, "Websocket SSL error!", ex);
                     mListener.onDisconnect(0, "SSL");
                     mConnected = false;
-
                 } catch (Exception ex) {
                     mListener.onError(ex);
                 }

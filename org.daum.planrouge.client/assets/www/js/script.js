@@ -246,14 +246,10 @@ function registerAgent() {
 		html: "<div style='width: 170px; text-align: center;' class='ui-bar ui-overlay-a ui-corner-all'><img  src='file:///android_asset/www/images/ajax-loader.gif' /><h2>Connexion en cours </h2></div>"
 	});	
 	
-	var result = window.tagid.getAgent(matricule);
+	//var result = window.tagid.getAgent(matricule);
+//window.location = "file:///android_asset/www/login/index.html";	
+	window.location = "file:///android_asset/www/waitTag/index.html";
 
-	if (result == "true"){
-		window.location = "file:///android_asset/www/waitTag/index.html";
-	}else {
-		window.location = "file:///android_asset/www/login/index.html";	
-	}
-//	result = null;
 	
 }
 
