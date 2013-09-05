@@ -28,19 +28,19 @@
 	<div data-role="page" id="gpsHours"  style='background-color: #bdc3c7'>
 	
 	
-		<div id="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" data-display="push" data-theme="a" data-position="right" data-role="panel">
+		<div  id="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" data-display="push" data-theme="a" data-position="right" data-role="panel">
 				<ul data-role="listview" >
 				<li><a href="file:///android_asset/www/categorieVictime/index.html" data-transition="slidefade">Catégorie vicitime</a></li>
 				<li><a href="file:///android_asset/www/identite/index.html" data-transition="slidefade">Identité</a></li>
 				<li><a href="file:///android_asset/www/gps_hours/index.html" data-transition="slidefade">Heures et GPS</a></li>
+				<li><a style="background: #e74c3c; margin-top : 30px;" href="file:///android_asset/www/login/index.html" onclick="deconnexion();" data-transition="slidefade">Déconnexion</a></li>
 			</ul>
-		
 		</div>
 		
 		
 		<!-- l'entête -->
 		<div data-role="header" data-theme="a" data-position= "fixed" >
-		<a href="file:///android_asset/www/parametres/index.html" data-rel="dialog"  data-icon="gear" data-transition="slidedown">Paramètres</a>
+		<a href="file:///android_asset/www/parametres/index.html" data-rel="dialog"  data-icon="gear" data-transition="pop">Paramètres</a>
 			<h1>Date et Lieu</h1>
 	<a href="#panel" data-rel="dialog"  data-icon="grid" >Menu</a>
 		</div>
@@ -93,8 +93,10 @@
                 
 			<!--  BOUTON SUBMIT -->
 			<p>
-				<input type="button" name="buttonSubmit" value="Envoyer de nouvelles coordonnées GPS et heures" onclick="writeDateHoursGps();" />
+				<input type="button" name="buttonSubmit" value="Envoyer de nouvelles coordonnées GPS et heures" onclick="writeDateHoursGps();" data-theme="b"/>
 			</p>
+			
+
 		</div>
 
 		<!-- le pied de page -->

@@ -82,8 +82,6 @@ function onDeviceReady() {
 	$(document).on("pageshow", "#loginPage", function() {
 		refreshIdAgent();
 		$("#username").val(window.localStorage.getItem("matriculeAgent"));	
-		$("#adresseIP").val(window.localStorage.getItem("ipAddress"));	
-		$("#distance").val(window.localStorage.getItem("distance"));	
 	});
 	
 	$(document).on("pageshow", "#victimCategory", function() {
@@ -97,7 +95,6 @@ function onDeviceReady() {
 	
 	$(document).on("pageshow", "#parametersPage", function() {
 		refreshIdAgent();
-		$("#username").val(window.localStorage.getItem("matriculeAgent"));	
 		$("#adresseIP").val(window.localStorage.getItem("ipAddress"));	
 		$("#distance").val(window.localStorage.getItem("distance"));	
 	});
@@ -133,7 +130,8 @@ function onDeviceReady() {
 		getInfoVitalEmergency();
 	});
 	
-	$(document).on("pageinit", "#waitTag", function() {
+	$(document).on("pageshow", "#waitTag", function() {
+		refreshIdAgent();
 	});
 	
 	$(document).on("pageinit", "#completed", function() {
@@ -260,14 +258,19 @@ function registerAgent() {
 }
 
 function modifierDistance(){
-	var distance = $("#distance").val();
-	window.localStorage.setItem("distance", distance);
+	
 }
 function modifierAdresse(){
-	var adresseIP = $("#adresseIP").val();
-	window.localStorage.setItem("ipAddress", adresseIP);
 	
-	window.tagid.ipAddress(adresseIP);
+	var distance = $("#distance").val();
+	if(distance !=''){
+		window.localStorage.setItem("distance", distance);
+	}	
+	var adresseIP = $("#adresseIP").val();
+	if(adresseIP !=''){
+		window.localStorage.setItem("ipAddress", adresseIP);
+		window.tagid.ipAddress(adresseIP);
+	}	
 }
 
 function distance(lat_a, lon_a, lat_b, lon_b) 
@@ -299,6 +302,10 @@ function startLoading(){
 
 function stopLoading(){
 	$.mobile.hidePageLoadingMsg();	
+}
+
+function deconnexion(){
+	window.localStorage.setItem("matriculeAgent", '');
 }
 
 
