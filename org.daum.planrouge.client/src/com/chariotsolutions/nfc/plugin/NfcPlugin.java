@@ -160,7 +160,6 @@ public class NfcPlugin extends CordovaPlugin {
 					callbackContext.success("true");
 				}else {
 					Log.i("NFCPlugin", "ERROR login AGENT");
-					
 					callbackContext.success("false");
 				}	
 			}
