@@ -57,10 +57,10 @@ public class NfcPlugin extends CordovaPlugin {
 	private static final String STATUS_NDEF_PUSH_DISABLED = "NDEF_PUSH_DISABLED";
 
 	private static final String TAG = "NfcPlugin";
-	private static String AGENT;
+
 	private final List<IntentFilter> intentFilters = new ArrayList<IntentFilter>();
 	private final ArrayList<String[]> techLists = new ArrayList<String[]>();
-	
+
 	private NdefMessage p2pMessage = null;
 	private PendingIntent pendingIntent = null;
 
@@ -72,10 +72,10 @@ public class NfcPlugin extends CordovaPlugin {
 	private ConsumerWebSocket consumerWebSocket = new ConsumerWebSocket(ipAddress,8080,"add",null);
 	private ConsumerWebSocket consumerWebSocketGet = new ConsumerWebSocket(ipAddress,8080,"get",this);
 	AdapterFactory adapterFactory = new AdapterFactory(consumerWebSocket);
-	
+
 	private boolean isWriteExecution = false;
 
-	
+
 	public boolean isWriteExecution() {
 		return isWriteExecution;
 	}
@@ -87,7 +87,7 @@ public class NfcPlugin extends CordovaPlugin {
 
 	@Override
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-		
+
 		Log.d(TAG, "execute " + action);
 
 		if (!getNfcStatus().equals(STATUS_NFC_OK)) {
@@ -136,7 +136,7 @@ public class NfcPlugin extends CordovaPlugin {
 		}  else if (action.equalsIgnoreCase("raz")) { //reset isWriteExecution
 			isWriteExecution = false;
 			Log.i("NFC PLUGIN", "IS NOT WRITE EXECUTION");
-		
+
 		} else if (action.equalsIgnoreCase("ipAddress")) {
 			ipAddress = data.getString(0);
 			consumerWebSocket = new ConsumerWebSocket(ipAddress, 8080, "add", null);
@@ -144,30 +144,27 @@ public class NfcPlugin extends CordovaPlugin {
 			adapterFactory = new AdapterFactory(consumerWebSocket);
 			callbackContext.success();
 		} else if (action.equalsIgnoreCase("getAgent")) {
-			AGENT = null;
-			JSONObject jObject = new JSONObject();
 
-				jObject.put("type", "AdapterAgent");
-				jObject.put("matricule", data.get(0));
+			JSONObject jObject = new JSONObject();
+			Log.i("NFCPlugin","getAgent "+data.get(0));
+			jObject.put("type", "AdapterAgent");
+			jObject.put("matricule", data.get(0));
 			
-			consumerWebSocketGet.addMessage(jObject.toString());
-			long instant = new Date().getTime();
-			while (AGENT == null && new Date().getTime()-instant<5000){
-				
-			}
+			boolean agentexist = consumerWebSocketGet.checkAgent(jObject.toString());
 			
-			if(AGENT.equals("true")){
+		
+			
+			
+			if(agentexist){
 				Log.i("NFCPlugin","SUCCESS login AGENT");
-				AGENT = null;
-				callbackContext.success();
+				callbackContext.success("true");
 			}else {
 				Log.i("NFCPlugin", "ERROR login AGENT");
-				AGENT = null;
-				callbackContext.error("error");
+				
+				callbackContext.success("false");
 			}
 
-				//new GetAgent().getAgent(data, callbackContext, consumerWebSocketGet);
-		
+
 		}else {
 			// invalid action
 			return false;
@@ -177,7 +174,7 @@ public class NfcPlugin extends CordovaPlugin {
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	private String getNfcStatus() {
 		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 		if (nfcAdapter == null) {
@@ -549,19 +546,19 @@ public class NfcPlugin extends CordovaPlugin {
 			String url = nextActionToProcess();
 			Log.i("NFCPLUGIN","NEW URL ::: "+url);
 			//if(!(url.equals(super.webView.getUrl()))){
-				super.webView.sendJavascript("javascript:window.location='"+url+"'");
-				//super.webView.loadUrl(url);
+			super.webView.sendJavascript("javascript:window.location='"+url+"'");
+			//super.webView.loadUrl(url);
 			//}
-			
+
 		}
 		parseMessage();
 
 	}
 
-	 
 
-	
-	
+
+
+
 	private String nextActionToProcess() {
 
 		String vital_urgency = "";
@@ -628,19 +625,5 @@ public class NfcPlugin extends CordovaPlugin {
 	String javaScriptEventTemplate = "var e = document.createEvent(''Events'');\n" + "e.initEvent(''{0}'');\n" + "e.tag = {1};\n"
 			+ "document.dispatchEvent(e);";
 
-
-	public void sendGetAgent(String string) {
-		
-		if(string.equals("false")){
-			AGENT = "false";
-		}else{
-			AGENT = "true";
-		}
-	}
-	
-	public String getAgent(){
-		
-		return AGENT;
-	}
 
 }

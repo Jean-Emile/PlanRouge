@@ -57,7 +57,7 @@ public class BenchServer implements Runnable {
             e.printStackTrace();
         }
 
-  //      t.start();
+        t.start();
 
     }
 
@@ -131,5 +131,6 @@ public class BenchServer implements Runnable {
     public static void main(String argv[]) {
 
         BenchServer t = new BenchServer();
+
     }
 }

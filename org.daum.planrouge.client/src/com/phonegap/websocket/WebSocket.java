@@ -42,9 +42,10 @@ public class WebSocket {
 					if (jObject.has("type")) {
 						if (jObject.get("type").equals("getAgent")) {
 							if(jObject.get("result").equals("undefined")){
-								nfcPlugin.sendGetAgent("false");
+								// TODO notify AGENT
+							//	nfcPlugin.sendGetAgent("false");
 							}else {
-								nfcPlugin.sendGetAgent(jObject.toString());
+								//nfcPlugin.sendGetAgent(jObject.toString());
 							}
 						}
 					}

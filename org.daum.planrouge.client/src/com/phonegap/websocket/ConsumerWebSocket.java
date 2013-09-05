@@ -14,7 +14,6 @@ public class ConsumerWebSocket extends Thread {
 	private LinkedBlockingQueue<String> queue;
 	private Thread t;
 
-
 	public ConsumerWebSocket(String address, int port, String handler, NfcPlugin nfcPlugin) {
 		client = new WebSocket(address, port, handler, nfcPlugin);
 		queue = new LinkedBlockingQueue<String>();
@@ -24,7 +23,6 @@ public class ConsumerWebSocket extends Thread {
 	}
 
 	public void connect(){
-		
 		client.connect();
 	}
 	
@@ -77,4 +75,25 @@ public class ConsumerWebSocket extends Thread {
 		}
 	}
 
+	public WebSocket getClient() {
+		return client;
+	}
+// NO HAVE TO BE HERE NEED TO CREATE A CLASSE
+  public boolean checkAgent(String json)
+  {
+	  if(client.isConnected()){
+		  addMessage(json);
+		  // TODO
+		  // synchronize --> wait result  
+		  
+		  return true;
+		  
+		  
+	  }else {
+		  return false;
+	  }
+	  
+
+  }
+	
 }
