@@ -517,21 +517,19 @@ function fireNfcTagEvent(eventType, tagAsJson) {
 }
 var r = true;
 var tagid = {
+
 	getAgent : function(matricule) {
-		var x;
-		
-		
+		var result;
 		cordova.exec(function(success) {
-			Toast.shortshow(success);
-			x = true;
+			result = success;
 			$.mobile.hidePageLoadingMsg();
 		}, function(error) {
-			x = false;
+			result = false;
 			Toast.shortshow(error);
 			$.mobile.hidePageLoadingMsg();
 
 		}, "NfcPlugin", "getAgent", [ matricule ]);
-		return x;
+		return result;
 	},
 
 	ipAddress: function(adresse) {
