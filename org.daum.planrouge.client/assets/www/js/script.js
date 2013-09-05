@@ -1,3 +1,4 @@
+
 $(document).one("mobileinit", function () {
  
             // Setting #container div as a jqm pageContainer
@@ -238,6 +239,7 @@ function onConfirmAtteinte(button) {
 
 function registerAgent() {
 	var matricule = $("#username").val();
+
 	window.localStorage.setItem("matriculeAgent", matricule);
 	$.mobile.loading( 'show', {
 		text: 'Connexion en cours',
@@ -246,12 +248,13 @@ function registerAgent() {
 		html: "<div style='width: 170px; text-align: center;' class='ui-bar ui-overlay-a ui-corner-all'><img  src='file:///android_asset/www/images/ajax-loader.gif' /><h2>Connexion en cours </h2></div>"
 	});	
 	
-//	var result = window.tagid.getAgent(matricule);
-//	if (result == true){
+	var result = window.tagid.getAgent(matricule);
+
+	if (result == "true"){
 		window.location = "file:///android_asset/www/waitTag/index.html";
-//	}else {
-//		window.location = "file:///android_asset/www/login/index.html";	
-//	}
+	}else {
+		window.location = "file:///android_asset/www/login/index.html";	
+	}
 //	result = null;
 	
 }
