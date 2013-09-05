@@ -19,6 +19,19 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="css/bootstrap-notify.css" rel="stylesheet">
+
+     <STYLE type="text/css">
+        .error{
+              padding: 4px;
+                 background: #f2dede;
+                 color: #b94a48;
+                 margin-left: 15px;
+                 border-color: #E2C7CB;
+                 border-radius: 4px;
+                 border-width: 1px;
+                 border-style: solid;
+        }
+      </STYLE>
 </head>
 
 <body style="padding:20px; min-width:830px;">
@@ -38,7 +51,7 @@
                title="Create Agent ">Creation d'un Agent</a>
             <a class="btn btn-primary" id="btnDeleteAgent" data-toggle="modal" href="#delete-modal-agent"
                title="Create Agent ">Suppression d'un Agent</a>
-            <a class="btn btn-primary" id="submitGetAllInterventions" >Refresh</a>
+
         </div>
     </div>
     <!-- CREATE INTERVENTION -->
@@ -55,25 +68,25 @@
                     <div class="control-group" id="NomRueControlGroup">
                         <label class="control-label mandatory" id="NomRueLabel">Nom de la rue</label>
 
-                        <div class="controls" id="NomRueControls"><input id="NomRueInput"></div>
+                        <div class="controls" id="NomRueControls"><input id="NomRueInput"><span  id="rueError"></span></div>
                     </div>
 
                     <div class="control-group" id="villeControlGroup">
                         <label class="control-label mandatory" id="villeLabel">Ville</label>
 
-                        <div class="controls" id="villeControls"><input id="villeInput"></div>
+                        <div class="controls" id="villeControls"><input id="villeInput"><span  id="villeError"></span></div>
                     </div>
 
                     <div class="control-group" id="cpControlGroup">
                         <label class="control-label mandatory" id="nameLabel">CP</label>
 
-                        <div class="controls" id="cpControls"><input id="cpInput"></div>
+                        <div class="controls" id="cpControls"><input id="cpInput"><span  id="cpError"></span></div>
                     </div>
 
                     <div class="control-group" id="descriptionControlGroup">
                         <label class="control-label mandatory" id="descriptionLabel">Description</label>
 
-                        <div class="controls" id="descriptionControls"><textarea id="descriptionInput"></textarea></div>
+                        <div class="controls" id="descriptionControls"><textarea id="descriptionInput"></textarea><span  id="descriptionError"></span></div>
                     </div>
 
                     <div style="text-align:center"><a id="submitCreateIntervention" class="btn btn-primary">Submit</a><br/></div>
@@ -96,9 +109,10 @@
                     <div class="control-group" id="Matricule">
                         <label class="control-label mandatory" id="MatriculeLabel">Matricule Agent</label>
 
-                        <div class="controls" id="MatriculeControls"><input id="MatriculeInput"></div>
+                        <div class="controls" id="MatriculeControls"><input id="MatriculeInput"><span  id="matriculeError"></span></div>
                     </div>
                     <div style="text-align:center"><a id="submitCreateAgent" class="btn btn-primary">Submit</a><br/>
+
                     </div>
                 </div>
             </div>
@@ -219,6 +233,7 @@
                 <th>Ajouter des agents</th>
                 <th>Supprimer des agents</th>
                 <th>Modifier l'intervention</th>
+                <th>Supprimer l'intervention</th>
             <tr>
         </table>
 

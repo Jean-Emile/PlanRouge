@@ -42,7 +42,7 @@
 
         wsGet.onopen = function (msg) {
             $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/getAll', {type: 'success'});
-            $("#submitGetAllInterventions").get(0).click();
+            submitGetAllInterventions();
         };
         wsGet.onclose /*= ws.onerror*/ = function (msg) {
             $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/getAll', {type: 'danger'});
@@ -98,17 +98,20 @@
 
                     var colonne6 = ligne.insertCell(5);
                     colonne6.innerHTML += '<a class="btn btn-primary" onclick="editIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" href="#edit-modal-intervention" title="Edit intervention ">Modifier l\'intervention</a>';
+
+                    var colonne7 = ligne.insertCell(6);
+                    colonne7.innerHTML += '<a class="btn btn-primary" onclick="deleteIntervention('+jsonObject.arrayInterventions[i].id+');" data-toggle="modal" title="Delete intervention ">Supprimer l\'intervention</a>';
                 }
             }
         };
 
 
-
+         // ADD AGENT
         $(".addAgentIntervention").click(function () {
             var agent = new Object();
             agent.type = "AdapterAgent";
             wsGet.send(JSON.stringify(agent));
-            $("#submitGetAllInterventions").get(0).click();
+            submitGetAllInterventions();
         }) ;
 
         // UPDATE INTERVENTION
@@ -141,7 +144,7 @@
 
                 ws.send(JSON.stringify(jsonIntervention));
                 $('#edit-modal-intervention').modal('hide');
-               $("#submitGetAllInterventions").get(0).click();
+                submitGetAllInterventions();
         });
 
         $("#submitAddAgentToIntervention").click(function () {
@@ -161,7 +164,7 @@
 
              ws.send(JSON.stringify(jsonIntervention));
               $('#add-modal-agent-intervention').modal('hide');
-              $("#submitGetAllInterventions").get(0).click();
+              submitGetAllInterventions();
         });
 
         $("#submitDelAgentToIntervention").click(function () {
@@ -181,74 +184,90 @@
 
              ws.send(JSON.stringify(jsonIntervention));
               $('#del-modal-agent-intervention').modal('hide');
-              $("#submitGetAllInterventions").get(0).click();
+              submitGetAllInterventions();
         });
 
 
         $("#submitCreateIntervention").click(function () {
-
+               document.getElementById("descriptionError").innerHTML='';
+               document.getElementById("villeError").innerHTML= '';
+               document.getElementById("cpError").innerHTML=  '';
+               document.getElementById("rueError").innerHTML=  '';
+               document.getElementById("rueError").className ='';
+               document.getElementById("descriptionError").className ='';
+               document.getElementById("cpError").className ='';
+               document.getElementById("villeError").className ='';
 
             var description = jQuery("#descriptionInput").get(0).value;
             var ville = jQuery("#villeInput").get(0).value;
             var cp = jQuery("#cpInput").get(0).value;
             var rue = jQuery("#NomRueInput").get(0).value;
 
-            if (description !='' && ville !='' && cp!=''){
+            if (description !='' && ville !='' && cp!='' && rue!=''){
 
 
-            var position = new Object();
-            position.nomVille = ville;
-            position.nomRue = rue;
-            position.cp = cp;
-            position.type = "AdapterPositionCivile";
-            position.heure = new Date().getTime();
+                var position = new Object();
+                position.nomVille = ville;
+                position.nomRue = rue;
+                position.cp = cp;
+                position.type = "AdapterPositionCivile";
+                position.heure = new Date().getTime();
 
-            var intervention = new Object();
-            intervention.type = "AdapterIntervention";
-            intervention.description = description;
-            intervention.position = position;
+                var intervention = new Object();
+                intervention.type = "AdapterIntervention";
+                intervention.description = description;
+                intervention.position = position;
 
 
-            ws.send(JSON.stringify(intervention));
+                ws.send(JSON.stringify(intervention));
 
-           $("#submitGetAllInterventions").get(0).click();
-            $('#add-modal').modal('hide');
-            $.toast('Agent '+matricule+' créé', {type: 'danger'});
+                submitGetAllInterventions();
+                $('#add-modal').modal('hide');
+                $.toast('Intervention créée', {type: 'info'});
            }else{
-            if(description ==''){
-              $.toast('Veuillez remplir la DESCRIPTION', {type: 'danger'});
-            }
-            if(ville ==''){
-               $.toast('Veuillez remplir la VILLE', {type: 'danger'});
-            }
-            if(cp ==''){
-              $.toast('Veuillez remplir le CODE POSTAL', {type: 'danger'});
-            }
+                if(description ==''){
+                  $.toast('Veuillez remplir la DESCRIPTION', {type: 'danger'});
+                   document.getElementById("descriptionError").innerHTML="Indiquer la DESCRIPTION";
+                   document.getElementById("descriptionError").className ='error';
+
+                }
+                if(ville ==''){
+                   $.toast('Veuillez remplir la VILLE', {type: 'danger'});
+                    document.getElementById("villeError").innerHTML="Indiquer la VILLE";
+                    document.getElementById("villeError").className ='error';
+                }
+                if(cp ==''){
+                  $.toast('Veuillez remplir le CODE POSTAL', {type: 'danger'});
+                  document.getElementById("cpError").innerHTML="Indiquer le CODE POSTAL";
+                  document.getElementById("cpError").className ='error';
+                }
+                 if(rue ==''){
+                  $.toast('Veuillez remplir la RUE', {type: 'danger'});
+                  document.getElementById("rueError").innerHTML="Indiquer la RUE";
+                  document.getElementById("rueError").className ='error';
+                }
 
            }
 
         }) ;
 
-        $("#submitGetAllAgents").click(function () {
+//        $("#submitGetAllAgents").click(function () {
+//
+//            var agent = new Object();
+//            agent.type = "AdapterAgent";
+//            wsGet.send(JSON.stringify(agent));
+//            submitGetAllInterventions();
+//        }) ;
 
-            var agent = new Object();
-            agent.type = "AdapterAgent";
-            wsGet.send(JSON.stringify(agent));
-
-            $("#submitGetAllInterventions").get(0).click();
-        }) ;
-
-        $("#submitGetAllInterventions").click(function () {
-            var intervention = new Object();
-            intervention.type = "AdapterIntervention";
-
-            wsGet.send(JSON.stringify(intervention));
+   //
 
 
-        }) ;
 
         $("#submitCreateAgent").click(function () {
             var matricule = jQuery("#MatriculeInput").get(0).value;
+            document.getElementById("matriculeError").innerHTML=  '';
+            document.getElementById("matriculeError").className ='';
+
             if (matricule !=''){
                  var agent = new Object();
                  agent.matricule = matricule;
@@ -256,8 +275,10 @@
 
                  ws.send(JSON.stringify(agent));
                  $('#add-modal-agent').modal('hide');
-                 $("#submitGetAllInterventions").get(0).click();
+               submitGetAllInterventions();
             }else {
+            document.getElementById("matriculeError").innerHTML=  'Indiquer le MATRICULE';
+            document.getElementById("matriculeError").className ='error';
                  $.toast('Veuillez remplir le MATRICULE', {type: 'danger'});
             }
 
@@ -266,37 +287,37 @@
         // DELETE AGENT
          $("#submitDeleteAgent").click(function () {
              $('#deleteAgent input:checked').each(function() {
-                 var newAgent = new  Object();
-                 newAgent.type = 'AdapterAgent';
-                 newAgent.matricule =  $(this).attr('value');
-                  alert(JSON.stringify(newAgent));
-                 wsDelete.send(JSON.stringify(newAgent));
+                 var agent = new  Object();
+                 agent.type = 'AdapterAgent';
+                 agent.matricule =  $(this).attr('value');
+                 wsDelete.send(JSON.stringify(agent));
              });
              $('#delete-modal-agent').modal('hide');
-             $("#submitGetAllInterventions").get(0).click();
-              $("#submitGetAllAgents").get(0).click();
+
+              submitGetAllInterventions();
+//              $("#submitGetAllAgents").get(0).click();
          });
 
          $("#btnDeleteAgent").click(function () {
             getAllAgents();
-            $("#submitGetAllInterventions").get(0).click();
+
+             submitGetAllInterventions();
          });
 
 
-          $("#submitDeleteIntervention").click(function () {
-              $('#deleteAgent input:checked').each(function() {
-                  var newAgent = new  Object();
-                  newAgent.type = 'AdapterAgent';
-                  newAgent.matricule =  $(this).attr('value');
-                   alert(JSON.stringify(newAgent));
-                  wsDelete.send(JSON.stringify(newAgent));
-              });
-              $("#submitGetAllInterventions").get(0).click();
-              $("#submitGetAllAgents").get(0).click();
-          });
 
     });
+        function submitGetAllInterventions(){
+            var intervention = new Object();
+            intervention.type = "AdapterIntervention";
+            wsGet.send(JSON.stringify(intervention));
+        }
+function deleteIntervention(id){
+     var intervention =  tabIntervention[id];
 
+      wsDelete.send(intervention);
+      submitGetAllInterventions();
+}
      // DELETE Rows of Table
     function delRows(tableID) {
         myTBody = document.getElementById(tableID).getElementsByTagName('TBODY')[0];
@@ -308,15 +329,14 @@
     function addAgentIntervention (id){
         $("#idIntervention").text(id);
         getAllAgents();
-
-        $("#submitGetAllInterventions").get(0).click();
+        submitGetAllInterventions();
     }
 
     function getAllAgents() {
         var agent = new Object();
         agent.type = "AdapterAgent";
         wsGet.send(JSON.stringify(agent));
-        $("#submitGetAllInterventions").get(0).click();
+        submitGetAllInterventions();
     }
 
        //DELETE AGENT OF INTERVENTION
@@ -331,7 +351,7 @@
             delAgent.appendChild(node);
         }
         $("#idIntervention_delete").text(jsonObject.id);
-        $("#submitGetAllInterventions").get(0).click();
+        submitGetAllInterventions();
     }
 
         // EDIT INTERVENTION
