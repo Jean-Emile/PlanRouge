@@ -3,6 +3,7 @@ package com.phonegap.websocket;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.cordova.CordovaWebView;
+import org.json.JSONObject;
 
 import com.chariotsolutions.nfc.plugin.NfcPlugin;
 
@@ -25,7 +26,7 @@ public class ConsumerWebSocket extends Thread {
 	public void connect(){
 		client.connect();
 	}
-	
+
 	public void disconnect(){
 		client.disconnect();
 	}
@@ -35,7 +36,6 @@ public class ConsumerWebSocket extends Thread {
 		if(!t.isAlive()){
 			Log.i("THREAD WS", "START");
 			this.t.start();
-			
 		}
 	}
 
@@ -57,7 +57,7 @@ public class ConsumerWebSocket extends Thread {
 			Log.i("THREAD WS", " Boucle Thread");
 			String message = takeMessage();
 			if (message != null) {
-				
+
 				if(!client.isConnected()){
 					client.connect();
 				}
@@ -78,32 +78,39 @@ public class ConsumerWebSocket extends Thread {
 	public WebSocket getClient() {
 		return client;
 	}
-// NO HAVE TO BE HERE NEED TO CREATE A CLASSE
-  public boolean checkAgent(String json)
-  {
-	  if(client.isConnected()){
-		  addMessage(json);
-		  // TODO
-		  // synchronize --> wait result  
-		
-		  return true;
-		  
-		  
-	  }else {
-		  return true;
-	  }
-	  
+	// NO HAVE TO BE HERE NEED TO CREATE A CLASSE
+	public boolean checkAgent(String json)
+	{
+			// todo create method 
+			addMessage(json);
+			try {
+				JSONObject response = 	client.getResponse("agent");
+	
+				if(response == null){
+					return false;
+				}else {
+					if(response.has("result")){
+						if(!response.get("result").toString().equals("undefined")){
+							return true;
+						}
+						
+					}
+					return false;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+	}
 
-  }
-  
-  // Called by Consumer
-//  public synchronized String getMessage() throws InterruptedException {
-//      notify();
-//      while (messages.size() == 0) {
-//          wait();//By executing wait() from a synchronized block, a thread gives up its hold on the lock and goes to sleep.
-//      }
-//      
-//      return message;
-//  }
-//  
+	// Called by Consumer
+	//  public synchronized String getMessage() throws InterruptedException {
+	//      notify();
+	//      while (messages.size() == 0) {
+	//          wait();//By executing wait() from a synchronized block, a thread gives up its hold on the lock and goes to sleep.
+	//      }
+	//      
+	//      return message;
+	//  }
+	//  
 }

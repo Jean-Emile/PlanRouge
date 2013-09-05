@@ -17,9 +17,10 @@ import com.phonegap.plugins.nfc.Common;
 
 public class WebSocket {
 
-	WebSocketClient client;
-	List<BasicNameValuePair> extraHeaders = Arrays.asList(new BasicNameValuePair("Cookie", "session=abcd"));
+	private WebSocketClient client;
+	private List<BasicNameValuePair> extraHeaders = Arrays.asList(new BasicNameValuePair("Cookie", "session=abcd"));
 	private NfcPlugin nfcPlugin;
+    private  BlockingConcurrentHashMap<String,JSONObject> responses = new  BlockingConcurrentHashMap<String,JSONObject>();
 
 	public WebSocket(String address, int port, String handler, final NfcPlugin nfcPlugin) {
 		this.nfcPlugin=nfcPlugin;
@@ -38,15 +39,11 @@ public class WebSocket {
 				JSONObject jObject = null;
 				try {
 					jObject = new JSONObject(message);
-
+			
 					if (jObject.has("type")) {
 						if (jObject.get("type").equals("getAgent")) {
-							if(jObject.get("result").equals("undefined")){
-								// TODO notify AGENT
-							//	nfcPlugin.sendGetAgent("false");
-							}else {
-								//nfcPlugin.sendGetAgent(jObject.toString());
-							}
+							// TODO generate token ID 
+							responses.put("agent", jObject);
 						}
 					}
 				} catch (JSONException e) {
@@ -94,4 +91,8 @@ public class WebSocket {
 		return client.isConnected();
 	}
 
+	public JSONObject getResponse(String id) throws InterruptedException {
+		return responses.getAndWait(id);
+	}
+	
 }
