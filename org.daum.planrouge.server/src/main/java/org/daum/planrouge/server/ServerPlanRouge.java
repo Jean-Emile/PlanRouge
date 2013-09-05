@@ -76,7 +76,8 @@ public class ServerPlanRouge extends AbstractComponentType {
                 .add("/getAll", handlerWebSocketgetAll)
                 .add("/delete", handlerWebSocketdelete)
                 .add("/getGlobalInformations", handlerGlobalInformations)
-                .add(new StaticFileHandler("/web")).add(new EmbedHandler());
+                .add(new StaticFileHandler("/web"))
+                .add(new EmbedHandler());
     }
 
 }

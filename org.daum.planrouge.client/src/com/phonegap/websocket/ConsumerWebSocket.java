@@ -85,14 +85,25 @@ public class ConsumerWebSocket extends Thread {
 		  addMessage(json);
 		  // TODO
 		  // synchronize --> wait result  
+		
 		  return true;
 		  
 		  
 	  }else {
-		  return false;
+		  return true;
 	  }
 	  
 
   }
-	
+  
+  // Called by Consumer
+//  public synchronized String getMessage() throws InterruptedException {
+//      notify();
+//      while (messages.size() == 0) {
+//          wait();//By executing wait() from a synchronized block, a thread gives up its hold on the lock and goes to sleep.
+//      }
+//      
+//      return message;
+//  }
+//  
 }
