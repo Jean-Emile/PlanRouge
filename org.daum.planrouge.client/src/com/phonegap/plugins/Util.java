@@ -1,4 +1,4 @@
-package com.chariotsolutions.nfc.plugin;
+package com.phonegap.plugins;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,9 +18,9 @@ import com.phonegap.plugins.nfc.Common;
 
 public class Util {
 
-    static final String TAG = "NfcPlugin";
+    public static final String TAG = "NfcPlugin";
 
-    static JSONObject ndefToJSON(Ndef ndef) {
+    public static JSONObject ndefToJSON(Ndef ndef) {
         JSONObject json = new JSONObject();
 
         if (ndef != null) {
@@ -52,7 +52,7 @@ public class Util {
         return json;
     }
        
-    static JSONObject tagToJSON(Tag tag) {
+    public static JSONObject tagToJSON(Tag tag) {
         JSONObject json = new JSONObject();
 
         if (tag != null) {
@@ -83,7 +83,7 @@ public class Util {
         return translation;
     }
 
-    static NdefRecord[] jsonToNdefRecords(String ndefMessageAsJSON) throws JSONException {
+    public static NdefRecord[] jsonToNdefRecords(String ndefMessageAsJSON) throws JSONException {
         JSONArray jsonRecords = new JSONArray(ndefMessageAsJSON);
         NdefRecord[] records = new NdefRecord[jsonRecords.length()];
         for (int i = 0; i < jsonRecords.length(); i++) {
@@ -113,7 +113,7 @@ public class Util {
         return b;
     }
 
-    static JSONArray messageToJSON(NdefMessage message) {
+    public static JSONArray messageToJSON(NdefMessage message) {
         if (message == null) {
             return null;
         }

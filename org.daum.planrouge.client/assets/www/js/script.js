@@ -77,7 +77,7 @@ function onDeviceReady() {
 	$("#username").val(window.localStorage.getItem("matriculeAgent"));	
 	$("#adresseIP").val(window.localStorage.getItem("ipAddress"));	
 	$("#distance").val(window.localStorage.getItem("distance"));	
-	window.tagid.ipAddress(window.localStorage.getItem("ipAddress"));
+//	ipaddress.ipAddress(window.localStorage.getItem("ipAddress"));
 	
 	$(document).on("pageshow", "#loginPage", function() {
 		refreshIdAgent();
@@ -246,9 +246,16 @@ function registerAgent() {
 		html: "<div style='width: 170px; text-align: center;' class='ui-bar ui-overlay-a ui-corner-all'><img  src='file:///android_asset/www/images/ajax-loader.gif' /><h2>Connexion en cours </h2></div>"
 	});	
 	
-	//var result = window.tagid.getAgent(matricule);
-//window.location = "file:///android_asset/www/login/index.html";	
-	window.location = "file:///android_asset/www/waitTag/index.html";
+	var result = agent.getAgent(matricule);
+	alert(result +"      dedeeededeede");
+	if (result == 'true'){
+		window.location = "file:///android_asset/www/waitTag/index.html";		
+	}else {
+		window.location = "file:///android_asset/www/login/index.html";	
+		
+	}
+//
+
 
 	
 }
@@ -265,7 +272,7 @@ function modifierAdresse(){
 	var adresseIP = $("#adresseIP").val();
 	if(adresseIP !=''){
 		window.localStorage.setItem("ipAddress", adresseIP);
-		window.tagid.ipAddress(adresseIP);
+		ipaddress.ipAddress(adresseIP);
 	}	
 }
 

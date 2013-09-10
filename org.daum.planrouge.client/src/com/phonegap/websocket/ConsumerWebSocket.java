@@ -5,7 +5,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.cordova.CordovaWebView;
 import org.json.JSONObject;
 
-import com.chariotsolutions.nfc.plugin.NfcPlugin;
+import com.phonegap.plugins.NfcPlugin;
+import com.phonegap.plugins.WebsocketPlugin;
 
 import android.util.Log;
 
@@ -15,8 +16,8 @@ public class ConsumerWebSocket extends Thread {
 	private LinkedBlockingQueue<String> queue;
 	private Thread t;
 
-	public ConsumerWebSocket(String address, int port, String handler, NfcPlugin nfcPlugin) {
-		client = new WebSocket(address, port, handler, nfcPlugin);
+	public ConsumerWebSocket(String address, int port, String handler, WebsocketPlugin websocketPlugin) {
+		client = new WebSocket(address, port, handler, websocketPlugin);
 		queue = new LinkedBlockingQueue<String>();
 		t = this;
 		this.t.start();
@@ -78,6 +79,8 @@ public class ConsumerWebSocket extends Thread {
 	public WebSocket getClient() {
 		return client;
 	}
+	
+	
 	// NO HAVE TO BE HERE NEED TO CREATE A CLASSE
 	public boolean checkAgent(String json)
 	{
@@ -103,14 +106,4 @@ public class ConsumerWebSocket extends Thread {
 			}
 	}
 
-	// Called by Consumer
-	//  public synchronized String getMessage() throws InterruptedException {
-	//      notify();
-	//      while (messages.size() == 0) {
-	//          wait();//By executing wait() from a synchronized block, a thread gives up its hold on the lock and goes to sleep.
-	//      }
-	//      
-	//      return message;
-	//  }
-	//  
 }

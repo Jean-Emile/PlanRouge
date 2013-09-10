@@ -5,10 +5,10 @@ import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.chariotsolutions.nfc.plugin.NfcPlugin;
 import com.phonegap.adapter.AdapterFactory;
 import com.phonegap.adapter.NFC_adapter;
 import com.phonegap.adapter.ReadAll;
+import com.phonegap.plugins.ReadWritePlugin;
 import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 import com.phonegap.plugins.nfc.TagActionException;
 
@@ -21,7 +21,7 @@ public class AdapterTextField implements NFC_adapter {
 	}
 	
 	@Override
-	public String write(JSONArray data, CallbackContext callbackContext, byte[] key, NFC_Mifare_classic puceNFC, NfcPlugin nfcPlugin)
+	public String write(JSONArray data, CallbackContext callbackContext, byte[] key, NFC_Mifare_classic puceNFC, ReadWritePlugin nfcPlugin)
 			throws JSONException {
 		String id = puceNFC.getId();
 		

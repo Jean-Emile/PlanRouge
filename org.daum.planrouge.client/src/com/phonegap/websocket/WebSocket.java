@@ -12,18 +12,19 @@ import org.json.JSONObject;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.chariotsolutions.nfc.plugin.NfcPlugin;
+import com.phonegap.plugins.NfcPlugin;
+import com.phonegap.plugins.WebsocketPlugin;
 import com.phonegap.plugins.nfc.Common;
 
 public class WebSocket {
 
 	private WebSocketClient client;
 	private List<BasicNameValuePair> extraHeaders = Arrays.asList(new BasicNameValuePair("Cookie", "session=abcd"));
-	private NfcPlugin nfcPlugin;
+	private WebsocketPlugin nfcPlugin;
     private  BlockingConcurrentHashMap<String,JSONObject> responses = new  BlockingConcurrentHashMap<String,JSONObject>();
 
-	public WebSocket(String address, int port, String handler, final NfcPlugin nfcPlugin) {
-		this.nfcPlugin=nfcPlugin;
+	public WebSocket(String address, int port, String handler, final WebsocketPlugin websocketPlugin) {
+		this.nfcPlugin=websocketPlugin;
 		client = new WebSocketClient(URI.create("http://" + address + ":" + port + "/" + handler), new WebSocketClient.Listener() {
 			String TAG = "WebSocketClient";
 

@@ -1,4 +1,4 @@
-package com.chariotsolutions.nfc.plugin;
+package com.phonegap.plugins;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -30,6 +30,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.phonegap.adapter.AdapterFactory;
+import com.phonegap.plugins.manager.ComManager;
 import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 import com.phonegap.plugins.nfc.TagActionException;
 import com.phonegap.websocket.ConsumerWebSocket;
@@ -67,103 +68,59 @@ public class NfcPlugin extends CordovaPlugin {
 	private Intent savedIntent = null;
 
 	private byte[] key = new NFC_Mifare_classic().hexStringToByteArray("FFFFFFFFFFFF");
-	private NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-	private String ipAddress = "192.168.1.101";
-	private ConsumerWebSocket consumerWebSocket = new ConsumerWebSocket(ipAddress,8080,"add",null);
-	private ConsumerWebSocket consumerWebSocketGet = new ConsumerWebSocket(ipAddress,8080,"get",this);
-	AdapterFactory adapterFactory = new AdapterFactory(consumerWebSocket);
-
-	private boolean isWriteExecution = false;
-
-
-	public boolean isWriteExecution() {
-		return isWriteExecution;
-	}
-
-	public void setWriteExecution(boolean isWriteExecution) {
-		Log.e("NFC PLUGIN", "IS NOT WRITE EXECUTION !!!!!!");
-		this.isWriteExecution = isWriteExecution;
-	}
+//	private NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
+//
+//	public NFC_Mifare_classic getPuceNFC() {
+//		return puceNFC;
+//	}
 
 	@Override
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-
 		Log.d(TAG, "execute " + action);
-
 		if (!getNfcStatus().equals(STATUS_NFC_OK)) {
 			callbackContext.error(getNfcStatus());
 			return true; // short circuit
 		}
-		// Vicitme vic1! createVictime(json);
+
 		createPendingIntent();
 
 		if (action.equalsIgnoreCase(REGISTER_MIME_TYPE)) {
+
 			registerMimeType(data, callbackContext);
 
 		} else if (action.equalsIgnoreCase(REGISTER_NDEF)) {
+
 			registerNdef(callbackContext);
 
 		} else if (action.equalsIgnoreCase(REGISTER_NDEF_FORMATABLE)) {
+
 			registerNdefFormattable(callbackContext);
 
 		} else if (action.equals(REGISTER_DEFAULT_TAG)) {
+
 			registerDefaultTag(callbackContext);
 
 		} else if (action.equalsIgnoreCase(WRITE_TAG)) {
+
 			writeTag(data, callbackContext);
 
 		} else if (action.equalsIgnoreCase(ERASE_TAG)) {
+
 			eraseTag(callbackContext);
 
 		} else if (action.equalsIgnoreCase(SHARE_TAG)) {
+
 			shareTag(data, callbackContext);
 
 		} else if (action.equalsIgnoreCase(UNSHARE_TAG)) {
+
 			unshareTag(callbackContext);
 
 		} else if (action.equalsIgnoreCase(INIT)) {
+
 			init(callbackContext);
 
-		} else if (action.equalsIgnoreCase("read")) { // read chip
-			Log.i("NfcPlugin", "read");
-			adapterFactory.read(data, callbackContext, key, puceNFC);
-
-		} else if (action.equalsIgnoreCase("write")) { // write on chip
-			isWriteExecution = true;
-			Log.i("NfcPlugin", "write");
-			adapterFactory.write(data, callbackContext, key, puceNFC,this);
-
-		}  else if (action.equalsIgnoreCase("raz")) { //reset isWriteExecution
-			isWriteExecution = false;
-			Log.i("NFC PLUGIN", "IS NOT WRITE EXECUTION");
-
-		} else if (action.equalsIgnoreCase("ipAddress")) {
-			ipAddress = data.getString(0);
-			consumerWebSocket = new ConsumerWebSocket(ipAddress, 8080, "add", null);
-			consumerWebSocketGet = new ConsumerWebSocket(ipAddress,8080,"get",this);
-			adapterFactory = new AdapterFactory(consumerWebSocket);
-			callbackContext.success();
-		} else if (action.equalsIgnoreCase("getAgent")) {
-
-			JSONObject jObject = new JSONObject();
-			Log.i("NFCPlugin","getAgent "+data.get(0));
-			jObject.put("type", "AdapterAgent");
-			jObject.put("matricule", data.get(0));
-			
-			if(data.get(0).toString().length() == 0){
-				callbackContext.success("false");
-			}else {
-				boolean agentexist = consumerWebSocketGet.checkAgent(jObject.toString());
-				
-				if(agentexist){
-					Log.i("NFCPlugin","SUCCESS login AGENT");
-					callbackContext.success("true");
-				}else {
-					Log.i("NFCPlugin", "ERROR login AGENT");
-					callbackContext.success("false");
-				}	
-			}
-		}else {
+		} else {
 			// invalid action
 			return false;
 		}
@@ -534,32 +491,30 @@ public class NfcPlugin extends CordovaPlugin {
 		Toast.makeText(getActivity(), "New Tag discovered", Toast.LENGTH_LONG).show();
 
 		super.onNewIntent(intent);
-
+		ComManager comManager = ComManager.getInstance();
 		setIntent(intent);
-		Log.i("NFCPLUGIN","GET URL ::: "+super.webView.getUrl());
+		Log.i("NFCPLUGIN", "GET URL ::: " + super.webView.getUrl());
 		savedIntent = intent;
-		puceNFC.treatAsNewTag(intent);
-		if (!(isWriteExecution) && !(super.webView.getUrl().equals("file:///android_asset/www/login/index.html"))){
+		comManager.getPuceNFC().treatAsNewTag(intent);
+		if (!(ReadWritePlugin.isWriteExecution()) && !(super.webView.getUrl().equals("file:///android_asset/www/login/index.html"))) {
 			Log.i("NFC PLUGIN", "IS WRITABLE");
 			String url = nextActionToProcess();
-			Log.i("NFCPLUGIN","NEW URL ::: "+url);
-			//if(!(url.equals(super.webView.getUrl()))){
-			super.webView.sendJavascript("javascript:window.location='"+url+"'");
-			//super.webView.loadUrl(url);
-			//}
+			Log.i("NFCPLUGIN", "NEW URL ::: " + url);
+			// if(!(url.equals(super.webView.getUrl()))){
+			super.webView.sendJavascript("javascript:window.location='" + url + "'");
+			// super.webView.loadUrl(url);
+			// }
 
 		}
 		parseMessage();
 
 	}
 
-
-
 	private String nextActionToProcess() {
-
+		ComManager comManager = ComManager.getInstance();
 		String vital_urgency = "";
 		try {
-			vital_urgency = puceNFC.readABlock(1, 0, key, false);
+			vital_urgency = comManager.getPuceNFC().readABlock(1, 0, key, false);
 		} catch (TagActionException e) {
 			e.printStackTrace();
 		}
@@ -580,12 +535,12 @@ public class NfcPlugin extends CordovaPlugin {
 		String identity_infos = "";
 		try {
 			// firstname
-			firstname = puceNFC.hexToAscii(puceNFC.readABlock(0, 1, key, false));
+			firstname = comManager.getPuceNFC().hexToAscii(comManager.getPuceNFC().readABlock(0, 1, key, false));
 			// surname
-			surname = puceNFC.hexToAscii(puceNFC.readABlock(0, 2, key, false));
+			surname = comManager.getPuceNFC().hexToAscii(comManager.getPuceNFC().readABlock(0, 2, key, false));
 
 			// Autres
-			identity_infos = puceNFC.hexToAscii(puceNFC.readABlock(1, 0, key, false));
+			identity_infos = comManager.getPuceNFC().hexToAscii(comManager.getPuceNFC().readABlock(1, 0, key, false));
 			// age
 			if (identity_infos.length() > 12) {
 				birthday = identity_infos.substring(0, 8);
@@ -620,6 +575,5 @@ public class NfcPlugin extends CordovaPlugin {
 
 	String javaScriptEventTemplate = "var e = document.createEvent(''Events'');\n" + "e.initEvent(''{0}'');\n" + "e.tag = {1};\n"
 			+ "document.dispatchEvent(e);";
-
 
 }

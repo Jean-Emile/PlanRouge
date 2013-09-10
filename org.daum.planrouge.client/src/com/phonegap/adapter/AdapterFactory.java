@@ -6,7 +6,6 @@ import org.json.JSONException;
 
 import android.util.Log;
 
-import com.chariotsolutions.nfc.plugin.NfcPlugin;
 import com.phonegap.adapter.entity.AdapterBilanComp;
 import com.phonegap.adapter.entity.AdapterBilanUrgence;
 import com.phonegap.adapter.entity.AdapterCategory;
@@ -15,6 +14,8 @@ import com.phonegap.adapter.entity.AdapterGpsHours;
 import com.phonegap.adapter.entity.AdapterIdentity;
 import com.phonegap.adapter.entity.AdapterLesion;
 import com.phonegap.adapter.entity.AdapterTextField;
+import com.phonegap.plugins.NfcPlugin;
+import com.phonegap.plugins.ReadWritePlugin;
 import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 import com.phonegap.websocket.ConsumerWebSocket;
 
@@ -28,8 +29,9 @@ public class AdapterFactory implements NFC_adapter {
 
 	@Override
 	//Write on chip
-	public String write(JSONArray data, CallbackContext callbackContext, byte[] key, NFC_Mifare_classic puceNFC, NfcPlugin nfcPlugin)
+	public String write(JSONArray data, CallbackContext callbackContext, byte[] key, NFC_Mifare_classic puceNFC, ReadWritePlugin nfcPlugin)
 			throws JSONException {
+		Log.i("AdapterFactory", "AdapterFactory");
 		if (data.get(0).equals("category")) {
 			Log.i("AdapterFactory", "write Category");
 			return new AdapterCategory(this).write(data, callbackContext, key, puceNFC, nfcPlugin);
@@ -57,7 +59,7 @@ public class AdapterFactory implements NFC_adapter {
 		} else if (data.get(0).equals("bilanUrgence")) {
 			Log.i("AdapterFactory", "write bilanUrgence");
 			return new AdapterBilanUrgence(this).write(data, callbackContext, key, puceNFC, nfcPlugin);
-			
+
 		} else if (data.get(0).equals("bilanComplementaire")) {
 			Log.i("AdapterFactory", "write bilanComplementaire");
 			return new AdapterBilanComp(this).write(data, callbackContext, key, puceNFC, nfcPlugin);

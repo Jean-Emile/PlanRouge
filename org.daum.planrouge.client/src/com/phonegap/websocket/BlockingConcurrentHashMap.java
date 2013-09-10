@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import android.util.Log;
 /**
  * User: jed
  */
@@ -16,6 +18,7 @@ public class BlockingConcurrentHashMap<K,V> implements Map<K,V> {
         synchronized(lock){
             V value = null;
             do{
+	
                 value = backingMap.get(key);
 
                 if(value == null) lock.wait();
@@ -53,6 +56,7 @@ public class BlockingConcurrentHashMap<K,V> implements Map<K,V> {
     public V put(K key, V val){
         synchronized(lock){
             V value = backingMap.put(key,val);
+           
             lock.notifyAll();
             return value;
         }
