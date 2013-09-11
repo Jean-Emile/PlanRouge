@@ -24,15 +24,15 @@ public class AgentPlugin extends CordovaPlugin {
 			if (data.get(0).toString().length() == 0) {
 				callbackContext.success("false");
 			} else {
-				boolean agentexist = checkAgent(jObject.toString());
-
-				if (agentexist) {
-					Log.e("NFCPlugin", "SUCCESS login AGENT");
+//				boolean agentexist = checkAgent(jObject.toString());
+//
+//				if (agentexist) {
+//					Log.e("NFCPlugin", "SUCCESS login AGENT");
 					callbackContext.success("true");
-				} else {
-					Log.e("NFCPlugin", "ERROR login AGENT");
-					callbackContext.success("false");
-				}
+//				} else {
+//					Log.e("NFCPlugin", "ERROR login AGENT");
+//					callbackContext.success("false");
+//				}
 			}
 		} else {
 			return false;
@@ -45,8 +45,9 @@ public class AgentPlugin extends CordovaPlugin {
 	public boolean checkAgent(String json) {
 		Log.d("AgentPlugin", "CHECK_AGENT 1");
 		ComManager comManager = ComManager.getInstance();
-		// todo create method
+		// Adding message to Client
 		comManager.getConsumerWebSocketGet().addMessage(json);
+		
 		Log.d("AgentPlugin", "CHECK_AGENT");
 		try {
 			JSONObject response = comManager.getConsumerWebSocketGet().getClient().getResponse("agent");

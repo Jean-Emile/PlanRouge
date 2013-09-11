@@ -14,9 +14,9 @@ import com.phonegap.adapter.entity.AdapterGpsHours;
 import com.phonegap.adapter.entity.AdapterIdentity;
 import com.phonegap.adapter.entity.AdapterLesion;
 import com.phonegap.adapter.entity.AdapterTextField;
+import com.phonegap.api.nfc.NFC_Mifare_classic;
 import com.phonegap.plugins.NfcPlugin;
 import com.phonegap.plugins.ReadWritePlugin;
-import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 import com.phonegap.websocket.ConsumerWebSocket;
 
 public class AdapterFactory implements NFC_adapter {

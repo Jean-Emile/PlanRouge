@@ -4,9 +4,9 @@ import org.apache.cordova.api.CallbackContext;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.phonegap.api.nfc.NFC_Mifare_classic;
 import com.phonegap.plugins.NfcPlugin;
 import com.phonegap.plugins.ReadWritePlugin;
-import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 
 public interface NFC_adapter {
 

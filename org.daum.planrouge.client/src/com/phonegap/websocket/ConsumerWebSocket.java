@@ -2,13 +2,11 @@ package com.phonegap.websocket;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.apache.cordova.CordovaWebView;
 import org.json.JSONObject;
 
-import com.phonegap.plugins.NfcPlugin;
-import com.phonegap.plugins.WebsocketPlugin;
-
 import android.util.Log;
+
+import com.phonegap.plugins.WebsocketPlugin;
 
 public class ConsumerWebSocket extends Thread {
 
@@ -16,8 +14,8 @@ public class ConsumerWebSocket extends Thread {
 	private LinkedBlockingQueue<String> queue;
 	private Thread t;
 
-	public ConsumerWebSocket(String address, int port, String handler, WebsocketPlugin websocketPlugin) {
-		client = new WebSocket(address, port, handler, websocketPlugin);
+	public ConsumerWebSocket(String address, int port, String handler) {
+		client = new WebSocket(address, port, handler);
 		queue = new LinkedBlockingQueue<String>();
 		t = this;
 		this.t.start();
@@ -79,31 +77,4 @@ public class ConsumerWebSocket extends Thread {
 	public WebSocket getClient() {
 		return client;
 	}
-	
-	
-	// NO HAVE TO BE HERE NEED TO CREATE A CLASSE
-	public boolean checkAgent(String json)
-	{
-			// todo create method 
-			addMessage(json);
-			try {
-				JSONObject response = 	client.getResponse("agent");
-	
-				if(response == null){
-					return false;
-				}else {
-					if(response.has("result")){
-						if(!response.get("result").toString().equals("undefined")){
-							return true;
-						}
-						
-					}
-					return false;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
 	}
-
-}

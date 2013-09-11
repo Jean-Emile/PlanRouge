@@ -22,8 +22,8 @@ public class WebsocketPlugin extends CordovaPlugin {
 
 		if (action.equalsIgnoreCase("ipAddress")) {
 			ipAddress = data.getString(0);
-			comManager.setConsumerWebSocketAdd(new ConsumerWebSocket(ipAddress, 8080, "add", null));
-			comManager.setConsumerWebSocketGet(new ConsumerWebSocket(ipAddress, 8080, "get", this));
+			comManager.setConsumerWebSocketAdd(new ConsumerWebSocket(ipAddress, 8080, "add"));
+			comManager.setConsumerWebSocketGet(new ConsumerWebSocket(ipAddress, 8080, "get"));
 			comManager.setAdapterFactory(new AdapterFactory(comManager.getConsumerWebSocketAdd()));
 			callbackContext.success();
 		} else {

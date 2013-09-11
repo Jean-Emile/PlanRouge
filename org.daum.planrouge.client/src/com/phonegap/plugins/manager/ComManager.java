@@ -3,7 +3,7 @@ package com.phonegap.plugins.manager;
 import android.util.Log;
 
 import com.phonegap.adapter.AdapterFactory;
-import com.phonegap.plugins.nfc.NFC_Mifare_classic;
+import com.phonegap.api.nfc.NFC_Mifare_classic;
 import com.phonegap.websocket.ConsumerWebSocket;
 
 public class ComManager {

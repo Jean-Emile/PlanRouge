@@ -4,27 +4,24 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.http.HttpException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.phonegap.plugins.NfcPlugin;
+import com.phonegap.api.nfc.Common;
 import com.phonegap.plugins.WebsocketPlugin;
-import com.phonegap.plugins.nfc.Common;
 
 public class WebSocket {
 
 	private WebSocketClient client;
 	private List<BasicNameValuePair> extraHeaders = Arrays.asList(new BasicNameValuePair("Cookie", "session=abcd"));
-	private WebsocketPlugin nfcPlugin;
+
     private  BlockingConcurrentHashMap<String,JSONObject> responses = new  BlockingConcurrentHashMap<String,JSONObject>();
 
-	public WebSocket(String address, int port, String handler, final WebsocketPlugin websocketPlugin) {
-		this.nfcPlugin=websocketPlugin;
+	public WebSocket(String address, int port, String handler) {
+
 		client = new WebSocketClient(URI.create("http://" + address + ":" + port + "/" + handler), new WebSocketClient.Listener() {
 			String TAG = "WebSocketClient";
 
@@ -48,7 +45,6 @@ public class WebSocket {
 						}
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			

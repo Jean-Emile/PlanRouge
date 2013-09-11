@@ -3,7 +3,6 @@ package com.phonegap.plugins;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.cordova.api.CallbackContext;
@@ -29,12 +28,9 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.phonegap.adapter.AdapterFactory;
+import com.phonegap.api.nfc.NFC_Mifare_classic;
+import com.phonegap.api.nfc.TagActionException;
 import com.phonegap.plugins.manager.ComManager;
-import com.phonegap.plugins.nfc.NFC_Mifare_classic;
-import com.phonegap.plugins.nfc.TagActionException;
-import com.phonegap.websocket.ConsumerWebSocket;
-import com.phonegap.websocket.GetAgent;
 
 public class NfcPlugin extends CordovaPlugin {
 	private static final String REGISTER_MIME_TYPE = "registerMimeType";
@@ -68,15 +64,11 @@ public class NfcPlugin extends CordovaPlugin {
 	private Intent savedIntent = null;
 
 	private byte[] key = new NFC_Mifare_classic().hexStringToByteArray("FFFFFFFFFFFF");
-//	private NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
-//
-//	public NFC_Mifare_classic getPuceNFC() {
-//		return puceNFC;
-//	}
 
 	@Override
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 		Log.d(TAG, "execute " + action);
+		
 		if (!getNfcStatus().equals(STATUS_NFC_OK)) {
 			callbackContext.error(getNfcStatus());
 			return true; // short circuit

@@ -72,16 +72,19 @@ function refreshIdAgent(){
 
 function onDeviceReady() {
 	
-	//Toast.shortshow("Deviceready");	
+	Toast.shortshow("Deviceready");	
 	refreshIdAgent();
 	$("#username").val(window.localStorage.getItem("matriculeAgent"));	
 	$("#adresseIP").val(window.localStorage.getItem("ipAddress"));	
 	$("#distance").val(window.localStorage.getItem("distance"));	
-//	ipaddress.ipAddress(window.localStorage.getItem("ipAddress"));
 	
+	if(document.location.href == "file:///android_asset/www/login/index.html"){
+		ipaddress.ipAddress(window.localStorage.getItem("ipAddress"));
+	}
 	$(document).on("pageshow", "#loginPage", function() {
 		refreshIdAgent();
-		$("#username").val(window.localStorage.getItem("matriculeAgent"));	
+		$("#username").val(window.localStorage.getItem("matriculeAgent"));
+		
 	});
 	
 	$(document).on("pageshow", "#victimCategory", function() {
@@ -247,17 +250,13 @@ function registerAgent() {
 	});	
 	
 	var result = agent.getAgent(matricule);
-	alert(result +"      dedeeededeede");
-	if (result == 'true'){
+//	alert(result +"      dedeeededeede");
+//	if (result == 'true'){
 		window.location = "file:///android_asset/www/waitTag/index.html";		
-	}else {
-		window.location = "file:///android_asset/www/login/index.html";	
+//	}else {
+//		window.location = "file:///android_asset/www/login/index.html";	
 		
-	}
-//
-
-
-	
+//	}	
 }
 
 function modifierDistance(){

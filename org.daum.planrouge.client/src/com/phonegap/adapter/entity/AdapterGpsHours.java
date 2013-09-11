@@ -8,9 +8,9 @@ import org.json.JSONException;
 import com.phonegap.adapter.AdapterFactory;
 import com.phonegap.adapter.NFC_adapter;
 import com.phonegap.adapter.ReadAll;
+import com.phonegap.api.nfc.NFC_Mifare_classic;
+import com.phonegap.api.nfc.TagActionException;
 import com.phonegap.plugins.ReadWritePlugin;
-import com.phonegap.plugins.nfc.NFC_Mifare_classic;
-import com.phonegap.plugins.nfc.TagActionException;
 
 public class AdapterGpsHours implements Runnable, NFC_adapter {
 

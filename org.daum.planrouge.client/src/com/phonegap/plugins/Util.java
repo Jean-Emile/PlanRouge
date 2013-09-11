@@ -14,7 +14,7 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.util.Log;
 
-import com.phonegap.plugins.nfc.Common;
+import com.phonegap.api.nfc.Common;
 
 public class Util {
 

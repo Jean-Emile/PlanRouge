@@ -1,6 +1,7 @@
 // Victim Category
 
 function read_victim_category() {
+	alert("Read Category");
 	var y = tagid.read("category");
 	if (y != false) {
 		var category = parseInt(y[0]);
@@ -64,12 +65,12 @@ function writeIdentity() {
 	var firstname = $("#firstname").val();
 	
 
-	window.tagid.write("identity",firstname, name, sexe, age, birthday);
+	tagid.write("identity",firstname, name, sexe, age, birthday);
 }
 
 function readIdentity() {
 
-	var y = window.tagid.read("identity");
+	var y = tagid.read("identity");
 	if (y != false) {
 		var firstname = y[0];
 		var surname = y[1];
@@ -527,64 +528,3 @@ function getInfoVitalEmergency() {
 		$("#pression_arterielle").val(pa);
 	}
 }
-
-
-var tagid = {	
-		read : function(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
-			var x;
-
-			cordova.exec(function(success) {
-				//Toast.shortshow(success);
-				x = success;
-			}, function(error) {
-				x = false;
-				Toast.shortshow(error);
-
-			}, "ReadWritePlugin", "read", [ type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10 ]);
-			return x;
-		},
-
-		write : function(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
-			var x;
-
-			cordova.exec(function(success) {
-				//Toast.shortshow(success);
-				x = success;
-
-				$.mobile.hidePageLoadingMsg();	
-
-
-				if(success[1] != 'GPS'){
-					writeDateHoursGps(success[1]);
-				}else {
-					
-				}
-				window.location = "file:///android_asset/www/waitTag/index.html";
-				
-			}, function(error) {
-				x = false;
-			
-
-				$.mobile.loading( 'show', {
-					text: 'Approcher le TAG !! ',
-					textVisible: true,
-					theme: 'e',
-					html: "<div style=' text-align: center;'><img  src='file:///android_asset/www/images/ajax-loader.gif' /><h3>Approcher le TAG !</h3><input type='button' value='Annuler' onClick='WriteCancel();' /></div>"
-				});
-
-
-					setTimeout(function() { 
-						if (r){
-						tagid.write(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, window.localStorage.getItem("matriculeAgent")) 
-						}
-						else {
-							r = false;
-						}
-					}, 1000);
-
-				
-			}, "ReadWritePlugin", "write", [ type, param1, param2, param3, param4, param5, param6, param7, param8, param9, window.localStorage.getItem("matriculeAgent") ]);
-			return x;
-		},
-
-	};

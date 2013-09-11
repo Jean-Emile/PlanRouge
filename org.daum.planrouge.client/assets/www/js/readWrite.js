@@ -1,3 +1,17 @@
+var r = true;
+
+function WriteCancel(){
+	$.mobile.hidePageLoadingMsg();
+	r = false;
+	cordova.exec(function(success) {}, function(error) {}, "ReadWritePlugin", "raz", []);
+}
+
+function alertCallback(buttonIndex, type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
+	alert('Envoi Annulé' + buttonIndex);
+
+	window.tagid.write(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+}
+
 var tagid = {	
 	read : function(type, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
 		var x;

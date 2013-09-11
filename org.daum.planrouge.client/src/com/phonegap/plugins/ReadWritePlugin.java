@@ -7,8 +7,8 @@ import org.json.JSONException;
 
 import android.util.Log;
 
+import com.phonegap.api.nfc.NFC_Mifare_classic;
 import com.phonegap.plugins.manager.ComManager;
-import com.phonegap.plugins.nfc.NFC_Mifare_classic;
 
 public class ReadWritePlugin extends CordovaPlugin {
 
@@ -26,12 +26,12 @@ public class ReadWritePlugin extends CordovaPlugin {
 	
 	@Override
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-		Log.e("READ_WRITE_PLUGIN","EXECUTE");
+		Log.i("READ_WRITE_PLUGIN","EXECUTE");
 		ComManager  comManager= ComManager.getInstance();
 
 
 		if (action.equalsIgnoreCase("read")) { // read chip
-			Log.i("READ_WRITE_PLUGIN", "read");
+			Log.i("READ_WRITE_PLUGIN", "read ");
 			comManager.getAdapterFactory().read(data, callbackContext, key, comManager.getPuceNFC());
 
 		} else if (action.equalsIgnoreCase("write")) { // write on chip

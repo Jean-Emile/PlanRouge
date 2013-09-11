@@ -9,7 +9,7 @@ import android.util.Log;
 import com.phonegap.adapter.entity.AdapterCategory;
 import com.phonegap.adapter.entity.AdapterGpsHours;
 import com.phonegap.adapter.entity.AdapterIdentity;
-import com.phonegap.plugins.nfc.NFC_Mifare_classic;
+import com.phonegap.api.nfc.NFC_Mifare_classic;
 
 public class ReadAll {
 
