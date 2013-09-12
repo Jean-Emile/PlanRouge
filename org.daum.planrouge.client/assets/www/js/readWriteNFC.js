@@ -1,7 +1,6 @@
 // Victim Category
 
 function read_victim_category() {
-	alert("Read Category");
 	var y = tagid.read("category");
 	if (y != false) {
 		var category = parseInt(y[0]);
@@ -182,6 +181,7 @@ function traitementGPS(latitude1, longitude1,accuracy1) {
 
 
 function writeDateHoursGps(gpsHours){
+
 	startLoading();
 	
 	
@@ -203,50 +203,54 @@ function writeDateHoursGps(gpsHours){
 		var lat4 = gpsHours[13]/10000000;
 		var long4 = gpsHours[14]/10000000;
 		var accuracy4 = gpsHours[15];
-		//alert("DISTANCE 4: "+lat+"  "+long+"  "+lat4+"  "+long4+"     "+distance(lat, long, lat4, long4));
+//		alert("DISTANCE 4: "+lat+"  "+long+"  "+lat4+"  "+long4+"     "+distance(lat, long, lat4, long4));
 		if(distance(lat, long, lat4, long4)> distanceRef){
 			traitementGPS(lat, long,accuracy);
 		}else{
 			stopLoading();
+			window.location = "file:///android_asset/www/waitTag/index.html";
 		}
 	}else if(parseInt(date3)!=0){
 
 		var lat3 = gpsHours[9]/10000000;
 		var long3 = gpsHours[10]/10000000;
 		var accuracy3 = gpsHours[11];
-		//alert("DISTANCE 3: "+lat+"  "+long+"  "+lat3+"  "+long3+"     "+distance(lat, long, lat3, long3));
+//		alert("DISTANCE 3: "+lat+"  "+long+"  "+lat3+"  "+long3+"     "+distance(lat, long, lat3, long3));
 		
 		if(distance(lat, long, lat3, long3)>distanceRef){
 			traitementGPS(lat, long,accuracy);
 		}else{
 			stopLoading();
+			window.location = "file:///android_asset/www/waitTag/index.html";
 		}
 	}else if (parseInt(date2)!=0){
 		
 		var lat2 = gpsHours[5]/10000000;
 		var long2 = gpsHours[6]/10000000;
 		var accuracy2 = gpsHours[7];
-		//alert("DISTANCE 2: "+lat+"  "+long+"  "+lat2+"  "+long2+"     "+distance(lat, long, lat2, lon2));
+//		alert("DISTANCE 2: "+lat+"  "+long+"  "+lat2+"  "+long2+"     "+distance(lat, long, lat2, lon2));
 		if(distance(lat, long, lat2, long2)>distanceRef){
 			traitementGPS(lat, long,accuracy);
 		}else{
 			stopLoading();
+			window.location = "file:///android_asset/www/waitTag/index.html";
 		}
 	}else if (parseInt(date1)!=0){
 
 		var lat1 = gpsHours[1]/10000000;
 		var long1 = gpsHours[2]/10000000;		
 		var accuracy1 = gpsHours[3];
-	//	alert("DISTANCE 1: "+lat+"  "+long+"  "+lat1+"  "+long1+"     "+(distance(lat, long, lat1, long1));
+//		alert("DISTANCE 1: "+lat+"  "+long+"  "+lat1+"  "+long1+"     "+distance(lat, long, lat1, long1));
 
 		
 		if( distance(lat, long, lat1, long1) > distanceRef){ 
 			traitementGPS(lat, long,accuracy);
 		}else{
 			stopLoading();
+			window.location = "file:///android_asset/www/waitTag/index.html";
 		}
 	}else {
-		//alert("DATE 0");
+//		alert("DATE 0");
 		traitementGPS(lat, long,accuracy);
 	}
 	

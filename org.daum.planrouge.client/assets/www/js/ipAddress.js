@@ -1,6 +1,5 @@
 var ipaddress = {	
 		ipAddress: function(adresse) {
-			Toast.shortshow("ipaddress");
 			cordova.exec(function(success) {
 				Toast.shortshow(success);
 
@@ -10,5 +9,3 @@ var ipaddress = {
 			}, "WebsocketPlugin", "ipAddress", [ adresse ]);
 		},
 };
-
-Toast.shortshow("TEST IP ADDRESS");

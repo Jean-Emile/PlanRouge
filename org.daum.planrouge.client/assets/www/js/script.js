@@ -72,7 +72,7 @@ function refreshIdAgent(){
 
 function onDeviceReady() {
 	
-	Toast.shortshow("Deviceready");	
+	//Toast.shortshow("Deviceready");	
 	refreshIdAgent();
 	$("#username").val(window.localStorage.getItem("matriculeAgent"));	
 	$("#adresseIP").val(window.localStorage.getItem("ipAddress"));	

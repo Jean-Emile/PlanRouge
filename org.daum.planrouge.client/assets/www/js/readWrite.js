@@ -31,18 +31,19 @@ var tagid = {
 		var x;
 
 		cordova.exec(function(success) {
-			//Toast.shortshow(success);
+
 			x = success;
 
 			$.mobile.hidePageLoadingMsg();	
 
 
 			if(success[1] != 'GPS'){
+			
 				writeDateHoursGps(success[1]);
 			}else {
-				
+				window.location = "file:///android_asset/www/waitTag/index.html";
 			}
-			window.location = "file:///android_asset/www/waitTag/index.html";
+
 			
 		}, function(error) {
 			x = false;
@@ -71,5 +72,3 @@ var tagid = {
 	},
 
 };
-
-Toast.shortshow("TEST WRITE READ");
