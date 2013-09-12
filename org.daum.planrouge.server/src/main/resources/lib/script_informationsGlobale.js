@@ -90,10 +90,10 @@ function addEvent(element, type, listener){
     }
 }
 
-// On exécute la fonction une première fois au chargement de la page
-addEvent(window, "load", adpaterALaTailleDeLaFenetre);
-// Puis à chaque fois que la fenêtre est redimensionnée
-addEvent(window, "resize", adpaterALaTailleDeLaFenetre);
+//// On exécute la fonction une première fois au chargement de la page
+//addEvent(window, "load", adpaterALaTailleDeLaFenetre);
+//// Puis à chaque fois que la fenêtre est redimensionnée
+//addEvent(window, "resize", adpaterALaTailleDeLaFenetre);
 
 
 // DELETE Rows of Table
@@ -183,40 +183,56 @@ function data(jsonObj){
 
     $("#bodyTable").trigger("update");
     // NUMERO Intervention
-//    document.getElementById('nIntervention').innerHTML = jIntervention.id;
+      document.getElementById('nIntervention').innerHTML = jIntervention.id;
 
 
     // NB VICTIMS
     document.getElementById('nbVictime').innerHTML = nbVictime;
 
-    //NB VICTIMS SEX
-//    document.getElementById('nbHommes').innerHTML = jNbVictimeSexe[0];
-//    document.getElementById('nbFemmes').innerHTML = jNbVictimeSexe[1];
+
 
     //Heure
     var dt = new Date(jHeure);
     var heure = dt.getHours();
     var minutes = dt.getMinutes();
-    if (heure.length == 1 ){
+
+    if (heure < 10 ){
         heure='0' + heure;
     }
-    if (minutes.length == 1 ){
+    if (minutes < 10){
         minutes='0'+ minutes;
     }
+
     document.getElementById('heureDebut').innerHTML = heure+':'+minutes;
 
 
+    // Heure mise a jour
+    var dateMAJ = new Date();
+    var heureMAJ = dateMAJ.getHours();
+    var minutesMAJ = dateMAJ.getMinutes();
+
+    if (heureMAJ< 10 ){
+      heureMAJ='0' + heureMAJ;
+    }
+    if (minutesMAJ< 10 ){
+      minutesMAJ='0'+ minutesMAJ;
+    }
+    document.getElementById('hoursMAJ').innerHTML = heureMAJ+':'+minutesMAJ;
     // NB AGENTS
     document.getElementById('nbAgents').innerHTML = nbAgents;
 
-    // INTERVENTION
+    // INTERVENTION  DESCRIPTION
     var description ;
     if(jIntervention.position != null){
-        if(jIntervention.position.nomVille != null){
-            description = '<b>'+jIntervention.position.nomRue+'   </b>';
-        }
+
+        if(jIntervention.position.nomRue != null){
+                description = '<div><b>Rue :  </b>'+jIntervention.position.nomRue+' </div>';
+            }
+         if(jIntervention.position.nomVille != null){
+                         description += '<div><b>Ville :  </b>'+jIntervention.position.nomVille+' </div>';
+                     }
         if(jIntervention.position.cp != null){
-            description += '<b>'+jIntervention.position.nomVille+'   </b>';
+            description += '<div><b>Code Postal :  </b>'+jIntervention.position.cp+' </div>';
         }
     }
     if(jIntervention.description != null){
@@ -225,11 +241,15 @@ function data(jsonObj){
 
     document.getElementById('description').innerHTML = description ;
 
+
+    // MAPS
+
     var latlng = new google.maps.LatLng(48.12107,-1.610556);  <!--default -->
     var options = {
         center: latlng,
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        zoom: 50,
+        mapTypeControl: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
     };
     carte = new google.maps.Map(document.getElementById("carte"), options);
 
@@ -256,8 +276,8 @@ function data(jsonObj){
         labels : ["U3","U2","U1","EU","DCD"],
         datasets : [
             {
-                fillColor : "rgba(41,128,185,1)",
-                strokeColor : "rgba(41,128,185,1)",
+                fillColor : "rgba(236, 240, 241,0.8)",
+                strokeColor : "rgba(236, 240, 241,0.8)",
 
                 data : [ parseInt(jNbVictimeCat[0]), parseInt(jNbVictimeCat[1]), parseInt(jNbVictimeCat[2]),
                     parseInt(jNbVictimeCat[3]), parseInt(jNbVictimeCat[4])]
@@ -275,7 +295,12 @@ function data(jsonObj){
         //Number - The scale starting value
         scaleStartValue : 0,
         scaleLineColor : "rgba(0,0,0,1)",
-        animation : false,
+        animation : true,
+        //Number - Number of animation steps
+        animationSteps : 30,
+
+        //String - Animation easing effect
+        animationEasing : "easeOutQuart",
     }
 
     var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData,option);
@@ -290,8 +315,8 @@ function data(jsonObj){
         labels : ["0-5","6-10","11-20","21-30","31-40","41-60","61-80","80+"],
         datasets : [
             {
-                fillColor : "rgba(22,160,133,1)",
-                strokeColor : "rgba(22,160,133,1)",
+                fillColor : "rgba(241, 196, 15,0.8)",
+                strokeColor : "rgba(241, 196, 15,0.8)",
 
                 data : [ parseInt(jNbVictimeAge[0]), parseInt(jNbVictimeAge[1]), parseInt(jNbVictimeAge[2]),
                     parseInt(jNbVictimeAge[3]),
@@ -312,7 +337,12 @@ function data(jsonObj){
         //Number - The scale starting value
         scaleStartValue : 0,
         scaleLineColor : "rgba(0,0,0,1)",
-        animation : false,
+        animation : true,
+        //Number - Number of animation steps
+        animationSteps : 50,
+
+        //String - Animation easing effect
+        animationEasing : "easeOutQuart",
     }
     var myLineAge = new Chart(document.getElementById("canvasAge").getContext("2d")).Bar(barChartDataAge,optionAge);
 
