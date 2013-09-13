@@ -12,12 +12,12 @@ public class ComManager {
 	
 	private ConsumerWebSocket consumerWebSocketGet = null;
 	private ConsumerWebSocket consumerWebSocketAdd = null;
-	
+	private boolean isWriteExecution = false;
 	private NFC_Mifare_classic puceNFC = new NFC_Mifare_classic();
 	
 	private AdapterFactory adapterFactory = null;
 	
-	private ComManager(){	}
+	private ComManager(){}
 	                   
 	public static ComManager getInstance() {
         if (singleton  == null) {
@@ -27,52 +27,43 @@ public class ComManager {
         return singleton;
     }
 
-
 	public NFC_Mifare_classic getPuceNFC() {
 		return puceNFC;
 	}
-
-
 
 	public void setPuceNFC(NFC_Mifare_classic puceNFC) {
 		this.puceNFC = puceNFC;
 	}
 
-
-
 	public AdapterFactory getAdapterFactory() {
 		return adapterFactory;
 	}
-
-
 
 	public void setAdapterFactory(AdapterFactory adapterFactory) {
 		this.adapterFactory = adapterFactory;
 	}
 
-
-
 	public ConsumerWebSocket getConsumerWebSocketGet() {
 		return consumerWebSocketGet;
 	}
-
-
 
 	public void setConsumerWebSocketGet(ConsumerWebSocket consumerWebSocketGet) {
 		this.consumerWebSocketGet = consumerWebSocketGet;
 	}
 
-
-
 	public ConsumerWebSocket getConsumerWebSocketAdd() {
 		return consumerWebSocketAdd;
 	}
 
-
-
 	public void setConsumerWebSocketAdd(ConsumerWebSocket consumerWebSocketAdd) {
 		this.consumerWebSocketAdd = consumerWebSocketAdd;
 	}
-	
-	
+
+	public boolean isWriteExecution() {
+		return isWriteExecution;
+	}
+
+	public void setWriteExecution(boolean isWriteExecution) {
+		this.isWriteExecution = isWriteExecution;
+	}	
 }

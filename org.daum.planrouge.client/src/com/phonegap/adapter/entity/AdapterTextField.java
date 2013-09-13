@@ -11,6 +11,7 @@ import com.phonegap.adapter.ReadAll;
 import com.phonegap.api.nfc.NFC_Mifare_classic;
 import com.phonegap.api.nfc.TagActionException;
 import com.phonegap.plugins.ReadWritePlugin;
+import com.phonegap.plugins.manager.ComManager;
 
 public class AdapterTextField implements NFC_adapter {
 
@@ -49,7 +50,9 @@ public class AdapterTextField implements NFC_adapter {
 		String matriculeAgent = data.getString(10);	
 		adapterFactory.getConsumerWebSocket().addMessage(new ReadAll().readAll(puceNFC, matriculeAgent, id).toString());
 		
-		nfcPlugin.setWriteExecution(false);
+		ComManager comManager = ComManager.getInstance();
+		comManager.setWriteExecution(false);
+		
 		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, "Transmission Réussie"));
 		return null;
 	}

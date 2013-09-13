@@ -488,7 +488,7 @@ public class NfcPlugin extends CordovaPlugin {
 		Log.i("NFCPLUGIN", "GET URL ::: " + super.webView.getUrl());
 		savedIntent = intent;
 		comManager.getPuceNFC().treatAsNewTag(intent);
-		if (!(ReadWritePlugin.isWriteExecution()) && !(super.webView.getUrl().equals("file:///android_asset/www/login/index.html"))) {
+		if (!(comManager.isWriteExecution()) && !(super.webView.getUrl().equals("file:///android_asset/www/login/index.html"))) {
 			Log.i("NFC PLUGIN", "IS WRITABLE");
 			String url = nextActionToProcess();
 			Log.i("NFCPLUGIN", "NEW URL ::: " + url);

@@ -11,6 +11,7 @@ import com.phonegap.adapter.ReadAll;
 import com.phonegap.api.nfc.NFC_Mifare_classic;
 import com.phonegap.api.nfc.TagActionException;
 import com.phonegap.plugins.ReadWritePlugin;
+import com.phonegap.plugins.manager.ComManager;
 
 public class AdapterGpsHours implements Runnable, NFC_adapter {
 
@@ -93,7 +94,8 @@ public class AdapterGpsHours implements Runnable, NFC_adapter {
 
 		this.run();
 		
-		nfcPlugin.setWriteExecution(false);
+		ComManager comManager = ComManager.getInstance();
+		comManager.setWriteExecution(false);
 		JSONArray result = new JSONArray();
 		result.put(0,"Transmission réussie");
 		result.put(1,"GPS");

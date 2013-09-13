@@ -10,6 +10,7 @@ import com.phonegap.adapter.NFC_adapter;
 import com.phonegap.api.nfc.NFC_Mifare_classic;
 import com.phonegap.api.nfc.TagActionException;
 import com.phonegap.plugins.ReadWritePlugin;
+import com.phonegap.plugins.manager.ComManager;
 
 public class AdapterDestination implements NFC_adapter {
 
@@ -38,7 +39,8 @@ public class AdapterDestination implements NFC_adapter {
 			callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION, e.getMessage()));
 			e.printStackTrace();
 		}
-		nfcPlugin.setWriteExecution(false);
+		ComManager comManager = ComManager.getInstance();
+		comManager.setWriteExecution(false);
 		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, true));
 		
 		return null;

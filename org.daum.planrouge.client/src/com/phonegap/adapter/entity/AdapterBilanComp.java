@@ -10,6 +10,7 @@ import com.phonegap.adapter.NFC_adapter;
 import com.phonegap.api.nfc.NFC_Mifare_classic;
 import com.phonegap.api.nfc.TagActionException;
 import com.phonegap.plugins.ReadWritePlugin;
+import com.phonegap.plugins.manager.ComManager;
 
 public class AdapterBilanComp implements NFC_adapter {
 
@@ -88,8 +89,8 @@ public class AdapterBilanComp implements NFC_adapter {
 			e.printStackTrace();
 
 		}
-
-		nfcPlugin.setWriteExecution(false);
+		ComManager comManager = ComManager.getInstance();
+		comManager.setWriteExecution(false);
 		callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, "Transmission Réussie"));
 		return null;
 	}
