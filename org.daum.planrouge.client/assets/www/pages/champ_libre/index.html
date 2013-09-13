@@ -1,0 +1,58 @@
+<!Doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<script src="file:///android_asset/www/lib/jquery-1.9.1.min.js"></script>
+<script src="file:///android_asset/www/lib/jquery.mobile-1.3.1.min.js"></script>
+
+<link rel="stylesheet" href="file:///android_asset/www/css/style.css" />
+<link rel="stylesheet" href="file:///android_asset/www/css/jquery.mobile.flatui.css" />
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script  src="file:///android_asset/www/lib/cordova.js"></script>
+
+<script charset="ISO-8859-1" src="file:///android_asset/www/lib/script.js"></script>
+
+<script  src="file:///android_asset/www/lib/phonegap-nfc.js"></script>
+<script src="file:///android_asset/www/lib/toast.js"></script>
+<script src="file:///android_asset/www/lib/ipAddress.js"></script>
+<script src="file:///android_asset/www/lib/readWriteNFC.js"></script>
+<script src="file:///android_asset/www/lib/agent.js"></script>
+<script src="file:///android_asset/www/lib/readWrite.js"></script>
+
+</head>
+<body onload="onload();">
+	<!-- la page d'identification -->
+	<div data-role="page" id="champLibre" data-add-back-btn=true>
+		<!-- l'entête -->
+		<div data-role="header" data-theme="a" data-position= "fixed" >
+			<h1>CHAMP LIBRE</h1>
+		</div>
+		<!-- le contenu -->
+		<div data-role="content">
+
+			<p>
+				<input type="button" name="buttonSubmit" value="Récupérer les données" onclick="read_champlibre();" />
+			</p>
+			<!--  CHAMP LIBRE -->
+
+			<div  data-role="fieldcontain">
+				<label for="textfield">Champ libre:</label>
+				<textarea style="height:220px" cols="40" rows="16" name="textarea" id="textfield" maxlength="288"></textarea>
+			</div>
+     
+                
+			<!--  BOUTON SUBMIT -->
+			<p>
+				<input type="button" name="buttonSubmit" value="Envoyer" onclick="write_champlibre();" />
+			</p>
+		</div>
+
+		<!-- le pied de page -->
+		<div data-role="footer" data-position="fixed" style='height: 35px;'>
+			<div style='text-align: center;'  class="idAgent" ></div>
+		</div>
+	</div>
+</body>
+</html>

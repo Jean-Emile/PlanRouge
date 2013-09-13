@@ -150,29 +150,29 @@ Hello Cordova
     <feature name="ReadWritePlugin" >
         <param
             name="android-package"
-            value="com.phonegap.plugins.ReadWritePlugin" />
+            value="com.planrouge.plugins.ReadWritePlugin" />
     </feature>
     <feature name="WebsocketPlugin" >
         <param
             name="android-package"
-            value="com.phonegap.plugins.WebsocketPlugin" />
+            value="com.planrouge.plugins.WebsocketPlugin" />
     </feature>
     <feature name="AgentPlugin" >
         <param
             name="android-package"
-            value="com.phonegap.plugins.AgentPlugin" />
+            value="com.planrouge.plugins.AgentPlugin" />
     </feature>
     <!-- Deprecated plugins element. Remove in 3.0 -->
     <plugins>
         <plugin
             name="NfcPlugin"
-            value="com.phonegap.plugins.NfcPlugin" />
+            value="com.planrouge.plugins.NfcPlugin" />
         <plugin
             name="WebSocket"
-            value="com.phonegap.websocket.WebSocket" />
+            value="com.planrouge.websocket.WebSocket" />
         <plugin
             name="ToastPlugin"
-            value="com.phonegap.plugins.ToastPlugin" />
+            value="com.planrouge.plugins.ToastPlugin" />
     </plugins>
 
 </widget>

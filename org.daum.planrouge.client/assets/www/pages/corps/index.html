@@ -1,0 +1,99 @@
+<!Doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<script src="file:///android_asset/www/lib/jquery-1.9.1.min.js"></script>
+<script src="file:///android_asset/www/lib/jquery.mobile-1.3.1.min.js"></script>
+
+<link rel="stylesheet" href="file:///android_asset/www/css/style.css" />
+<link rel="stylesheet" href="file:///android_asset/www/css/jquery.mobile.flatui.css" />
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script  src="file:///android_asset/www/lib/cordova.js"></script>
+
+<script charset="ISO-8859-1" src="file:///android_asset/www/lib/script.js"></script>
+
+<script  src="file:///android_asset/www/lib/phonegap-nfc.js"></script>
+<script src="file:///android_asset/www/lib/toast.js"></script>
+<script src="file:///android_asset/www/lib/ipAddress.js"></script>
+<script src="file:///android_asset/www/lib/readWriteNFC.js"></script>
+<script src="file:///android_asset/www/lib/agent.js"></script>
+<script src="file:///android_asset/www/lib/readWrite.js"></script>
+
+</head>
+<body onload="onload();">
+	<!-- la page d'identification -->
+	<div data-role="page" id="corps" data-add-back-btn=true>
+		<!-- l'entête -->
+		<div data-role="header" data-position="fixed" data-theme="a">
+			<h1>CORPS</h1>
+		</div>
+		<!-- le contenu -->
+		<div data-role="content">
+			<div data-role="fieldcontain">
+
+				<fieldset data-role="controlgroup" data-mini="true" data-role="fieldcontain">
+					<legend>Sélectionner la catégorie de la victime</legend>
+					<p>
+						<input type="radio" name="atteintesLesionnelles" id="atteintesLesionnelles_1" value="1" /> <label for="atteintesLesionnelles_1">Gonflement</label>
+
+						<input type="radio" name="atteintesLesionnelles" id="atteintesLesionnelles_2" value="2" /> <label for="atteintesLesionnelles_2">Section</label>
+
+						<input type="radio" name="atteintesLesionnelles" id="atteintesLesionnelles_3" value="3" /> <label for="atteintesLesionnelles_3">Plaie</label> <input
+							type="radio" name="atteintesLesionnelles" id="atteintesLesionnelles_4" value="4" /> <label for="atteintesLesionnelles_4">Douleur</label> <input
+							type="radio" name="atteintesLesionnelles" id="atteintesLesionnelles_5" value="5" /> <label for="atteintesLesionnelles_5">Contusion</label> <input
+							type="radio" name="atteintesLesionnelles" id="atteintesLesionnelles_6" value="6" /> <label for="atteintesLesionnelles_6">Brûlure</label> <input
+							type="radio" name="atteintesLesionnelles" id="atteintesLesionnelles_7" value="7" /> <label for="atteintesLesionnelles_7">Déformation</label>
+
+					</p>
+				</fieldset>
+			</div>
+
+			<img alt="corps_face.png" usemap="#corps_face" src="file:///android_asset/www/images/corps_face.png" />
+			<map id="corps_face" name="corps_face">
+				<area alt="crane" href="" shape="rect" coords="88,1,159,22" />
+				<area alt="cou" href="" shape="rect" coords="96,60,151,80" />
+				<area alt="tete" href="" shape="rect" coords="88,23,160,59" />
+				<area alt="piedD" href="" shape="rect" coords="89,476,126,505" />
+				<area alt="piedG" href="" shape="rect" coords="128,477,165,505" />
+				<area alt="molletD" href="" shape="rect" coords="85,387,125,469" />
+				<area alt="cuisseD" href="" shape="rect" coords="73,285,124,358" />
+				<area alt="cuisseG" href="" shape="rect" coords="125,285,176,358" />
+				<area alt="bassin" href="" shape="rect" coords="73,230,176,282" />
+				<area alt="molletG" href="" shape="rect" coords="127,387,168,471" />
+				<area alt="genouG" href="" shape="rect" coords="124,359,165,386" />
+				<area alt="genouD" href="" shape="rect" coords="81,359,122,386" />
+				<area alt="mainG" href="" shape="rect" coords="199,253,246,308" />
+				<area alt="mainD" href="" shape="rect" coords="3,255,50,310" />
+				<area alt="abdomen" onclick="testabdo();" shape="rect" coords="79,172,167,229" />
+				<area alt="thorax" href="" shape="rect" coords="78,105,168,159" />
+				<area alt="abrasD" href="" shape="poly" coords="38,165,78,179,73,223,54,254,5,253,38,165,38,166" />
+				<area alt="abrasG" href="" shape="poly" coords="205,165,168,178,171,213,190,250,237,249,205,166,203,168" />
+				<area alt="brasD" href="" shape="poly" coords="38,164,49,102,76,105,75,174,37,164" />
+				<area alt="brasG" href="" shape="poly" coords="202,163,169,178,169,161,169,106,197,105,204,159" />
+				<area alt="epauleD" href="" shape="poly" coords="94,79,70,72,49,84,49,99,94,105,93,77,93,79" />
+				<area alt="epauleG" href="" shape="poly" coords="152,70,151,103,203,104,203,71,153,72,153,72,153,71" />
+			</map>
+
+
+
+			<!--  BOUTON SUBMIT -->
+			<p>
+				<input type="button" name="submit" value="Envoyer" onclick="Javascript:writeBilanComplementaire();" />
+			</p>
+
+
+		</div>
+
+
+
+
+
+		<!-- le pied de page -->
+		<div data-role="footer">
+			<h3></h3>
+		</div>
+	</div>
+</body>
+</html>

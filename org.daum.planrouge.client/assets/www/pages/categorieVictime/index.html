@@ -1,0 +1,83 @@
+<!Doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<script src="file:///android_asset/www/lib/jquery-1.9.1.min.js"></script>
+<script src="file:///android_asset/www/lib/jquery.mobile-1.3.1.min.js"></script>
+
+<link rel="stylesheet" href="file:///android_asset/www/css/style.css" />
+<link rel="stylesheet" href="file:///android_asset/www/css/jquery.mobile.flatui.css" />
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script  src="file:///android_asset/www/lib/cordova.js"></script>
+
+<script charset="ISO-8859-1" src="file:///android_asset/www/lib/script.js"></script>
+
+<script  src="file:///android_asset/www/lib/phonegap-nfc.js"></script>
+<script src="file:///android_asset/www/lib/toast.js"></script>
+<script src="file:///android_asset/www/lib/ipAddress.js"></script>
+<script src="file:///android_asset/www/lib/readWriteNFC.js"></script>
+<script src="file:///android_asset/www/lib/agent.js"></script>
+<script src="file:///android_asset/www/lib/readWrite.js"></script>
+
+</head>
+<body onload= "onload();">
+<div id="container">
+	<!-- la page d'identification -->
+	<div data-role="page" id="victimCategory"  style='background-color: #bdc3c7'>
+	
+		<div id="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" data-display="push" data-theme="a" data-position="right" data-role="panel">
+				<ul data-role="listview" >
+				<li><a href="file:///android_asset/www/pages/categorieVictime/index.html" data-transition="slidefade">Catégorie vicitime</a></li>
+				<li><a href="file:///android_asset/www/pages/identite/index.html" data-transition="slidefade">Identité</a></li>
+				<li><a href="file:///android_asset/www/pages/gps_hours/index.html" data-transition="slidefade">Heures et GPS</a></li>
+				<li><a style="background: #e74c3c; margin-top : 30px;" href="file:///android_asset/www/pages/login/index.html" onclick="deconnexion();" data-transition="slidefade">Déconnexion</a></li>
+			</ul>
+		
+		</div>
+		
+		<!-- l'entête -->
+		<div data-role="header" data-theme="a" data-position= "fixed" >
+		<a href="file:///android_asset/www/pages/parametres/index.html" data-rel="dialog"  data-icon="gear" data-transition="pop">Paramètres</a>
+			<h1>Categorie de victime</h1>
+		<a href="#panel" data-rel="dialog"  data-icon="grid" >Menu</a>
+		</div>
+		
+
+		<!-- le contenu -->
+		<div data-role="content" id='victimCategoryChoice'>
+			
+			<form >
+				<fieldset>
+					<legend id='legend'>Sélectionner la catégorie de la victime</legend>
+					<p>
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_1" value="1" /> 
+						<label for="categorie_victime_1" id='cat1' style="background: #11A600; text-shadow: none; border: 0px; height: 100px;">U3 - Impliqué sans lésion corporelles apparentes</label> 
+						
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_2" value="2" /> 
+						<label for="categorie_victime_2" id='cat2' style="background: #D8E801; text-shadow: none; border: 0px; height: 100px;">U2 - Lesion corporelles ET/OU psychologique (blessé léger)</label> 
+						
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_3" value="3" /> 
+						<label for="categorie_victime_3" id='cat3' style="background: #E88B01; text-shadow: none; border: 0px; height: 100px;">U1 - Urgence absolue</label> 
+						
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_4" value="4" />
+						<label for="categorie_victime_4"  id='cat4' style="background: #f00; text-shadow: none; border: 0px; height: 100px;">EU - Extreme Urgence</label> 
+						
+						<input type="radio" name="categorie_victime" onClick="javascript:changementradio()" id="categorie_victime_5" value="5" /> 
+						<label for="categorie_victime_5"  id='cat5' style="background: #000; color: white; text-shadow: none; border: 0px; height: 100px; vertical-align: center;">DCD - Personne décédée</label>
+					</p>
+
+					
+				</fieldset>
+			</form>
+
+		</div>
+		<!-- le pied de page -->
+		<div data-role="footer" data-position="fixed" style='height: 35px;'>
+			<div style='text-align: center;'  class="idAgent"></div>
+		</div>
+	</div>
+	</div>
+</body>
+</html>

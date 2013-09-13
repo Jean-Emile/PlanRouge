@@ -1,0 +1,74 @@
+<!Doctype html>
+<html>
+<head>
+<!-- pour spécifier au naviageteur comment afficher la page -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+
+<link rel="stylesheet" href="file:///android_asset/www/css/style.css" />
+<link rel="stylesheet" href="file:///android_asset/www/jquery.mobile.flatui.css" />
+
+<!-- le fichier css pour formater nos balises html -->
+<!-- <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" /> -->
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script  src="file:///android_asset/www/cordova.js"></script>
+<script charset="ISO-8859-1" src="file:///android_asset/www/js/script.js"></script>
+<script  src="file:///android_asset/www/lib/phonegap-nfc.js"></script>
+<script src="file:///android_asset/www/js/readWriteNFC.js"></script>
+<script src="file:///android_asset/www/js/toast.js"></script>
+
+</head>
+
+<body onload="onload();">
+
+
+
+	<!-- la page d'identification -->
+	<div data-role="page" id="accueil" style='background-color: #bdc3c7'>
+		<div id="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" data-display="push" data-theme="a" data-position="right" data-role="panel">
+				<ul data-role="listview" >
+				<li><a href="file:///android_asset/www/pages/categorieVictime/index.html" data-transition="slidefade">Catégorie vicitime</a></li>
+				<li><a href="file:///android_asset/www/pages/identite/index.html" data-transition="slidefade">Identité</a></li>
+				<li><a href="file:///android_asset/www/pages/gps_hours/index.html" data-transition="slidefade">Heures et GPS</a></li>
+			</ul>
+		
+		</div>
+		
+		<!-- l'entÃªte -->
+		<div data-role="header" data-theme="a" data-position="fixed">
+		
+		
+			<h1>Welcome</h1>
+			<a href="file:///android_asset/www/pages/login/index.html" data-rel="dialog"  data-icon="gear" data-transition="slidedown">Paramètres</a>
+			<a href="#panel" data-rel="dialog"  data-icon="grid" >Menu</a>
+			
+		</div>
+		<!-- le contenu -->
+		<div data-role="content">
+			<ul data-role="listview" data-inset="true">
+				<li data-role="list-divider">Etape</li>
+				<li><a href="file:///android_asset/www/pages/categorieVictime/index.html" data-transition="slidefade">Catégorie vicitime</a></li>
+				<li><a href="file:///android_asset/www/pages/identite/index.html" data-transition="slidefade">Identité</a></li>
+<!-- 				<li><a href="urgence_vitale/index.html" data-transition="fade">Bilan d'Urgence Vitale</a></li> -->
+<!-- 				<li><a href="bilan_complementaire/index.html" data-transition="fade">Bilan Complémentaires</a></li> -->
+<!-- 				<li><a href="champ_libre/index.html" data-transition="fade">Champ Libre</a></li> -->
+<!-- 				<li><a href="evacuation/index.html" data-transition="fade">Evacuation</a></li> -->
+<!-- 				<li><a href="lesion/index.html" data-transition="fade">Lesion</a></li> -->
+				<li><a href="file:///android_asset/www/pages/gps_hours/index.html" data-transition="slidefade">Heures et GPS</a></li>
+<!-- 				<li><a href="corps/index.html" data-transition="fade">Corps</a></li> -->
+			</ul>
+		</div>
+		<!-- le pied de page -->
+		<div data-role="footer" data-position="fixed" style='height: 35px;'>
+			 <div id="personneConnecte1"></div>
+			 <input type="button" name="test" onClick="javascript:testtest()" id="test"  /> 
+		</div>
+	</div>
+	
+
+</body>
+</html>

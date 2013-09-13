@@ -1,0 +1,308 @@
+<!Doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="ISO-8859-1">
+
+<script src="file:///android_asset/www/lib/jquery-1.9.1.min.js"></script>
+<script src="file:///android_asset/www/lib/jquery.mobile-1.3.1.min.js"></script>
+
+<link rel="stylesheet" href="file:///android_asset/www/css/style.css" />
+<link rel="stylesheet" href="file:///android_asset/www/css/jquery.mobile.flatui.css" />
+
+<!-- importation du bibliothèque cordova ( phoneGap ) -->
+<script  src="file:///android_asset/www/lib/cordova.js"></script>
+
+<script charset="ISO-8859-1" src="file:///android_asset/www/lib/script.js"></script>
+
+<script  src="file:///android_asset/www/lib/phonegap-nfc.js"></script>
+<script src="file:///android_asset/www/lib/toast.js"></script>
+<script src="file:///android_asset/www/lib/ipAddress.js"></script>
+<script src="file:///android_asset/www/lib/readWriteNFC.js"></script>
+<script src="file:///android_asset/www/lib/agent.js"></script>
+<script src="file:///android_asset/www/lib/readWrite.js"></script>
+
+</head>
+<body onload="onload();">
+	<!-- la page d'identification -->
+	<div data-role="page" id="bilanComplementaire" data-add-back-btn=true>
+		<!-- l'entête -->
+		<div data-role="header" data-position= "fixed" data-theme="a">
+			<h1>BILAN COMPLÉMENTAIRE</h1>
+		</div>
+		<!-- le contenu -->
+		<div data-role="content">
+
+			<p>
+				<input type="button" name="submit" value="Récupérer les informations du bilan complémentaire" onclick="Javascript:getInfoBilanComplementaire();" />
+			</p>
+
+
+			<!--  SEVERITE -->
+
+			<div data-role="fieldcontain">
+			
+				<fieldset data-role="controlgroup" data-type="horizontal"
+					data-role="fieldcontain">
+					<legend>Sévérité</legend>
+						<input type="radio" name="bilan_complementaire_1" id="bilan_complementaire_1"
+						value="1000" checked="checked" /><label for="bilan_complementaire_1">0 à 4</label> 
+						<input type="radio" name="bilan_complementaire_1" id="bilan_complementaire_2"
+						value="0100" /> <label for="bilan_complementaire_2">5-6</label> 
+						<input type="radio" name="bilan_complementaire_1" id="bilan_complementaire_3"
+						value="0010" /> <label for="bilan_complementaire_3">7-8</label> 
+						<input type="radio" name="bilan_complementaire_1" id="bilan_complementaire_4"
+						value="0001" /> <label for="bilan_complementaire_4">9-10</label>
+				</fieldset>
+			</div>
+
+			<!-- REGION -->
+			
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup">
+					<legend>Région :</legend>
+					<input type="checkbox" name="bilan_complementaire_5" id="urgence1"
+						class="custom" /> <label for="urgence1">Tête</label> <input
+						type="checkbox" name="bilan_complementaire_6" id="urgence2" class="custom" />
+					<label for="urgence2">Thorax</label> <input type="checkbox"
+						name="bilan_complementaire_7" id="urgence3" class="custom" /> <label
+						for="urgence3">Abdomen</label> <input type="checkbox"
+						name="bilan_complementaire_8" id="urgence4" class="custom" /> <label
+						for="urgence4">Dos</label> <input type="checkbox"
+						name="bilan_complementaire_9" id="urgence5" class="custom" /> <label
+						for="urgence5">Membre Supérieur</label> <input type="checkbox"
+						name="bilan_complementaire_10" id="urgence6" class="custom" /> <label
+						for="urgence6">Membre Inférieur</label>
+				</fieldset>
+			</div>
+
+
+
+			<!--  VENTILATION  -->
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup">
+					<legend>Gestes Effectués :</legend>
+					<input type="checkbox" name="bilan_complementaire_11" id="urgence1"
+						class="custom" /> <label for="urgence1">PLS</label> <input
+						type="checkbox" name="bilan_complementaire_12" id="urgence2" class="custom" />
+					<label for="urgence2">Oxygène</label> <input type="checkbox"
+						name="bilan_complementaire_13" id="urgence3" class="custom" /> <label
+						for="urgence3">Garrot</label> <input type="checkbox"
+						name="bilan_complementaire_14" id="urgence4" class="custom" /> <label
+						for="urgence4">Pensement compressif</label> <input type="checkbox"
+						name="bilan_complementaire_15" id="urgence5" class="custom" /> <label
+						for="urgence5">RCP</label> <input type="checkbox"
+						name="bilan_complementaire_16" id="urgence6" class="custom" /> <label
+						for="urgence6">DSA</label>
+
+
+				</fieldset>
+			</div>
+
+
+<!-- OXYGENE DEBIT -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Oxygène - débit : </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="number"  class=ui-field-contain id="oxygene" >
+				</div>
+
+				<div class=ui-block-c style="vertical-align:middle; padding: 0em;">
+					<select name="select-native-1" id="select-native-1">
+						<option value="1">Minutes</option>
+						<option value="2">Secondes</option>
+					</select>
+				</div>
+
+			</div>
+
+
+<!-- DSA - NOMBRE DE CHOCS  -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Nombres de Chocs </label>
+				</div>
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+					<input type="number"  class=ui-field-contain id="chocs" >
+				</div>
+			</div>
+
+
+<!--  IMMOBILISATION  -->
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup">
+					<legend>Immobiliation :</legend>
+					<input type="checkbox" name="bilan_complementaire_17" id="urgence1"
+						class="custom" /> <label for="urgence1">Collier cervical</label>
+					<input type="checkbox" name="bilan_complementaire_18" id="urgence2"
+						class="custom" /> <label for="urgence2">A.C.T</label> <input
+						type="checkbox" name="bilan_complementaire_19" id="urgence3" class="custom" />
+					<label for="urgence3">Immobilisateur de tête</label> <input
+						type="checkbox" name="bilan_complementaire_20" id="urgence4" class="custom" />
+					<label for="urgence4">Matelas à dépression</label> <input
+						type="checkbox" name="bilan_complementaire_21" id="urgence5" class="custom" />
+					<label for="urgence5">Attelle de traction</label> <input
+						type="checkbox" name="bilan_complementaire_22" id="urgence6" class="custom" />
+					<label for="urgence6">Attelle de membre</label> <input
+						type="checkbox" name="bilan_complementaire_23" id="urgence7" class="custom" />
+					<label for="urgence7">Echarpe</label> <input type="checkbox"
+						name="bilan_complementaire_24" id="urgence8" class="custom" /> <label
+						for="urgence8">Autre :</label>
+				</fieldset>
+			</div>
+
+<!-- IMMOBILISATION AUTRE -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Autre </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="text" maxlength="16" class=ui-field-contain id="immobilisation" >
+				</div>
+
+
+			</div>
+
+
+<!--  EXAMEN VICTIME  -->
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup">
+					<legend>Immobiliation :</legend>
+					<input type="checkbox" name="bilan_complementaire_25" id="urgence1"
+						class="custom" /> <label for="urgence1">Asymétrie de l'expression faciale</label>
+					<input type="checkbox" name="bilan_complementaire_26" id="urgence2"
+						class="custom" /> <label for="urgence2">Anomalie extension de</label> <input
+						type="checkbox" name="bilan_complementaire_27" id="urgence3" class="custom" />
+					<label for="urgence3">Anomaliede la parole</label>
+				</fieldset>
+			</div>
+
+<!-- EXTENSION -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Extension </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="text" maxlength="16" class=ui-field-contain id="extension" >
+				</div>
+
+
+			</div>
+			
+			
+<!-- MALADIES -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Maladies </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="text" maxlength="16" class=ui-field-contain id="maladies" >
+				</div>
+
+
+			</div>
+			
+<!-- Hospitalisations -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Hospitalisations </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="text" maxlength="16" class=ui-field-contain id="hospitalisations" >
+				</div>
+
+
+			</div>
+			
+			
+<!-- TRAITEMENTS -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Traitements </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="text" maxlength="16" class=ui-field-contain id="traitements" >
+				</div>
+
+
+			</div>
+			
+			
+<!-- ALLERGIES -->
+			<div class=ui-grid-b data-role=controlgroup data-type=horizontal style="vertical-align:middle;">
+
+				<div class=ui-block-a style="vertical-align:middle; padding: 0em;" >
+
+					<label style="text-align:center; vertical-align:middle; padding-top: 10em;">
+						Allergies </label>
+				</div>
+
+
+				<div class=ui-block-b style="vertical-align:middle; padding: 0em;">
+
+					<input type="text" maxlength="16" class=ui-field-contain id="allergies" >
+				</div>
+
+
+			</div>									
+
+
+<!--  BOUTON SUBMIT -->
+			<p>
+				<input type="button" name="submit" value="Envoyer"
+					onclick="Javascript:writeBilanComplementaire();" />
+			</p>
+
+
+		</div>
+
+
+
+
+
+		<!-- le pied de page -->
+		<div data-role="footer">
+			<h3></h3>
+		</div>
+	</div>
+</body>
+</html>
