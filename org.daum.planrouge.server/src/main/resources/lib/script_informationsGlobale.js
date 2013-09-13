@@ -111,13 +111,55 @@ function data(jsonObj){
     var nbAgents = jsonObj.agents;
     var nbVictime = jsonObj.nbVictime;
     var jHeure =  parseInt(jsonObj.heure);
+    var latlng = new Array();
+    var marker = new Array();
+    var contentString  = new Array();
+    var infowindow  = new Array();
+      // MAPS
+
+
+             var latlng = new google.maps.LatLng(48.12107,-1.610556);  <!--default -->
+             var adresse = jIntervention.position.nomRue+" "+jIntervention.position.nomVille+" "+jIntervention.position.cp;
+
+             var mapOptions = {
+             zoom: 15,
+             center: latlng,
+             mapTypeId: google.maps.MapTypeId.HYBRIDE
+             }
+
+             var map = new google.maps.Map(document.getElementById("carte"), mapOptions);
+
+             var geocoder  = new google.maps.Geocoder();
+             geocoder.geocode( { 'address': adresse}, function(results, status) {
+                 if (status == google.maps.GeocoderStatus.OK) {
+                     map.setCenter(results[0].geometry.location);
+                     var marker = new google.maps.Marker({
+                         map: map,
+                         position: results[0].geometry.location,
+                         title: 'Lieu de l\'intervention',
+                         icon : '../css/images/marker/intervention.png'
+                     });
+                 } else {
+                     alert("Geocode was not successful for the following reason: " + status);
+                 }
+             });
+
 
 
     // TABLE VICTIMS
     delRows("bodyTable");
 
     for ( var i in arrayVictimes) {
+        var code ='';
+        var nom ='';
+        var prenom ='';
+        var age ='';
+        var sexe  ='';
+        var id ='';
         var victime = arrayVictimes[i];
+        var latitude = '';
+        var longitude ='';
+        var heure = '';
         var tableau = document.getElementById("bodyTable").getElementsByTagName('TBODY')[0];
 
         var ligne = tableau.insertRow(-1);
@@ -127,6 +169,7 @@ function data(jsonObj){
         if (victime.categorie != null){
             if (victime.categorie.code != null){
                 colonne1.innerHTML += '<div class="cat'+victime.categorie.code+'">'+victime.categorie.code+'</div>';
+                code = victime.categorie.code;
             }
         }
 
@@ -134,18 +177,21 @@ function data(jsonObj){
         colonne2.innerHTML = ' ';
         if (victime.id != null){
             colonne2.innerHTML = victime.id;
+            id = victime.id;
         }
 
         var colonne3 = ligne.insertCell(2);
         colonne3.innerHTML = ' ';
         if (victime.nom != null){
             colonne3.innerHTML = victime.nom;
+            nom = victime.nom;
         }
 
         var colonne4 = ligne.insertCell(3);
         colonne4.innerHTML = ' ';
         if (victime.prenom != null){
             colonne4.innerHTML = victime.prenom ;
+            prenom = victime.prenom;
         }
         var colonne5 = ligne.insertCell(4);
         colonne5.innerHTML =  ' ';
@@ -154,6 +200,7 @@ function data(jsonObj){
                 colonne5.innerHTML='--';
             }else{
                 colonne5.innerHTML = victime.age;
+                age = victime.age ;
             }
         }
 
@@ -175,10 +222,55 @@ function data(jsonObj){
         if (victime.sexe != null){
             if( victime.sexe == 1) {
                 colonne7.innerHTML = 'Homme';
+                sexe = 'homme';
             }else if (victime.sexe == 2){
                 colonne7.innerHTML = 'Femme';
+                sexe = 'femme';
             }
         }
+
+        if (victime.posDestination != null){
+//            var j = 1;
+//            while(victime.posDestination[victime.posDestination.length-j].gpsPoint.latitude == 0) {
+//            j++;
+//            }
+            if(victime.posDestination[0].gpsPoint.latitude != 0){
+            alert(JSON.stringify(victime.posDestination[0].gpsPoint));
+            latitude = (victime.posDestination[0].gpsPoint.latitude)/10000000 ;
+            longitude = (victime.posDestination[0].gpsPoint.longitude)/10000000 ;
+            var dateVictime = new Date(parseInt(victime.posDestination[0].gpsPoint.heure));
+            heure =  dateVictime.toString();
+            alert( latitude + "   "+longitude+ "  "+ heure);
+           } else if(victime.posRef.gpsPoint != 0){
+              latitude = (victime.posRef.gpsPoint.latitude)/10000000 ;
+                          longitude = (victime.posRef.gpsPoint.longitude)/10000000 ;
+                          var dateVictime = new Date(parseInt(victime.posRef.gpsPoint.heure));
+                          heure =  dateVictime.toString();
+           }
+
+        }
+
+        // MARKER
+
+           latlng[i] = new google.maps.LatLng(latitude,longitude);  <!--default -->
+                 marker[i] = new google.maps.Marker({
+                map: map,
+                position: latlng[i] ,
+                title: 'victime :'+id +'\n'+'nom : '+nom+'\n'+'prenom : '+prenom+'\n'+'age : '+age+'\n'+'categorie : '+code+'\n'+'heure : '+heure,
+                icon : '../css/images/marker/'+code+'.png'
+                });
+
+//                contentString[i] = '<div> Victime '+id+'</div>'+'<div> nom : '+nom+'</div>' +'<div> prenom : '+prenom+'</div>'+'<div> age : '+age+'</div>'+'<div> categorie : '+code+'</div>'+'<div> heure : '+heure+'</div>'       ;
+//
+//                infowindow[i] = new google.maps.InfoWindow({
+//                content: contentString[i],
+//                maxWidth: 500
+//                });
+//
+//                google.maps.event.addListener(marker[i], 'click', function() {
+//                infowindow[i].open(map,marker[i]);
+//                });
+
     }
 
     $("#bodyTable").trigger("update");
@@ -242,28 +334,10 @@ function data(jsonObj){
     document.getElementById('description').innerHTML = description ;
 
 
-    // MAPS
 
-    var latlng = new google.maps.LatLng(48.12107,-1.610556);  <!--default -->
-    var options = {
-        center: latlng,
-        zoom: 50,
-        mapTypeControl: true,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-    };
-    carte = new google.maps.Map(document.getElementById("carte"), options);
 
-    var adresse = jIntervention.position.nomRue+" "+jIntervention.position.nomVille+" "+jIntervention.position.cp;
 
-    var geocoder  = new GClientGeocoder();
-    geocoder.getLatLng(adresse, function (coord) {
-        if(coord){
-            carte.setCenter(coord, 10);
-            var marker = new GMarker(coord, {draggable: false});
-            carte.addOverlay(marker);
-        }
 
-    });
 
 
 
