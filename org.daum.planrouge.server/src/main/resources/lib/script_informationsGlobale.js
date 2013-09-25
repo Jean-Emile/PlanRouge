@@ -1,7 +1,7 @@
 var id=0;
 var ws={};
-
-
+var address = document.location.host;
+address= address.substring(0,address.length-4)+'8080';
 $(function () {
 
     $(document).ready(function()
@@ -14,14 +14,13 @@ $(function () {
     $.toast.config.align = 'right';
     $.toast.config.closeForStickyOnly = false;
 
-    ws = new ReconnectingWebSocket('ws://'+ document.location.host +'/getGlobalInformations');
-
+    ws = new ReconnectingWebSocket('ws://'+ address +'/getGlobalInformations');
     ws.onopen = function() {
-        $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/getGlobalInformations', {type: 'success'});
+        $.toast('<b>Success!</b> Connected with server : ws://' + address + '/getGlobalInformations', {type: 'success'});
         load();
     };
     ws.onclose = function() {
-        $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/getGlobalInformations', {type: 'danger'});
+        $.toast('<b>Error!</b> Lost connection with server : ws://' + address + '/getGlobalInformations', {type: 'danger'});
     };
     ws.onmessage = function(msg) {
         var jsonObj = JSON.parse(msg.data);
@@ -235,12 +234,12 @@ function data(jsonObj){
 //            j++;
 //            }
             if(victime.posDestination[0].gpsPoint.latitude != 0){
-            alert(JSON.stringify(victime.posDestination[0].gpsPoint));
+
             latitude = (victime.posDestination[0].gpsPoint.latitude)/10000000 ;
             longitude = (victime.posDestination[0].gpsPoint.longitude)/10000000 ;
             var dateVictime = new Date(parseInt(victime.posDestination[0].gpsPoint.heure));
             heure =  dateVictime.toString();
-            alert( latitude + "   "+longitude+ "  "+ heure);
+
            } else if(victime.posRef.gpsPoint != 0){
               latitude = (victime.posRef.gpsPoint.latitude)/10000000 ;
                           longitude = (victime.posRef.gpsPoint.longitude)/10000000 ;

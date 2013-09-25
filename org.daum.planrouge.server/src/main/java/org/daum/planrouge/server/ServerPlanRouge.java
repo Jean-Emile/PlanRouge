@@ -4,13 +4,17 @@ import org.daum.planrouge.server.adapter.model.AdapterFactory;
 import org.daum.planrouge.server.web.EmbedHandler;
 import org.daum.planrouge.server.websocket.GetGlobalInformationsHandler;
 import org.daum.planrouge.server.websocket.HandlerWebSocket;
+import org.daum.planrouge.server.websocket.WsHandler;
 import org.kevoree.annotation.*;
 import org.kevoree.framework.AbstractComponentType;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.ContainerRoot;
+import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebServer;
 import org.webbitserver.WebServers;
 import org.webbitserver.handler.StaticFileHandler;
+
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,6 +39,8 @@ public class ServerPlanRouge extends AbstractComponentType {
     private GetGlobalInformationsHandler handlerGlobalInformations;
     private HandlerWebSocket handlerWebSocketgetAll;
     private HandlerWebSocket handlerWebSocketdelete;
+    private int port;
+    private HashMap<String,HandlerWebSocket> wspages = new HashMap<String, HandlerWebSocket>();
 
     @Start
     public void start() {
@@ -45,6 +51,7 @@ public class ServerPlanRouge extends AbstractComponentType {
         handlerWebSocketput = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.PUT);
         handlerWebSocketgetAll = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.GETALL);
         handlerWebSocketdelete = new HandlerWebSocket(adapterFactory,containerRoot, HandlerWebSocket.ACTION.DELETE);
+
         handlerGlobalInformations =  new GetGlobalInformationsHandler(adapterFactory,containerRoot);
 
         createWebServer();
@@ -64,17 +71,17 @@ public class ServerPlanRouge extends AbstractComponentType {
         webServer.stop();
         createWebServer();
         webServer.start();
-        // TODO update webbit server port
         Log.info("UPDATE :: Server running at " + webServer.getUri());
     }
 
 
     private void createWebServer() {
-        webServer = WebServers.createWebServer(Integer.parseInt(getDictionary().get("port").toString()))
-                .add("/add",handlerWebSocketput)
+        port = Integer.parseInt(getDictionary().get("port").toString());
+        webServer = WebServers.createWebServer(port);
+        webServer.add("/add", handlerWebSocketput)
                 .add("/get", handlerWebSocketget)
                 .add("/getAll", handlerWebSocketgetAll)
-                .add("/delete", handlerWebSocketdelete)
+                .add("/delete", handlerWebSocketdelete )
                 .add("/getGlobalInformations", handlerGlobalInformations)
                 .add(new StaticFileHandler("/web"))
                 .add(new EmbedHandler());

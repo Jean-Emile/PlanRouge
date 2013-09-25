@@ -106,8 +106,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             int nbVictimeC3 = 0;
             int nbVictimeC4 = 0;
             int nbVictimeC5 = 0;
-            int nbFemmes = 0;
-            int nbHommes = 0;
+
             int age0_5 = 0;
             int age6_10 = 0;
             int age11_20 = 0;
@@ -143,14 +142,7 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
                         Log.info("cat 5");
                     }
                 }
-                if (intervention.getVictimes().get(j).getSexe() != "" && intervention.getVictimes().get(j).getSexe() != null) {
-                    String sexe = intervention.getVictimes().get(j).getSexe();
-                    if (sexe.equals("2")) {
-                        nbFemmes++;
-                    } else if (sexe.equals("1")) {
-                        nbHommes++;
-                    }
-                }
+
                 if (intervention.getVictimes().get(j).getAge() != 0) {
                     int age = intervention.getVictimes().get(j).getAge();
                     if (age <= 5) {
@@ -199,7 +191,6 @@ public class GetGlobalInformationsHandler extends BaseWebSocketHandler {
             jObject.put("type", "donnees");
             jObject.put("nbVictimeCat", jNbVictimeCat);
             jObject.put("nbVictimeAge", jNbVictimeAge);
-            jObject.put("nbVictimeSexe", new JSONArray().put(0, nbHommes).put(1, nbFemmes));
             jObject.put("intervention", adapterFactory.build(intervention));
             jObject.put("victimes", jArrayVictimes);
             jObject.put("agents", nbAgent);

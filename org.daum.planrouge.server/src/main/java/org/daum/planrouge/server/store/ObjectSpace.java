@@ -1,6 +1,6 @@
 package org.daum.planrouge.server.store;
 /*
-import org.daum.planrouge.server.adapter.model.AdapterFactory;
+import org.daum.planrouge.Server.adapter.model.AdapterFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kevoree.log.Log;

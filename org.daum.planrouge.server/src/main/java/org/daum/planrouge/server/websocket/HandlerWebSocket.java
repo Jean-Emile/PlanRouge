@@ -71,6 +71,7 @@ public  class HandlerWebSocket extends BaseWebSocketHandler {
         //connection.send("Other connection :: "+connexion );
         connexion++;
         peers.addPeer(connection);
+        Log.info("START SOCKET  :  "+current.name());
     }
 
     public void onClose(WebSocketConnection connection) {

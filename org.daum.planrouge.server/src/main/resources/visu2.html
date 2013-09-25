@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Supervision</title>
-    <!-- pour spécifier au naviageteur comment afficher la page -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
 
     <!-- JQUERY -->
@@ -13,11 +13,20 @@
     <script src="lib/jquery.gridster.js"></script>
     <script src="lib/jquery.toast.min.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="css/themeMetro.css">
+
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="lib/blue/style.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery.gridster.min.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery.toast.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome/css/font-awesome.min.css">
+
     <!-- MAPS-->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
     <!--<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=AIzaSyB7D9Xe7CrN8kYsbvs3oJEyCTtjjGTHzn4"-->
-            <!--type="text/javascript"></script>-->
+    <!--type="text/javascript"></script>-->
 
 
     <script type="text/javascript"
@@ -44,27 +53,27 @@
         var gridster;
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
 
-            $(function(){
+        $(function(){
 
-                gridster = $(".gridster > ul").gridster({
-                widget_margins: [1, 1],
-                widget_base_dimensions: [150, 150],
-                min_cols: 5,
-                max_cols: 5
-                }).data('gridster').disable();
+        gridster = $(".gridster > ul").gridster({
+        widget_margins: [1, 1],
+        widget_base_dimensions: [150, 150],
+        min_cols: 5,
+        max_cols: 5
+        }).data('gridster').disable();
 
-            });
+        });
         } else {
-            $(function(){
+        $(function(){
 
-                gridster = $(".gridster > ul").gridster({
-                widget_margins: [1, 1],
-                widget_base_dimensions: [150, 150],
-                min_cols: 10,
-                max_cols: 12
-                }).data('gridster');
+        gridster = $(".gridster > ul").gridster({
+        widget_margins: [1, 1],
+        widget_base_dimensions: [150, 150],
+        min_cols: 10,
+        max_cols: 12
+        }).data('gridster');
 
-            });
+        });
         }
 
         $(function () {
@@ -78,7 +87,7 @@
         }
         );
 
-         });
+        });
 
     </script>
 
@@ -96,7 +105,8 @@
                 <li class="bleu" data-row="1" data-col="1" data-sizex="2" data-sizey="1">
                     <h2>ID Intervention</h2>
 
-                    <select class="" style="vertical-align:center" name="idIntervention" id="idIntervention" data-theme="b"
+                    <select class="" style="vertical-align:center" name="idIntervention" id="idIntervention"
+                            data-theme="b"
                             onchange="selectIntervention(this.options[this.selectedIndex].value);">
                         <option value="0000">Id Intervention</option>
                     </select>
@@ -108,7 +118,7 @@
                     <h2>Heure début</h2>
 
                     <div class="nombre" id="heureDebut"></div>
-                    <i class="icon-time icon-background" ></i>
+                    <i class="icon-time icon-background"></i>
                 </li>
 
                 <!-- NOMBRE D'AGENT-->
@@ -116,7 +126,7 @@
                     <h2>Nb Agents</h2>
 
                     <div class="nombre" id="nbAgents"></div>
-                    <i class="icon-user-md icon-background" ></i>
+                    <i class="icon-user-md icon-background"></i>
                 </li>
 
                 <!-- HEURE MISE A JOUR -->
@@ -124,7 +134,7 @@
                     <h2>Heure MàJ</h2>
 
                     <div class="nombre " id="hoursMAJ"></div>
-                    <i class="icon-time icon-background" ></i>
+                    <i class="icon-time icon-background"></i>
                 </li>
 
                 <!-- NOMBRE VICTIMES -->
@@ -133,7 +143,7 @@
                     <h2>Nombres de victimes</h2>
 
                     <div class="nombre " id="nbVictime"></div>
-                    <i class="icon-male icon-victim icon-background" ></i>
+                    <i class="icon-male icon-victim icon-background"></i>
 
                 </li>
 
@@ -163,7 +173,7 @@
                     <h2>ID de l'intervention</h2>
 
                     <div class="nombre " id="nIntervention"></div>
-                    <i class="icon-info icon-background" ></i>
+                    <i class="icon-info icon-background"></i>
 
                 </li>
 
@@ -207,8 +217,5 @@
 
 </body>
 
-<script type="text/javascript">
 
-
-
-</script>
+</html>

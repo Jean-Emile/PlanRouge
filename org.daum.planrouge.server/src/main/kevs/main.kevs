@@ -1,21 +1,75 @@
  {
-addRepo "http://maven.kevoree.org/archiva/repository/daum/snapshots"
-addRepo "http://maven.kevoree.org/release"
+addRepo "http://maven.kevoree.org/daum/snapshots"
 addRepo "http://repo.maven.apache.org/maven2"
 addRepo "http://maven.kevoree.org/daum/release"
-addRepo "https://oss.sonatype.org/content/groups/public/"
 addRepo "http://repository.jetbrains.com/all"
+addRepo "https://oss.sonatype.org/content/groups/public/"
 addRepo "https://oss.sonatype.org/content/repositories/snapshots"
-addRepo "http://maven.kevoree.org/snapshots"
-addRepo "http://maven.kevoree.org/daum/snapshots"
-merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/2.0.0-SNAPSHOT'
-merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.jexxus/2.0.0-SNAPSHOT'
-merge 'mvn:org.daum.planrouge/org.daum.planrouge.server/2.0.0-SNAPSHOT'
+addRepo "http://repo.typesafe.com/typesafe/releases/"
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/2.0.5-SNAPSHOT'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.webserver.spray/2.0.5-SNAPSHOT'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/2.0.5-SNAPSHOT'
+merge 'mvn:org.daum.planrouge/org.daum.planrouge.server/2.0.1-SNAPSHOT'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.jexxus/2.0.5-SNAPSHOT'
 addNode node0:JavaSENode
-updateDictionary node0{coreLogLevel="INFO",logLevel="INFO"}
-  addComponent ServerPla330@node0 : ServerPlanRouge {}
-updateDictionary ServerPla330@node0 
+updateDictionary node0{coreLogLevel="DEBUG",logLevel="DEBUG"}
+ {
+  addComponent SprayWebS248@node0 : SprayWebServer {port='8888',timeout='5000'}
+  addComponent HandlerWS750@node0 : HandlerWS {handler='/getAll',action='GETALL'}
+  addComponent PageComma18@node0 : PageCommande {urlpattern='/com'}
+  addComponent Server76@node0 : Server {}
+  addComponent HandlerWS823@node0 : HandlerWS {handler='/delete',action='DELETE'}
+  addComponent GlobalInf231@node0 : GlobalInformations {urlpattern='/visu'}
+  addComponent HandlerWS414@node0 : HandlerWS {handler='/add',action='PUT'}
+  addComponent Resources242@node0 : ResourcesPage {urlpattern='/**'}
+addChannel defSERVIC722 : defSERVICE {}
+addChannel defMSG524 : defMSG {}
+addChannel defMSG407 : defMSG {}
+addChannel defSERVIC929 : defSERVICE {}
+addChannel defSERVIC745 : defSERVICE {}
+addChannel defMSG900 : defMSG {}
+bind HandlerWS823.Adapter@node0 => defSERVIC722
+bind GlobalInf231.Adapter@node0 => defSERVIC722
+bind Server76.Adapter@node0 => defSERVIC722
+bind Resources242.request@node0 => defMSG407
+bind Server76.Container@node0 => defSERVIC929
+bind HandlerWS750.Adapter@node0 => defSERVIC722
+bind HandlerWS414.Adapter@node0 => defSERVIC722
+bind GlobalInf231.content@node0 => defMSG524
+bind GlobalInf231.request@node0 => defMSG900
+bind GlobalInf231.WS@node0 => defSERVIC745
+bind HandlerWS414.Container@node0 => defSERVIC929
+bind HandlerWS414.WS@node0 => defSERVIC745
+bind PageComma18.content@node0 => defMSG524
+bind GlobalInf231.forward@node0 => defMSG407
+bind HandlerWS823.WS@node0 => defSERVIC745
+bind GlobalInf231.Container@node0 => defSERVIC929
+bind PageComma18.forward@node0 => defMSG407
+bind SprayWebS248.response@node0 => defMSG524
+bind HandlerWS750.Container@node0 => defSERVIC929
+bind HandlerWS750.WS@node0 => defSERVIC745
+bind PageComma18.request@node0 => defMSG900
+bind SprayWebS248.handler@node0 => defMSG900
+bind Server76.WS@node0 => defSERVIC745
+bind HandlerWS823.Container@node0 => defSERVIC929
+bind Resources242.content@node0 => defMSG524
+updateDictionary SprayWebS248@node0
+updateDictionary HandlerWS750@node0
+updateDictionary defSERVIC745
+updateDictionary defMSG407
+updateDictionary HandlerWS414@node0
+updateDictionary Resources242@node0
+updateDictionary defSERVIC722
+updateDictionary Server76@node0
+updateDictionary defMSG900
+updateDictionary GlobalInf231@node0
+updateDictionary defSERVIC929
+updateDictionary PageComma18@node0
+updateDictionary HandlerWS823@node0
+updateDictionary defMSG524
+}
 
 addGroup sync:BasicGroup
 addToGroup sync node0
 }
+

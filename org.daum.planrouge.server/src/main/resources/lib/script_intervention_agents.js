@@ -3,34 +3,35 @@
     var wsGet = {};
     var tabIntervention = new Object();
 
+var address = document.location.host;
+address= address.substring(0,address.length-4)+'8080';
 
     $(function () {
          $.toast.config.width = 600;
          $.toast.config.align = 'right';
          $.toast.config.closeForStickyOnly = false;
 
-
         // Client WebServer ADD
-        ws = new ReconnectingWebSocket('ws://' + document.location.host + '/add');
+        ws = new ReconnectingWebSocket('ws://' + address + '/add');
 
         ws.onopen = function (msg) {
-            $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/add', {type: 'success'});
+            $.toast('<b>Success!</b> Connected with server : ws://' + address + '/add', {type: 'success'});
         };
         ws.onclose /*= ws.onerror*/ = function (msg) {
-            $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/add', {type: 'danger'});
+            $.toast('<b>Error!</b> Lost connection with server : ws://' + address + '/add', {type: 'danger'});
         };
         ws.onmessage = function (evt) {
             var data = evt.data;
         };
 
         // Client WebServer DELETE
-        wsDelete = new ReconnectingWebSocket('ws://' + document.location.host + '/delete');
+        wsDelete = new ReconnectingWebSocket('ws://' + address + '/delete');
 
         wsDelete.onopen = function (msg) {
-            $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/delete', {type: 'success'});
+            $.toast('<b>Success!</b> Connected with server : ws://' + address + '/delete', {type: 'success'});
         };
         wsDelete.onclose /*= ws.onerror*/ = function (msg) {
-            $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/delete', {type: 'danger'});
+            $.toast('<b>Error!</b> Lost connection with server : ws://' + address + '/delete', {type: 'danger'});
         };
         wsDelete.onmessage = function (evt) {
             var data = evt.data;
@@ -38,14 +39,14 @@
         };
 
         // Client WebServer GETALL
-        wsGet = new ReconnectingWebSocket('ws://' + document.location.host + '/getAll');
+        wsGet = new ReconnectingWebSocket('ws://' + address+ '/getAll');
 
         wsGet.onopen = function (msg) {
-            $.toast('<b>Success!</b> Connected with server : ws://' + document.location.host + '/getAll', {type: 'success'});
+            $.toast('<b>Success!</b> Connected with server : ws://' + address + '/getAll', {type: 'success'});
             submitGetAllInterventions();
         };
         wsGet.onclose /*= ws.onerror*/ = function (msg) {
-            $.toast('<b>Error!</b> Lost connection with server : ws://' + document.location.host + '/getAll', {type: 'danger'});
+            $.toast('<b>Error!</b> Lost connection with server : ws://' + address + '/getAll', {type: 'danger'});
         };
         wsGet.onmessage = function (evt) {
             var data = evt.data;

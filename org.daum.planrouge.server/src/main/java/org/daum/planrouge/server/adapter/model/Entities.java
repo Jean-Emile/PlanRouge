@@ -8,5 +8,5 @@ package org.daum.planrouge.server.adapter.model;
  * To change this template use File | Settings | File Templates.
  */
 public enum Entities {
-    AdapterGpsPoint,AdapterPositionCivile ,AdapterCategorie ,AdapterVictime ,AdapterIntervention, AdapterAgent
+    AdapterGpsPoint,AdapterPositionCivile , AdapterCategorie ,AdapterVictime ,AdapterIntervention, AdapterAgent
 }
