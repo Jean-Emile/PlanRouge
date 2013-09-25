@@ -8,7 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 
-public class First_Phone_GapActivity extends DroidGap {
+public class MainActivity extends DroidGap {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

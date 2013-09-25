@@ -16,7 +16,8 @@ public class ReadAll {
 	private byte[] key = new NFC_Mifare_classic().hexStringToByteArray("FFFFFFFFFFFF");
 	private NFC_Mifare_classic puceNFC;
 	private JSONObject victimeObject;
-
+	
+	//reading data from the chip for transmission to the server	
 	public JSONObject readAll(NFC_Mifare_classic puceNFC, String matriculeAgent,String idPuce) throws JSONException {
 		this.puceNFC = puceNFC;
 		victimeObject = new JSONObject();
