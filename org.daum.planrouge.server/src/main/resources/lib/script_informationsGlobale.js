@@ -229,10 +229,6 @@ function data(jsonObj){
         }
 
         if (victime.posDestination != null){
-//            var j = 1;
-//            while(victime.posDestination[victime.posDestination.length-j].gpsPoint.latitude == 0) {
-//            j++;
-//            }
             if(victime.posDestination[0].gpsPoint.latitude != 0){
 
             latitude = (victime.posDestination[0].gpsPoint.latitude)/10000000 ;
@@ -258,17 +254,6 @@ function data(jsonObj){
                 title: 'victime :'+id +'\n'+'nom : '+nom+'\n'+'prenom : '+prenom+'\n'+'age : '+age+'\n'+'categorie : '+code+'\n'+'heure : '+heure,
                 icon : '../css/images/marker/'+code+'.png'
                 });
-
-//                contentString[i] = '<div> Victime '+id+'</div>'+'<div> nom : '+nom+'</div>' +'<div> prenom : '+prenom+'</div>'+'<div> age : '+age+'</div>'+'<div> categorie : '+code+'</div>'+'<div> heure : '+heure+'</div>'       ;
-//
-//                infowindow[i] = new google.maps.InfoWindow({
-//                content: contentString[i],
-//                maxWidth: 500
-//                });
-//
-//                google.maps.event.addListener(marker[i], 'click', function() {
-//                infowindow[i].open(map,marker[i]);
-//                });
 
     }
 

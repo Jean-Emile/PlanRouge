@@ -23,12 +23,6 @@ public class ResourcesPage extends AbstractPage {
     public KevoreeHttpResponse process(KevoreeHttpRequest kevoreeHttpRequest, KevoreeHttpResponse kevoreeHttpResponse)
     {
         String url = kevoreeHttpRequest.getUrl().substring(1);
-//        if(url.contains("lib")){
-//            url =url.replace("lib","lib/");
-//        }
-//        if(url.contains("css")){
-//            url =url.replace("css","css/");
-//        }
         Log.debug("ResourcePage ::: "+url);
         kevoreeHttpResponse.setRawContent(MemCache.getRessource(url));
         return kevoreeHttpResponse;

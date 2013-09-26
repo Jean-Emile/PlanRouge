@@ -309,10 +309,10 @@ select {
 
 
 select:active {
-    border: 2px solid #12B0C5;
+     border: #12B0C5 solid 2px;
 }
 
 select:focus {
-    3px solid rgba(18,176,197,0.5);
+    border: 3px solid rgba(18,176,197,0.5);
     outline-color: #12B0C5;
 }

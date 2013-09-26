@@ -5,22 +5,25 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
 
+
     <!-- JQUERY -->
-    <link href="css/jquery.toast.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/jquery.gridster.min.css">
+    <link rel="stylesheet" type="text/css" href="css/themeMetro.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <link href="lib/blue/style.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+
+    <link rel="stylesheet" type="text/css" href="lib/blue/style.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery.toast.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome/css/font-awesome.min.css">
 
     <script src="lib/jquery-1.9.1.min.js"></script>
     <script src="lib/jquery.gridster.js"></script>
     <script src="lib/jquery.toast.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/themeMetro.css">
 
-
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="lib/blue/style.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery.gridster.min.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery.toast.min.css">
-    <link rel="stylesheet" type="text/css" href="css/font-awesome/css/font-awesome.min.css">
 
     <!-- MAPS-->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
@@ -38,58 +41,52 @@
 
 
     <script src="lib/Chart.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/themeMetro.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+
     <script src="lib/script_informationsGlobale.js"></script>
 
     <!--Table -->
     <script type="text/javascript" src="lib/jquery.tablesorter.js"></script>
-    <link href="lib/blue/style.css" rel="stylesheet">
-
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 
     <script type="text/javascript">
         var gridster;
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
 
-        $(function(){
-
-        gridster = $(".gridster > ul").gridster({
-        widget_margins: [1, 1],
-        widget_base_dimensions: [150, 150],
-        min_cols: 5,
-        max_cols: 5
-        }).data('gridster').disable();
-
-        });
+            $(function(){
+                gridster = $(".gridster > ul").gridster({
+                widget_margins: [1, 1],
+                widget_base_dimensions: [150, 150],
+                min_cols: 5,
+                max_cols: 5
+                }).data('gridster').disable();
+            });
         } else {
-        $(function(){
-
-        gridster = $(".gridster > ul").gridster({
-        widget_margins: [1, 1],
-        widget_base_dimensions: [150, 150],
-        min_cols: 10,
-        max_cols: 12
-        }).data('gridster');
-
-        });
+            $(function(){
+                gridster = $(".gridster > ul").gridster({
+                widget_margins: [1, 1],
+                widget_base_dimensions: [150, 150],
+                min_cols: 10,
+                max_cols: 12
+                }).data('gridster');
+            });
         }
 
         $(function () {
 
-        $("#carte").hover(
-        function () {
-        gridster.disable();
-        },
-        function () {
-        gridster.enable();
-        }
-        );
+            $("#carte").hover(
+                function () {
+                    gridster.disable();
+                },
+                function () {
+                    gridster.enable();
+                }
+            );
 
         });
 
     </script>
+
+
+
 
 
 </head>
@@ -115,7 +112,7 @@
 
                 <!-- HEURE DEBUT INTERVENTION-->
                 <li class="orange" data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-                    <h2>Heure début</h2>
+                    <h2>Heure debut</h2>
 
                     <div class="nombre" id="heureDebut"></div>
                     <i class="icon-time icon-background"></i>
@@ -131,7 +128,7 @@
 
                 <!-- HEURE MISE A JOUR -->
                 <li class="bleu-vert" data-row="2" data-col="10" data-sizex="1" data-sizey="1">
-                    <h2>Heure MàJ</h2>
+                    <h2>Heure MaJ</h2>
 
                     <div class="nombre " id="hoursMAJ"></div>
                     <i class="icon-time icon-background"></i>
@@ -157,7 +154,7 @@
 
                 <!-- NOMBRE VICTIMES PAR CATEGORIE -->
                 <li class="bleu-vert" data-row="3" data-col="1" data-sizex="4" data-sizey="3">
-                    <h2>Nombre de victimes par catégorie</h2>
+                    <h2>Nombre de victimes par categorie</h2>
                     <canvas id="canvas" height="400" width="565"></canvas>
                 </li>
 
@@ -188,7 +185,7 @@
                                 <th>Urgence</th>
                                 <th>ID</th>
                                 <th>Nom</th>
-                                <th>Prénom</th>
+                                <th>Prenom</th>
                                 <th>Age</th>
                                 <th>Date de Naissance</th>
                                 <th>Sexe</th>

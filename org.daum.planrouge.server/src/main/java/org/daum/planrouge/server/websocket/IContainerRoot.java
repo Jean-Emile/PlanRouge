@@ -2,6 +2,7 @@ package org.daum.planrouge.server.websocket;
 
 import org.kevoree.planrouge.Agent;
 import org.kevoree.planrouge.ContainerRoot;
+import org.kevoree.planrouge.Intervention;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,5 +17,6 @@ public interface IContainerRoot {
 
     public Agent getAgent(String id);
 
+    public Intervention getIntervention(String id);
 
 }

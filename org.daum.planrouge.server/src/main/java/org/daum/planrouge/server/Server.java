@@ -8,6 +8,7 @@ import org.kevoree.framework.AbstractComponentType;
 import org.kevoree.log.Log;
 import org.kevoree.planrouge.Agent;
 import org.kevoree.planrouge.ContainerRoot;
+import org.kevoree.planrouge.Intervention;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebServer;
 import org.webbitserver.WebServers;
@@ -112,7 +113,13 @@ public class Server extends AbstractComponentType implements WsHandler, IContain
     @Port(name = "Container", method = "getAgent")
     @Override
     public Agent getAgent(String id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+       return containerRoot.findAgentsByID(id);
+    }
+
+    @Port(name = "Container", method = "getIntervention")
+    @Override
+    public Intervention getIntervention(String id) {
+        return containerRoot.findInterventionsByID(id);
     }
 
 

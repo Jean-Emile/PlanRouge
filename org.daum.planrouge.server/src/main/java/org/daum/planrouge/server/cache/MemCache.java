@@ -1,5 +1,6 @@
 package org.daum.planrouge.server.cache;
 
+import org.daum.planrouge.server.utils.LRUMap;
 import org.kevoree.log.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -33,11 +34,11 @@ public class MemCache
             try
             {
                 InputStream res =    MemCache.class.getClassLoader().getResourceAsStream(url);
-                Log.debug("denug ::: " +url);
+                Log.debug("debug ::: " +url);
                 if(res != null)
                 {
                     // found in disk
-                    Log.debug("Ressource found in disk : " + url);
+                    Log.debug("Resource found in disk : " + url);
                     int nRead;
                     byte[] data = new byte[16384];
                     while ((nRead = res.read(data, 0, data.length)) != -1) {
