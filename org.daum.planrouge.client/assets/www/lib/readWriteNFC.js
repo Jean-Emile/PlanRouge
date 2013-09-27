@@ -240,8 +240,6 @@ function writeDateHoursGps(gpsHours){
 		var lat1 = gpsHours[1]/10000000;
 		var long1 = gpsHours[2]/10000000;		
 		var accuracy1 = gpsHours[3];
-//		alert("DISTANCE 1: "+lat+"  "+long+"  "+lat1+"  "+long1+"     "+distance(lat, long, lat1, long1));
-
 		
 		if( distance(lat, long, lat1, long1) > distanceRef){ 
 			traitementGPS(lat, long,accuracy);
@@ -250,7 +248,7 @@ function writeDateHoursGps(gpsHours){
 			window.location = "file:///android_asset/www/pages/waitTag/index.html";
 		}
 	}else {
-//		alert("DATE 0");
+
 		traitementGPS(lat, long,accuracy);
 	}
 	
